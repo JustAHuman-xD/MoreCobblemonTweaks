@@ -1,6 +1,7 @@
 package me.justahuman.dystoriantweaks.mixins;
 
 import me.justahuman.dystoriantweaks.Utils;
+import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -46,7 +47,7 @@ public abstract class ItemStackMixin {
                 Text name = lore.get(0);
                 final boolean shiny = Utils.get(customData, "Shiny", false);
                 if (shiny) {
-                    name = name.copy().append(Text.literal(" ★").formatted(YELLOW, BOLD));
+                    name = Text.literal("").formatted(GOLD).append(name.copy().append(Text.literal(" ★").formatted(YELLOW, BOLD)));
                 }
                 final String gender = Utils.get(customData, "Gender", "NONE");
                 if (gender.equals("MALE") || gender.equals("FEMALE")) {
@@ -61,10 +62,6 @@ public abstract class ItemStackMixin {
                 final List<Text> additionalLore = new ArrayList<>();
                 boolean spacer = false;
 
-                if (shiny) {
-                    additionalLore.add(Text.literal("Shiny").formatted(GOLD));
-                    spacer = true;
-                }
                 if (cycles != -1) {
                     additionalLore.add(Text.literal("Egg Cycles Remaining: ").formatted(GREEN)
                             .append(Text.literal(String.valueOf(cycles)).formatted(WHITE)));
@@ -72,7 +69,36 @@ public abstract class ItemStackMixin {
                 }
                 if (steps != -1) {
                     additionalLore.add(Text.literal("Steps Left: ").formatted(AQUA)
-                            .append(Text.literal(String.valueOf(steps)).formatted(WHITE)));
+                            .append(Text.literal(String.valueOf(Math.round(steps))).formatted(WHITE)));
+                    spacer = true;
+                }
+
+                String nature = Utils.get(customData, "Nature", "");
+                String ability = Utils.get(customData, "AbilityName", "");
+                String form = Utils.get(customData, "FormId", "");
+                if ((!nature.isBlank() || !ability.isBlank() || !form.isBlank()) && spacer) {
+                    additionalLore.add(Text.literal(" "));
+                    spacer = false;
+                }
+
+                if (!nature.isBlank()) {
+                    if (nature.contains(":")) {
+                        nature = StringUtil.capitalize(nature.substring(nature.indexOf(':') + 1));
+                    }
+                    additionalLore.add(Text.literal("Nature: ").formatted(YELLOW)
+                            .append(Text.literal(nature).formatted(WHITE)));
+                    spacer = true;
+                }
+
+                if (!ability.isBlank()) {
+                    additionalLore.add(Text.literal("Ability: ").formatted(GOLD)
+                            .append(Text.literal(StringUtil.capitalize(ability)).formatted(WHITE)));
+                    spacer = true;
+                }
+
+                if (!form.isBlank()) {
+                    additionalLore.add(Text.literal("Form: ").formatted(WHITE)
+                            .append(Text.literal(StringUtil.capitalize(form))));
                     spacer = true;
                 }
 
