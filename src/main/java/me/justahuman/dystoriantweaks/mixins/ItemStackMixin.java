@@ -1,0 +1,136 @@
+package me.justahuman.dystoriantweaks.mixins;
+
+import me.justahuman.dystoriantweaks.Utils;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.minecraft.util.Formatting.*;
+
+@Mixin(value = ItemStack.class, priority = 1000000)
+public abstract class ItemStackMixin {
+    @Shadow @Nullable
+    public abstract NbtCompound getNbt();
+
+    @Shadow
+    public abstract Item getItem();
+
+    @Inject(method = "getTooltip", at = @At(value = "RETURN"))
+    public void changeTooltip(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir) {
+        final NbtCompound nbt = this.getNbt();
+        if (nbt == null) {
+            return;
+        }
+
+        final List<Text> lore = cir.getReturnValue();
+        final String polymerItem = nbt.getString("Polymer$itemId");
+        final NbtCompound customData = nbt.get("Polymer$itemTag") instanceof NbtCompound compound ? compound : null;
+        if ("huliscobblebreeding:pokemonegg".equals(polymerItem)) {
+            changeIdentifier(lore, "cobblemon:pokemon_egg", "Cobblemon");
+            if (customData != null) {
+                Text name = lore.get(0);
+                final boolean shiny = Utils.get(customData, "Shiny", false);
+                if (shiny) {
+                    name = name.copy().append(Text.literal(" ★").formatted(YELLOW, BOLD));
+                }
+                final String gender = Utils.get(customData, "Gender", "NONE");
+                if (gender.equals("MALE") || gender.equals("FEMALE")) {
+                    boolean male = gender.equals("MALE");
+                    name = name.copy().append(Text.literal(male ? " ♂" : " ♀").styled(style -> style.withColor(0x32CBFF)));
+                }
+                lore.set(0, name);
+
+                final int cycles = Utils.get(customData, "currentEggCycle", -1);
+                final double steps = Utils.get(customData, "stepsLeftInCycle", -1d);
+
+                final List<Text> additionalLore = new ArrayList<>();
+                boolean spacer = false;
+
+                if (shiny) {
+                    additionalLore.add(Text.literal("Shiny").formatted(GOLD));
+                    spacer = true;
+                }
+                if (cycles != -1) {
+                    additionalLore.add(Text.literal("Egg Cycles Remaining: ").formatted(GREEN)
+                            .append(Text.literal(String.valueOf(cycles)).formatted(WHITE)));
+                    spacer = true;
+                }
+                if (steps != -1) {
+                    additionalLore.add(Text.literal("Steps Left: ").formatted(AQUA)
+                            .append(Text.literal(String.valueOf(steps)).formatted(WHITE)));
+                    spacer = true;
+                }
+
+                NbtCompound ivs = customData.get("IVs") instanceof NbtCompound compound ? compound : null;
+                if (ivs != null) {
+                    short hp = Utils.get(ivs, "hp", (short) -1);
+                    short attack = Utils.get(ivs, "attack", (short) -1);
+                    short defense = Utils.get(ivs, "defence", (short) -1);
+                    short spAttack = Utils.get(ivs, "special_attack", (short) -1);
+                    short spDefense = Utils.get(ivs, "special_defence", (short) -1);
+                    short speed = Utils.get(ivs, "speed", (short) -1);
+
+                    if (spacer) {
+                        additionalLore.add(Text.literal(" "));
+                    }
+
+                    if (hp != -1) {
+                        additionalLore.add(Text.literal("HP: ").formatted(RED)
+                                .append(Text.literal(String.valueOf(hp)).formatted(WHITE)));
+                    }
+                    if (attack != -1) {
+                        additionalLore.add(Text.literal("Attack: ").formatted(DARK_AQUA)
+                                .append(Text.literal(String.valueOf(attack)).formatted(WHITE)));
+                    }
+                    if (defense != -1) {
+                        additionalLore.add(Text.literal("Defense: ").formatted(GRAY)
+                                .append(Text.literal(String.valueOf(defense)).formatted(WHITE)));
+                    }
+                    if (spAttack != -1) {
+                        additionalLore.add(Text.literal("Sp. Attack: ").formatted(AQUA)
+                                .append(Text.literal(String.valueOf(spAttack)).formatted(WHITE)));
+                    }
+                    if (spDefense != -1) {
+                        additionalLore.add(Text.literal("Sp. Defense: ").formatted(YELLOW)
+                                .append(Text.literal(String.valueOf(spDefense)).formatted(WHITE)));
+                    }
+                    if (speed != -1) {
+                        additionalLore.add(Text.literal("Speed: ").formatted(GREEN)
+                                .append(Text.literal(String.valueOf(speed)).formatted(WHITE)));
+                    }
+                }
+
+                lore.addAll(1, additionalLore);
+            }
+        }
+    }
+
+    @Unique
+    public void changeIdentifier(List<Text> lore, String newIdentifier, String newSource) {
+        final Identifier identifier = Registries.ITEM.getId(getItem());
+        final String idLine = identifier.toString();
+        for (int i = 0; i < lore.size(); i++) {
+            String line = lore.get(i).getString();
+            if (line.equals(idLine)) {
+                lore.set(i, Text.literal(newIdentifier).formatted(DARK_GRAY));
+            } else if (line.equals("Minecraft")) {
+                lore.set(i, Text.literal(newSource).formatted(BLUE).formatted(ITALIC));
+            }
+        }
+    }
+}
