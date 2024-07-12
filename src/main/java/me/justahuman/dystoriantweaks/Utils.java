@@ -9,35 +9,35 @@ import net.minecraft.nbt.NbtString;
 
 public class Utils {
     public static String get(NbtCompound nbt, String key, String def) {
-        if (nbt.get(key) instanceof NbtString nbtString) {
+        if (nbt != null && nbt.get(key) instanceof NbtString nbtString) {
             return nbtString.asString();
         }
         return def;
     }
 
     public static boolean get(NbtCompound nbt, String key, boolean def) {
-        if (nbt.get(key) instanceof NbtByte nbtByte) {
+        if (nbt != null && nbt.get(key) instanceof NbtByte nbtByte) {
             return nbtByte.byteValue() == 1;
         }
         return def;
     }
 
     public static int get(NbtCompound nbt, String key, int def) {
-        if (nbt.get(key) instanceof NbtInt nbtInt) {
+        if (nbt != null && nbt.get(key) instanceof NbtInt nbtInt) {
             return nbtInt.intValue();
         }
         return def;
     }
 
     public static short get(NbtCompound nbt, String key, short def) {
-        if (nbt.get(key) instanceof NbtShort nbtShort) {
+        if (nbt != null && nbt.get(key) instanceof NbtShort nbtShort) {
             return nbtShort.shortValue();
         }
         return def;
     }
 
     public static double get(NbtCompound nbt, String key, double def) {
-        if (nbt.get(key) instanceof NbtDouble nbtDouble) {
+        if (nbt != null && nbt.get(key) instanceof NbtDouble nbtDouble) {
             return nbtDouble.doubleValue();
         }
         return def;

@@ -74,9 +74,10 @@ public abstract class ItemStackMixin {
                 }
 
                 String nature = Utils.get(customData, "Nature", "");
-                String ability = Utils.get(customData, "AbilityName", "");
+                NbtCompound ability = customData.get("Ability") instanceof NbtCompound compound ? compound : null;
+                String abilityName = Utils.get(ability, "AbilityName", "");
                 String form = Utils.get(customData, "FormId", "");
-                if ((!nature.isBlank() || !ability.isBlank() || !form.isBlank()) && spacer) {
+                if ((!nature.isBlank() || !abilityName.isBlank() || !form.isBlank()) && spacer) {
                     additionalLore.add(Text.literal(" "));
                     spacer = false;
                 }
@@ -90,9 +91,9 @@ public abstract class ItemStackMixin {
                     spacer = true;
                 }
 
-                if (!ability.isBlank()) {
+                if (!abilityName.isBlank()) {
                     additionalLore.add(Text.literal("Ability: ").formatted(GOLD)
-                            .append(Text.literal(StringUtil.capitalize(ability)).formatted(WHITE)));
+                            .append(Text.literal(StringUtil.capitalize(abilityName)).formatted(WHITE)));
                     spacer = true;
                 }
 
@@ -120,7 +121,7 @@ public abstract class ItemStackMixin {
                                 .append(Text.literal(String.valueOf(hp)).formatted(WHITE)));
                     }
                     if (attack != -1) {
-                        additionalLore.add(Text.literal("Attack: ").formatted(DARK_AQUA)
+                        additionalLore.add(Text.literal("Attack: ").formatted(BLUE)
                                 .append(Text.literal(String.valueOf(attack)).formatted(WHITE)));
                     }
                     if (defense != -1) {
