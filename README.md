@@ -1,5 +1,5 @@
 # Features
 - Enhanced Egg Visuals
   -   Eggs will now show the gender, shiny status, hatch status, and ivs in the lore of the item!
-  -   ![image](https://github.com/user-attachments/assets/634daa4a-ddeb-4c00-8752-bed8489065c6)
+  -   ![image](https://cdn.modrinth.com/data/cached_images/4a6c64576bd6d13c8cd078b92b8286eec11e02b3.png)
 - More coming soon! (Please feel free to make suggestions via Issues!)
