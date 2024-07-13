@@ -47,12 +47,13 @@ public abstract class ItemStackMixin {
                 Text name = lore.get(0);
                 final boolean shiny = Utils.get(customData, "Shiny", false);
                 if (shiny) {
-                    name = Text.literal("").formatted(GOLD).append(name.copy().append(Text.literal(" ★").formatted(YELLOW, BOLD)));
+                    name = name.copy().append(Text.literal(" ★").formatted(YELLOW, BOLD));
                 }
                 final String gender = Utils.get(customData, "Gender", "NONE");
                 if (gender.equals("MALE") || gender.equals("FEMALE")) {
                     boolean male = gender.equals("MALE");
-                    name = name.copy().append(Text.literal(male ? " ♂" : " ♀").styled(style -> style.withColor(0x32CBFF)));
+                    name = name.copy().append(Text.literal(male ? " ♂" : " ♀")
+                            .styled(style -> style.withColor(male ? 0x32CBFF : 0xFC5454)));
                 }
                 lore.set(0, name);
 
