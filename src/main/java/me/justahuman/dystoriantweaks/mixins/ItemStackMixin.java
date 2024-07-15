@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -27,19 +28,20 @@ import static net.minecraft.util.Formatting.*;
 public abstract class ItemStackMixin {
     @Shadow @Nullable
     public abstract NbtCompound getNbt();
-
     @Shadow
     public abstract Item getItem();
 
+
     @Inject(method = "getTooltip", at = @At(value = "RETURN"))
     public void changeTooltip(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir) {
-        final NbtCompound nbt = this.getNbt();
+        NbtCompound nbt = getNbt();
         if (nbt == null) {
-            return;
+            nbt = new NbtCompound();
         }
 
         final List<Text> lore = cir.getReturnValue();
-        final String polymerItem = nbt.getString("Polymer$itemId");
+        final List<Text> additionalLore = new ArrayList<>();
+        final String polymerItem = nbt.get("Polymer$itemId") instanceof NbtString nbtString ? nbtString.asString() : null;
         final NbtCompound customData = nbt.get("Polymer$itemTag") instanceof NbtCompound compound ? compound : null;
         if ("huliscobblebreeding:pokemonegg".equals(polymerItem)) {
             changeIdentifier(lore, "cobblemon:pokemon_egg", "Cobblemon");
@@ -59,8 +61,6 @@ public abstract class ItemStackMixin {
 
                 final int cycles = Utils.get(customData, "currentEggCycle", -1);
                 final double steps = Utils.get(customData, "stepsLeftInCycle", -1d);
-
-                final List<Text> additionalLore = new ArrayList<>();
                 boolean spacer = false;
 
                 if (cycles != -1) {
@@ -142,10 +142,28 @@ public abstract class ItemStackMixin {
                                 .append(Text.literal(String.valueOf(speed)).formatted(WHITE)));
                     }
                 }
-
-                lore.addAll(1, additionalLore);
             }
         }
+
+        final String key = Registries.ITEM.getId(getItem()).toString();
+        switch (key) {
+            case "cobblemon:tamato_berry" -> friendStatBerry(additionalLore, "speed");
+            case "cobblemon:grepa_berry" -> friendStatBerry(additionalLore, "sp. defense");
+            case "cobblemon:hondew_berry" -> friendStatBerry(additionalLore, "sp. attack");
+            case "cobblemon:qualot_berry" -> friendStatBerry(additionalLore, "defense");
+            case "cobblemon:pomeg_berry" -> friendStatBerry(additionalLore, "hp");
+            case "cobblemon:kelpsey_berry" -> friendStatBerry(additionalLore, "attack");
+            case "cobblemon:hopo_berry", "cobblemon:leppa_berry"
+                    -> additionalLore.add(Text.literal("Restores a selected move's PP when fed").formatted(GRAY));
+        }
+
+        lore.addAll(1, additionalLore);
+    }
+
+    @Unique
+    public void friendStatBerry(List<Text> lore, String ev) {
+        lore.add(Text.literal("Lowers %s EV when fed".formatted(ev)).formatted(GRAY));
+        lore.add(Text.literal("Increases friendship when fed").formatted(GRAY));
     }
 
     @Unique
@@ -153,7 +171,7 @@ public abstract class ItemStackMixin {
         final Identifier identifier = Registries.ITEM.getId(getItem());
         final String idLine = identifier.toString();
         for (int i = 0; i < lore.size(); i++) {
-            String line = lore.get(i).getString();
+            final String line = lore.get(i).getString();
             if (line.equals(idLine)) {
                 lore.set(i, Text.literal(newIdentifier).formatted(DARK_GRAY));
             } else if (line.equals("Minecraft")) {
