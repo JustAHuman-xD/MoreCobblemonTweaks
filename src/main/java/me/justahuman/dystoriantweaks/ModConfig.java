@@ -14,12 +14,13 @@ import java.io.IOException;
 public class ModConfig {
     private static final Gson GSON = new Gson().newBuilder().setPrettyPrinting().create();
     public static final JsonObject INTERNAL_CONFIG = new JsonObject();
+    public static final JsonObject DEFAULT_CONFIG = new JsonObject();
     static {
-        INTERNAL_CONFIG.addProperty("enhanced_egg_lore", true);
-        INTERNAL_CONFIG.addProperty("enhanced_berry_lore", true);
-        INTERNAL_CONFIG.addProperty("enhanced_consumable_lore", true);
-        INTERNAL_CONFIG.addProperty("enhanced_held_item_lore", true);
-        INTERNAL_CONFIG.addProperty("wt_compact_lore", true);
+        DEFAULT_CONFIG.addProperty("enhanced_egg_lore", true);
+        DEFAULT_CONFIG.addProperty("enhanced_berry_lore", true);
+        DEFAULT_CONFIG.addProperty("enhanced_consumable_lore", true);
+        DEFAULT_CONFIG.addProperty("enhanced_held_item_lore", true);
+        DEFAULT_CONFIG.addProperty("wt_compact_lore", true);
     }
 
     public static void loadFromFile() {
@@ -36,8 +37,9 @@ public class ModConfig {
     }
 
     public static boolean isEnabled(String option) {
-        return !(INTERNAL_CONFIG.get(option) instanceof JsonPrimitive primitive)
-                || !primitive.isBoolean() || primitive.getAsBoolean();
+        return INTERNAL_CONFIG.get(option) instanceof JsonPrimitive primitive && primitive.isBoolean()
+                ? primitive.getAsBoolean()
+                : DEFAULT_CONFIG.get(option).getAsBoolean();
     }
 
     public static File getConfigFile() {
@@ -50,7 +52,7 @@ public class ModConfig {
                 }
 
                 try (final FileWriter fileWriter = new FileWriter(getConfigFile())) {
-                    GSON.toJson(INTERNAL_CONFIG, fileWriter);
+                    GSON.toJson(DEFAULT_CONFIG, fileWriter);
                     fileWriter.flush();
                 } catch (IOException e) {
                     DystorianTweaks.LOGGER.warn("Error occurred while saving default config!");
