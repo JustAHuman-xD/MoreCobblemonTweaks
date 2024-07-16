@@ -148,7 +148,7 @@ public abstract class ItemStackMixin {
         final String key = Registries.ITEM.getId(getItem()).toString();
         final String cobbleKey = key.startsWith("cobblemon:") ? key.substring(10) : null;
         if (ModConfig.isEnabled("enhanced_berry_lore") && cobbleKey != null && cobbleKey.endsWith("_berry")) {
-            switch(cobbleKey.substring(0, key.lastIndexOf('_'))) {
+            switch(cobbleKey.substring(0, cobbleKey.lastIndexOf('_'))) {
                 case "tamato" -> evBerry(additionalLore, "Speed");
                 case "grepa" -> evBerry(additionalLore, "Sp. Defense");
                 case "hondew" -> evBerry(additionalLore, "Sp. Attack");
@@ -162,7 +162,7 @@ public abstract class ItemStackMixin {
 
         if (ModConfig.isEnabled("enhanced_consumable_lore") && cobbleKey != null) {
             if (cobbleKey.endsWith("_mint")) {
-                String nature = cobbleKey.substring(0, key.indexOf('_'));
+                String nature = cobbleKey.substring(0, cobbleKey.indexOf('_'));
                 additionalLore.add(Text.literal("When used on a Pokémon, it changes the effect of a Pokémon's Nature on its stats to that of the %s Nature.".formatted(nature)).formatted(GRAY));
                 additionalLore.add(Text.literal("This does not change the Pokémon's actual Nature.").formatted(GRAY));
             } else {
@@ -193,7 +193,7 @@ public abstract class ItemStackMixin {
 
         if (ModConfig.isEnabled("enhanced_held_item_lore") && cobbleKey != null) {
             if (key.endsWith("_gem")) {
-                String type = StringUtil.capitalize(cobbleKey.substring(0, key.lastIndexOf('_')));
+                String type = StringUtil.capitalize(cobbleKey.substring(0, cobbleKey.lastIndexOf('_')));
                 additionalLore.add(Text.literal("Increases the power of a" + type + " type move by 30%.").formatted(GRAY));
                 additionalLore.add(Text.literal(" "));
                 additionalLore.add(Text.literal("⇢ ").formatted(GRAY).append(Text.literal("Only activates once per battle.").formatted(RED)));
