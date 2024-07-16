@@ -1,5 +1,6 @@
 package me.justahuman.dystoriantweaks.mixins;
 
+import me.justahuman.dystoriantweaks.ModConfig;
 import me.justahuman.dystoriantweaks.Utils;
 import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.client.item.TooltipContext;
@@ -43,8 +44,7 @@ public abstract class ItemStackMixin {
         final List<Text> additionalLore = new ArrayList<>();
         final String polymerItem = nbt.get("Polymer$itemId") instanceof NbtString nbtString ? nbtString.asString() : null;
         final NbtCompound customData = nbt.get("Polymer$itemTag") instanceof NbtCompound compound ? compound : null;
-        if ("huliscobblebreeding:pokemonegg".equals(polymerItem)) {
-            changeIdentifier(lore, "cobblemon:pokemon_egg", "Cobblemon");
+        if (ModConfig.isEnabled("enhanced_egg_lore") && "huliscobblebreeding:pokemonegg".equals(polymerItem)) {
             if (customData != null) {
                 Text name = lore.get(0);
                 final boolean shiny = Utils.get(customData, "Shiny", false);
@@ -146,24 +146,102 @@ public abstract class ItemStackMixin {
         }
 
         final String key = Registries.ITEM.getId(getItem()).toString();
-        switch (key) {
-            case "cobblemon:tamato_berry" -> friendStatBerry(additionalLore, "speed");
-            case "cobblemon:grepa_berry" -> friendStatBerry(additionalLore, "sp. defense");
-            case "cobblemon:hondew_berry" -> friendStatBerry(additionalLore, "sp. attack");
-            case "cobblemon:qualot_berry" -> friendStatBerry(additionalLore, "defense");
-            case "cobblemon:pomeg_berry" -> friendStatBerry(additionalLore, "hp");
-            case "cobblemon:kelpsey_berry" -> friendStatBerry(additionalLore, "attack");
-            case "cobblemon:hopo_berry", "cobblemon:leppa_berry"
-                    -> additionalLore.add(Text.literal("Restores a selected move's PP when fed").formatted(GRAY));
+        final String cobbleKey = key.startsWith("cobblemon:") ? key.substring(10) : null;
+        if (ModConfig.isEnabled("enhanced_berry_lore") && cobbleKey != null && cobbleKey.endsWith("_berry")) {
+            switch(cobbleKey.substring(0, key.lastIndexOf('_'))) {
+                case "tamato" -> evBerry(additionalLore, "Speed");
+                case "grepa" -> evBerry(additionalLore, "Sp. Defense");
+                case "hondew" -> evBerry(additionalLore, "Sp. Attack");
+                case "qualot" -> evBerry(additionalLore, "Defense");
+                case "pomeg" -> evBerry(additionalLore, "HP");
+                case "kelpsey" -> evBerry(additionalLore, "Attack");
+                case "hopo", "leppa"
+                        -> additionalLore.add(Text.literal("Restores a selected move's PP when fed").formatted(GRAY));
+            }
+        }
+
+        if (ModConfig.isEnabled("enhanced_consumable_lore") && cobbleKey != null) {
+            if (cobbleKey.endsWith("_mint")) {
+                String nature = cobbleKey.substring(0, key.indexOf('_'));
+                additionalLore.add(Text.literal("When used on a Pokémon, it changes the effect of a Pokémon's Nature on its stats to that of the %s Nature.".formatted(nature)).formatted(GRAY));
+                additionalLore.add(Text.literal("This does not change the Pokémon's actual Nature.").formatted(GRAY));
+            } else {
+                switch (cobbleKey) {
+                    case "health_feather" -> evFeather(additionalLore, "HP");
+                    case "muscle_feather" -> evFeather(additionalLore, "Attack");
+                    case "resist_feather" -> evFeather(additionalLore, "Defense");
+                    case "genius_feather" -> evFeather(additionalLore, "Sp. Attack");
+                    case "clever_feather" -> evFeather(additionalLore, "Sp. Defense");
+                    case "swift_feather" -> evFeather(additionalLore, "Speed");
+                    case "hp_up" -> evMedicine(additionalLore, "HP");
+                    case "protein" -> evMedicine(additionalLore, "Attack");
+                    case "iron" -> evMedicine(additionalLore, "Defense");
+                    case "calcium" -> evMedicine(additionalLore, "Sp. Attack");
+                    case "zinc" -> evMedicine(additionalLore, "Sp. Defense");
+                    case "carbos" -> evMedicine(additionalLore, "Speed");
+                    case "pp_up" -> additionalLore.add(Text.literal("Increases the maximum PP of a selected move by 20% it's base PP. Can be stacked 3 times.").formatted(GRAY));
+                    case "pp_max" -> additionalLore.add(Text.literal("Increases the maximum PP of a selected move to 160% it's base PP."));
+                    case "exp_candy_xs" -> expCandy(additionalLore, 100);
+                    case "exp_candy_s" -> expCandy(additionalLore, 800);
+                    case "exp_candy_m" -> expCandy(additionalLore, 3000);
+                    case "exp_candy_l" -> expCandy(additionalLore, 10000);
+                    case "exp_candy_xl" -> expCandy(additionalLore, 30000);
+                    case "rare_candy" -> additionalLore.add(Text.literal("Increases the Pokémon's level by 1.").formatted(GRAY));
+                }
+            }
+        }
+
+        if (ModConfig.isEnabled("enhanced_held_item_lore") && cobbleKey != null) {
+            if (key.endsWith("_gem")) {
+                String type = StringUtil.capitalize(cobbleKey.substring(0, key.lastIndexOf('_')));
+                additionalLore.add(Text.literal("Increases the power of a" + type + " type move by 30%.").formatted(GRAY));
+                additionalLore.add(Text.literal(" "));
+                additionalLore.add(Text.literal("⇢ ").formatted(GRAY).append(Text.literal("Only activates once per battle.").formatted(RED)));
+            } else {
+                String line = switch(cobbleKey) {
+                    case "ability_capsule" -> "Changes the ability of a Pokémon to it's alternative standard ability if possible.";
+                    case "ability_patch" -> "Changes the ability of a Pokémon to it's hidden ability.";
+                    case "eject_button" -> "Causes the holder to switch out if hit by a damaging move. Activates only once per battle.";
+                    case "float_stone" -> "Halves the holder's weight to a minimum of 0.1kg.";
+                    case "eviolite" -> "Boosts the holders Defense and Sp. Defense by 50% if they are not fully evolved.";
+                    case "weakness_policy" -> "Raises the holder's Attack and Sp. Attack by two stages when hit by a super-effective move. Activates only once per battle.";
+                    default -> null;
+                };
+
+                List<String> lines = switch (cobbleKey) {
+                    case "sticky_barb" -> List.of("Damages the holder by 1/8 of the holder's maximum HP at the end of each turn.", "If a Pokémon with no held item hits the holder with a contact move, the Sticky Barb is transferred to the attacker.");
+                    default -> null;
+                };
+
+                if (line != null) {
+                    additionalLore.add(Text.literal(line).formatted(GRAY));
+                } else if (lines != null) {
+                    additionalLore.addAll(lines.stream().map(Text::literal).map(text -> text.formatted(GRAY)).toList());
+                }
+            }
         }
 
         lore.addAll(1, additionalLore);
     }
 
     @Unique
-    public void friendStatBerry(List<Text> lore, String ev) {
-        lore.add(Text.literal("Lowers %s EV when fed".formatted(ev)).formatted(GRAY));
-        lore.add(Text.literal("Increases friendship when fed").formatted(GRAY));
+    public void evBerry(List<Text> lore, String ev) {
+        lore.add(Text.literal("Decreases the Pokémon's %s EV by 10 (if possible), while raising friendship.".formatted(ev)).formatted(GRAY));
+    }
+
+    @Unique
+    public void evFeather(List<Text> lore, String ev) {
+        lore.add(Text.literal("Increases the Pokémon's %s by 1 if possible.".formatted(ev)).formatted(GRAY));
+    }
+
+    @Unique
+    public void expCandy(List<Text> lore, int amount) {
+        lore.add(Text.literal(String.format("Increases a Pokémon's experience by %.2f when used.", (double) amount)).formatted(GRAY));
+    }
+
+    @Unique
+    public void evMedicine(List<Text> lore, String ev) {
+        lore.add(Text.literal("Increases the Pokémon's %s EV by 10 if possible.".formatted(ev)).formatted(GRAY));
     }
 
     @Unique
