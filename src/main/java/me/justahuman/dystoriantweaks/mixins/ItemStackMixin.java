@@ -208,10 +208,10 @@ public abstract class ItemStackMixin {
                     default -> null;
                 };
 
-                List<String> lines = switch (cobbleKey) {
+                List<String> lines = line == null ? switch (cobbleKey) {
                     case "sticky_barb" -> List.of("Damages the holder by 1/8 of the holder's maximum HP at the end of each turn.", "If a Pokémon with no held item hits the holder with a contact move, the Sticky Barb is transferred to the attacker.");
                     default -> null;
-                };
+                } : null;
 
                 if (line != null) {
                     additionalLore.add(Text.literal(line).formatted(GRAY));
