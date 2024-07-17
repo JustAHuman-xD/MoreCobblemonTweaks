@@ -40,11 +40,11 @@ public class ConfigScreen {
                 .setSaveConsumer(value -> ModConfig.setEnabled("enhanced_held_item_lore", value))
                 .build());
 
-        itemCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Compact Wonder Trade Lore"), ModConfig.isEnabled("wt_compact_lore"))
+        /*itemCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Compact Wonder Trade Lore"), ModConfig.isEnabled("wt_compact_lore"))
                 .setDefaultValue(true)
                 .setTooltip(Text.literal("Compacts the lore displayed when hovering over a WT pokemon in the menu."))
                 .setSaveConsumer(value -> ModConfig.setEnabled("wt_compact_lore", value))
-                .build());
+                .build());*/
 
         builder.setSavingRunnable(ModConfig::saveConfig);
         return builder.build();

@@ -221,6 +221,10 @@ public abstract class ItemStackMixin {
             }
         }
 
+        if (ModConfig.isEnabled("wt_compact_lore") && "pokemon_model".equals(cobbleKey)) {
+
+        }
+
         lore.addAll(1, additionalLore);
     }
 
