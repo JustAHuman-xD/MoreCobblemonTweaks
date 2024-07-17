@@ -1,9 +1,10 @@
-package me.justahuman.dystoriantweaks;
+package me.justahuman.dystoriantweaks.config;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import me.justahuman.dystoriantweaks.DystorianTweaks;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
@@ -40,6 +41,20 @@ public class ModConfig {
         return INTERNAL_CONFIG.get(option) instanceof JsonPrimitive primitive && primitive.isBoolean()
                 ? primitive.getAsBoolean()
                 : DEFAULT_CONFIG.get(option).getAsBoolean();
+    }
+
+    public static void setEnabled(String key, boolean value) {
+        INTERNAL_CONFIG.addProperty(key, value);
+    }
+
+    public static void saveConfig() {
+        try (final FileWriter fileWriter = new FileWriter(getConfigFile())) {
+            GSON.toJson(INTERNAL_CONFIG, fileWriter);
+            fileWriter.flush();
+        } catch (IOException e) {
+            DystorianTweaks.LOGGER.warn("Error occurred while saving config!");
+            DystorianTweaks.LOGGER.warn(e.getMessage());
+        }
     }
 
     public static File getConfigFile() {

@@ -8,8 +8,18 @@
     "JustAHuman"
   ],
   "contact": {
-    "website": "https://github.com/JustAHuman-xD",
-    "repo": "https://github.com/JustAHuman-xD/DystorianTweaks"
+    "homepage": "https://modrinth.com/mod/dystoriantweaks",
+    "sources": "https://github.com/JustAHuman-xD/DystorianTweaks",
+    "issues": "https://github.com/JustAHuman-xD/DystorianTweaks/issues",
+    "discord": "https://discord.gg/y6fV6pbgHB"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/y6fV6pbgHB"
+      },
+      "update_checker": true
+    }
   },
   "license": "GPL-3.0",
   "icon": "assets/dystoriantweaks/icon.png",
@@ -17,6 +27,9 @@
   "entrypoints": {
     "client": [
       "me.justahuman.dystoriantweaks.DystorianTweaks"
+    ],
+    "modmenu": [
+      "me.justahuman.dystoriantweaks.config.ModMenuIntegration"
     ]
   },
   "mixins": [

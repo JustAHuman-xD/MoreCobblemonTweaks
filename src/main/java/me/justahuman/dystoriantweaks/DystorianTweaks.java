@@ -1,6 +1,7 @@
 package me.justahuman.dystoriantweaks;
 
 import com.mojang.logging.LogUtils;
+import me.justahuman.dystoriantweaks.config.ModConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;

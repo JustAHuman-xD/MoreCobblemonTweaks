@@ -1,6 +1,6 @@
 package me.justahuman.dystoriantweaks.mixins;
 
-import me.justahuman.dystoriantweaks.ModConfig;
+import me.justahuman.dystoriantweaks.config.ModConfig;
 import me.justahuman.dystoriantweaks.Utils;
 import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.client.item.TooltipContext;
@@ -181,11 +181,11 @@ public abstract class ItemStackMixin {
                     case "carbos" -> evMedicine(additionalLore, "Speed");
                     case "pp_up" -> additionalLore.add(Text.literal("Increases the maximum PP of a selected move by 20% it's base PP. Can be stacked 3 times.").formatted(GRAY));
                     case "pp_max" -> additionalLore.add(Text.literal("Increases the maximum PP of a selected move to 160% it's base PP."));
-                    case "exp_candy_xs" -> expCandy(additionalLore, 100);
-                    case "exp_candy_s" -> expCandy(additionalLore, 800);
-                    case "exp_candy_m" -> expCandy(additionalLore, 3000);
-                    case "exp_candy_l" -> expCandy(additionalLore, 10000);
-                    case "exp_candy_xl" -> expCandy(additionalLore, 30000);
+                    case "exp_candy_xs" -> expCandy(additionalLore, "100");
+                    case "exp_candy_s" -> expCandy(additionalLore, "800");
+                    case "exp_candy_m" -> expCandy(additionalLore, "3,000");
+                    case "exp_candy_l" -> expCandy(additionalLore, "10,000");
+                    case "exp_candy_xl" -> expCandy(additionalLore, "30,000");
                     case "rare_candy" -> additionalLore.add(Text.literal("Increases the Pokémon's level by 1.").formatted(GRAY));
                 }
             }
@@ -194,7 +194,7 @@ public abstract class ItemStackMixin {
         if (ModConfig.isEnabled("enhanced_held_item_lore") && cobbleKey != null) {
             if (key.endsWith("_gem")) {
                 String type = StringUtil.capitalize(cobbleKey.substring(0, cobbleKey.lastIndexOf('_')));
-                additionalLore.add(Text.literal("Increases the power of a" + type + " type move by 30%.").formatted(GRAY));
+                additionalLore.add(Text.literal("Increases the power of a " + type + " type move by 30%.").formatted(GRAY));
                 additionalLore.add(Text.literal(" "));
                 additionalLore.add(Text.literal("⇢ ").formatted(GRAY).append(Text.literal("Only activates once per battle.").formatted(RED)));
             } else {
@@ -235,8 +235,8 @@ public abstract class ItemStackMixin {
     }
 
     @Unique
-    public void expCandy(List<Text> lore, int amount) {
-        lore.add(Text.literal(String.format("Increases a Pokémon's experience by %.2f when used.", (double) amount)).formatted(GRAY));
+    public void expCandy(List<Text> lore, String amount) {
+        lore.add(Text.literal("Increases a Pokémon's experience by %s when used.".formatted(amount)).formatted(GRAY));
     }
 
     @Unique
