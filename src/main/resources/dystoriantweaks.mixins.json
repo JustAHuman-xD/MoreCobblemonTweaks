@@ -4,7 +4,8 @@
   "package": "me.justahuman.dystoriantweaks.mixins",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "ItemStackMixin"
+    "ItemStackMixin",
+    "PcGuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1
