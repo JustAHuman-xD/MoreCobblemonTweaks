@@ -1,6 +1,5 @@
 package me.justahuman.dystoriantweaks.features;
 
-import com.cobblemon.mod.common.CobblemonItems;
 import com.cobblemon.mod.common.item.berry.FriendshipRaisingBerryItem;
 import com.cobblemon.mod.common.item.berry.PPRestoringBerryItem;
 import com.cobblemon.mod.common.item.interactive.CandyItem;
@@ -18,10 +17,12 @@ import net.minecraft.text.Text;
 import java.util.List;
 import java.util.Set;
 
+import static com.cobblemon.mod.common.CobblemonItems.*;
 import static net.minecraft.util.Formatting.*;
 
 public class LoreEnhancements {
-    private static final Set<Item> TYPE_GEMS = Set.of(CobblemonItems.BUG_GEM);
+    private static final Set<Item> TYPE_GEMS = Set.of(NORMAL_GEM, FIRE_GEM, WATER_GEM, GRASS_GEM, ELECTRIC_GEM, ICE_GEM, FIGHTING_GEM,
+            POISON_GEM, GROUND_GEM, FLYING_GEM, PSYCHIC_GEM, BUG_GEM, ROCK_GEM, GHOST_GEM, DRAGON_GEM, DARK_GEM, STEEL_GEM, FAIRY_GEM);
 
     public static void enhanceEggLore(List<Text> lore, List<Text> newLore, NbtCompound customData) {
         Text name = lore.get(0);
@@ -139,23 +140,23 @@ public class LoreEnhancements {
         } else if (item instanceof VitaminItem vitamin) {
             evMedicine(newLore, vitamin.getStat().getDisplayName().getString());
         } else if (item instanceof PPUpItem) {
-            if (item == CobblemonItems.PP_UP) {
+            if (item == PP_UP) {
                 newLore.add(Text.literal("Increases the maximum PP of a selected move by 20% it's base PP. Can be stacked 3 times.").formatted(GRAY));
-            } else if (item == CobblemonItems.PP_MAX) {
+            } else if (item == PP_MAX) {
                 newLore.add(Text.literal("Increases the maximum PP of a selected move to 160% it's base PP."));
             }
         } else if (item instanceof CandyItem) {
-            if (item == CobblemonItems.EXPERIENCE_CANDY_XS) {
+            if (item == EXPERIENCE_CANDY_XS) {
                 expCandy(newLore, "100");
-            } else if (item == CobblemonItems.EXPERIENCE_CANDY_S) {
+            } else if (item == EXPERIENCE_CANDY_S) {
                 expCandy(newLore, "800");
-            } else if (item == CobblemonItems.EXPERIENCE_CANDY_M) {
+            } else if (item == EXPERIENCE_CANDY_M) {
                 expCandy(newLore, "3,000");
-            } else if (item == CobblemonItems.EXPERIENCE_CANDY_L) {
+            } else if (item == EXPERIENCE_CANDY_L) {
                 expCandy(newLore, "10,000");
-            } else if (item == CobblemonItems.EXPERIENCE_CANDY_XL) {
+            } else if (item == EXPERIENCE_CANDY_XL) {
                 expCandy(newLore, "30,000");
-            } else if (item == CobblemonItems.RARE_CANDY) {
+            } else if (item == RARE_CANDY) {
                 newLore.add(Text.literal("Increases the Pokémon's level by 1.").formatted(GRAY));
             }
         }
@@ -168,25 +169,25 @@ public class LoreEnhancements {
             newLore.add(Text.literal(" "));
             newLore.add(Text.literal("⇢ ").formatted(GRAY).append(Text.literal("Only activates once per battle.").formatted(RED)));
         } else if (item instanceof AbilityChangeItem<?>) {
-            if (item == CobblemonItems.ABILITY_CAPSULE) {
+            if (item == ABILITY_CAPSULE) {
                 newLore.add(Text.literal("Changes the ability of a Pokémon to it's alternative standard ability if possible.").formatted(GRAY));
-            } else if (item == CobblemonItems.ABILITY_PATCH) {
+            } else if (item == ABILITY_PATCH) {
                 newLore.add(Text.literal("Changes the ability of a Pokémon to it's hidden ability.").formatted(GRAY));
             }
         } else {
             String line = null;
-            if (item == CobblemonItems.EJECT_BUTTON) {
+            if (item == EJECT_BUTTON) {
                 line = "Causes the holder to switch out if hit by a damaging move. Activates only once per battle.";
-            } else if (item == CobblemonItems.FLOAT_STONE) {
+            } else if (item == FLOAT_STONE) {
                 line = "Halves the holder's weight to a minimum of 0.1kg.";
-            } else if (item == CobblemonItems.EVIOLITE) {
+            } else if (item == EVIOLITE) {
                 line = "Boosts the holders Defense and Sp. Defense by 50% if they are not fully evolved.";
-            } else if (item == CobblemonItems.WEAKNESS_POLICY) {
+            } else if (item == WEAKNESS_POLICY) {
                 line = "Raises the holder's Attack and Sp. Attack by two stages when hit by a super-effective move. Activates only once per battle.";
             }
 
             List<String> lines = null;
-            if (item == CobblemonItems.STICKY_BARB) {
+            if (item == STICKY_BARB) {
                 lines = List.of("Damages the holder by 1/8 of the holder's maximum HP at the end of each turn.", "If a Pokémon with no held item hits the holder with a contact move, the Sticky Barb is transferred to the attacker.");
             }
 

@@ -1,6 +1,7 @@
 package me.justahuman.dystoriantweaks.mixins;
 
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
+import me.justahuman.dystoriantweaks.config.ModConfig;
 import me.justahuman.dystoriantweaks.features.PcEnhancements;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -17,6 +18,8 @@ public class PcGuiMixin extends Screen {
 
     @Inject(at = @At("TAIL"), method = "init")
     public void onInit(CallbackInfo ci) {
-        this.addDrawable(new PcEnhancements.IvWidget((PCGUI) (Object) this));
+        if (ModConfig.isEnabled("pc_iv_display")) {
+            this.addDrawable(new PcEnhancements.IvWidget((PCGUI) (Object) this));
+        }
     }
 }

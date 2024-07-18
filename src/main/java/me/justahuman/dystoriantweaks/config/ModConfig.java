@@ -22,6 +22,8 @@ public class ModConfig {
         DEFAULT_CONFIG.addProperty("enhanced_consumable_lore", true);
         DEFAULT_CONFIG.addProperty("enhanced_held_item_lore", true);
         DEFAULT_CONFIG.addProperty("wt_compact_lore", true);
+        DEFAULT_CONFIG.addProperty("pc_iv_display", true);
+        DEFAULT_CONFIG.addProperty("custom_pc_box_names", true);
     }
 
     public static void loadFromFile() {

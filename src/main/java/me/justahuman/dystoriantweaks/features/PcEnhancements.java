@@ -6,6 +6,9 @@ import com.cobblemon.mod.common.client.render.RenderHelperKt;
 import com.cobblemon.mod.common.pokemon.IVs;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
+import me.justahuman.dystoriantweaks.config.ModConfig;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.text.MutableText;
@@ -34,8 +37,8 @@ public class PcEnhancements {
 
         @Override
         public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-            int x = (gui.width - PCGUI.BASE_WIDTH) / 2;
-            int y = (gui.height - PCGUI.BASE_HEIGHT) / 2;
+            double x = (gui.width - PCGUI.BASE_WIDTH) / 2d;
+            double y = (gui.height - PCGUI.BASE_HEIGHT) / 2d;
 
             RenderSystem.enableBlend();
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -44,7 +47,7 @@ public class PcEnhancements {
             y += 31;
 
             context.drawTexture(IV_WIDGET_TEXTURE,
-                    x, y,
+                    (int) x, (int) y,
                     IV_WIDGET_WIDTH,
                     IV_WIDGET_HEIGHT,
                     0, 0,
@@ -56,25 +59,36 @@ public class PcEnhancements {
 
             Pokemon pokemon = gui.getPreviewPokemon$common();
             if (pokemon != null) {
-                x += 6;
-                y += 6;
+                x += 9.5;
+                y += 9.5;
                 IVs iVs = pokemon.getIvs();
-                drawText(context, Text.literal("HP: ").formatted(RED).append(Text.literal(String.valueOf(iVs.get(Stats.HP))).formatted(WHITE)), x, y, mouseX, mouseY);
-                y += 20;
-                drawText(context, Text.literal("Atk: ").formatted(BLUE).append(Text.literal(String.valueOf(iVs.get(Stats.ATTACK))).formatted(WHITE)), x, y, mouseX, mouseY);
-                y += 20;
-                drawText(context, Text.literal("Def: ").formatted(GRAY).append(Text.literal(String.valueOf(iVs.get(Stats.DEFENCE))).formatted(WHITE)), x, y, mouseX, mouseY);
-                y += 20;
-                drawText(context, Text.literal("Sp.Atk: ").formatted(AQUA).append(Text.literal(String.valueOf(iVs.get(Stats.SPECIAL_ATTACK))).formatted(WHITE)), x, y, mouseX, mouseY);
-                y += 20;
-                drawText(context, Text.literal("Sp.Def: ").formatted(YELLOW).append(Text.literal(String.valueOf(iVs.get(Stats.SPECIAL_DEFENCE))).formatted(WHITE)), x, y, mouseX, mouseY);
-                y += 20;
-                drawText(context, Text.literal("Speed: ").formatted(GREEN).append(Text.literal(String.valueOf(iVs.get(Stats.SPEED))).formatted(WHITE)), x, y, mouseX, mouseY);
-                y += 20;
+                drawText(context, Text.literal("HP:").formatted(RED), x, y, mouseX, mouseY);
+                String hp = iVs.get(Stats.HP).toString();
+                drawText(context, Text.literal(hp).formatted(WHITE), x + (hp.length() == 1 ? 30 : 27), y, mouseX, mouseY);
+                y += 15;
+                drawText(context, Text.literal("Atk:").formatted(BLUE), x, y, mouseX, mouseY);
+                String attack = iVs.get(Stats.ATTACK).toString();
+                drawText(context, Text.literal(attack).formatted(WHITE), x + (attack.length() == 1 ? 30 : 27), y, mouseX, mouseY);
+                y += 15;
+                drawText(context, Text.literal("Def:").formatted(GRAY), x, y, mouseX, mouseY);
+                String defense = iVs.get(Stats.DEFENCE).toString();
+                drawText(context, Text.literal(defense).formatted(WHITE), x + (defense.length() == 1 ? 30 : 27), y, mouseX, mouseY);
+                y += 15;
+                drawText(context, Text.literal("Sp.Atk:").formatted(AQUA), x, y, mouseX, mouseY);
+                String spAttack = iVs.get(Stats.SPECIAL_ATTACK).toString();
+                drawText(context, Text.literal(spAttack).formatted(WHITE), x + (spAttack.length() == 1 ? 30 : 27), y, mouseX, mouseY);
+                y += 15;
+                drawText(context, Text.literal("Sp.Def:").formatted(YELLOW), x, y, mouseX, mouseY);
+                String spDef = iVs.get(Stats.SPECIAL_DEFENCE).toString();
+                drawText(context, Text.literal(spDef).formatted(WHITE), x + (spDef.length() == 1 ? 30 : 27), y, mouseX, mouseY);
+                y += 15;
+                drawText(context, Text.literal("Speed:").formatted(GREEN), x, y, mouseX, mouseY);
+                String speed = iVs.get(Stats.SPEED).toString();
+                drawText(context, Text.literal(speed).formatted(WHITE), x + (speed.length() == 1 ? 30 : 27), y, mouseX, mouseY);
             }
         }
 
-        public void drawText(DrawContext context, MutableText text, int x, int y, int mouseX, int mouseY) {
+        public void drawText(DrawContext context, MutableText text, double x, double y, int mouseX, int mouseY) {
             RenderHelperKt.drawScaledText(context, null, text, x, y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);
         }
     }
