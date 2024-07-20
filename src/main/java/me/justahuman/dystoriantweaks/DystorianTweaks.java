@@ -31,6 +31,8 @@ public class DystorianTweaks implements ClientModInitializer {
             @Override
             public void reload(ResourceManager manager) {
                 ModConfig.loadFromFile();
+                PcEnhancements.POSSIBLE_WALLPAPER_TEXTURES.clear();
+                PcEnhancements.POSSIBLE_WALLPAPER_TEXTURES.addAll(manager.findAllResources("textures/gui/pc/wallpaper", identifier -> true).keySet());
             }
         });
 

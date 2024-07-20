@@ -4,6 +4,7 @@
   "package": "me.justahuman.dystoriantweaks.mixins",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "ChatScreenAccessor",
     "GuiUtilsMixin",
     "ItemStackMixin",
     "PcGuiMixin",

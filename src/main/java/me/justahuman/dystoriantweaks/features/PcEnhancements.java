@@ -11,10 +11,12 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import me.justahuman.dystoriantweaks.DystorianTweaks;
 import me.justahuman.dystoriantweaks.Utils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
+import me.justahuman.dystoriantweaks.mixins.ChatScreenAccessor;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -23,10 +25,14 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 import static net.minecraft.util.Formatting.*;
 
 public class PcEnhancements {
+    public static final List<Identifier> POSSIBLE_WALLPAPER_TEXTURES = new ArrayList<>();
     public static final Identifier IV_WIDGET_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/iv_display.png");
     public static final Identifier RENAME_BUTTON_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/rename_button.png");
     public static final Identifier WALLPAPER_BUTTON_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/wallpaper_button.png");
@@ -162,12 +168,31 @@ public class PcEnhancements {
 
         @Override
         public void onClick(double mouseX, double mouseY) {
-
+            ChatScreen chatScreen = new ChatScreen("");
+            MinecraftClient.getInstance().setScreen(chatScreen);
+            ((ChatScreenAccessor) chatScreen).getChatField().setText("/setWallpaper ");
         }
     }
 
     public static void registerWallpaperCommand(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(literal("setWallpaper")
-                .then(argument("wallpaper", StringArgumentType.string())));
+                .then(argument("wallpaper", StringArgumentType.string())
+                        .suggests((context, builder) -> {
+                            for (Identifier wallpaper : POSSIBLE_WALLPAPER_TEXTURES) {
+                                builder.suggest(wallpaper.toString());
+                            }
+                            return builder.buildFuture();
+                        })
+                        .executes(context -> {
+                            String identifier = StringArgumentType.getString(context, "wallpaper");
+                            Identifier wallpaper = new Identifier(identifier);
+                            if (!POSSIBLE_WALLPAPER_TEXTURES.contains(wallpaper)) {
+                                context.getSource().sendFeedback(Text.literal("Not a valid wallpaper identifier!").formatted(RED));
+                                return 1;
+                            }
+                            context.getSource().sendFeedback(Text.literal("Updated box texture!").formatted(GREEN));
+                            ModConfig.setBoxTexture(Utils.currentBox, wallpaper);
+                            return 1;
+                        })));
     }
 }
