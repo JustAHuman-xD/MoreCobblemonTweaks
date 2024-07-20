@@ -2,8 +2,11 @@ package me.justahuman.dystoriantweaks;
 
 import com.mojang.logging.LogUtils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
+import me.justahuman.dystoriantweaks.features.PcEnhancements;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
@@ -29,6 +32,10 @@ public class DystorianTweaks implements ClientModInitializer {
             public void reload(ResourceManager manager) {
                 ModConfig.loadFromFile();
             }
+        });
+
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            PcEnhancements.registerWallpaperCommand(dispatcher);
         });
 
         ClientSendMessageEvents.ALLOW_CHAT.register(message -> {

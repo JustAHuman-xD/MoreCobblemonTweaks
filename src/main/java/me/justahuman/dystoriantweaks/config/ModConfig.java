@@ -7,11 +7,11 @@ import com.google.gson.JsonPrimitive;
 import me.justahuman.dystoriantweaks.DystorianTweaks;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.DebugHud;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 import java.io.File;
 import java.io.FileReader;
@@ -29,7 +29,9 @@ public class ModConfig {
         DEFAULT_CONFIG.addProperty("enhanced_held_item_lore", true);
         DEFAULT_CONFIG.addProperty("wt_compact_lore", true);
         DEFAULT_CONFIG.addProperty("pc_iv_display", true);
+        DEFAULT_CONFIG.addProperty("custom_pc_wallpapers", true);
         DEFAULT_CONFIG.addProperty("custom_pc_box_names", true);
+        DEFAULT_CONFIG.add("pc_wallpapers", new JsonObject());
         DEFAULT_CONFIG.add("pc_box_names", new JsonObject());
     }
 
@@ -56,7 +58,7 @@ public class ModConfig {
         INTERNAL_CONFIG.addProperty(key, value);
     }
 
-    public static MutableText getBoxName(int box) {
+    public static Text getBoxName(int box) {
         JsonObject serverBoxes = INTERNAL_CONFIG.get("pc_box_names") instanceof JsonObject object ? object : null;
         if (serverBoxes == null) {
             return null;
@@ -88,6 +90,42 @@ public class ModConfig {
         boxNames.addProperty(String.valueOf(box), name);
         serverBoxes.add(info.address, boxNames);
         INTERNAL_CONFIG.add("pc_box_names", serverBoxes);
+
+        saveConfig();
+    }
+
+    public static Identifier getBoxTexture(int box) {
+        JsonObject pcWallpapers = INTERNAL_CONFIG.get("pc_wallpapers") instanceof JsonObject object ? object : null;
+        if (pcWallpapers == null) {
+            return null;
+        }
+
+        ServerInfo info = MinecraftClient.getInstance().getCurrentServerEntry();
+        if (info == null) {
+            info = new ServerInfo("", "singleplayer", true);
+        }
+
+        JsonObject wallpapers = pcWallpapers.get(info.address) instanceof JsonObject object ? object : null;
+        if (wallpapers == null) {
+            return null;
+        }
+
+        return wallpapers.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
+                ? new Identifier(primitive.getAsString())
+                : null;
+    }
+
+    public static void setBoxTexture(int box, Identifier texture) {
+        ServerInfo info = MinecraftClient.getInstance().getCurrentServerEntry();
+        if (info == null) {
+            info = new ServerInfo("", "singleplayer", true);
+        }
+
+        JsonObject pcWallpapers = INTERNAL_CONFIG.get("pc_wallpapers") instanceof JsonObject object ? object : new JsonObject();
+        JsonObject wallpapers = pcWallpapers.get(info.address) instanceof JsonObject object ? object : new JsonObject();
+        wallpapers.addProperty(String.valueOf(box), texture.toString());
+        pcWallpapers.add(info.address, wallpapers);
+        INTERNAL_CONFIG.add("pc_wallpapers", pcWallpapers);
 
         saveConfig();
     }

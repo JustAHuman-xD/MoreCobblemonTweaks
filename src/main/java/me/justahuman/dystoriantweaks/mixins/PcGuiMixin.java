@@ -1,7 +1,6 @@
 package me.justahuman.dystoriantweaks.mixins;
 
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
-import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import me.justahuman.dystoriantweaks.features.PcEnhancements;
 import net.minecraft.client.gui.screen.Screen;
@@ -18,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PcGuiMixin extends Screen {
     @Shadow(remap = false) @Final public static int BASE_WIDTH;
     @Shadow(remap = false) @Final public static int BASE_HEIGHT;
-    @Shadow(remap = false) private StorageWidget storageWidget;
 
     protected PcGuiMixin(Text title) {
         super(title);
@@ -33,8 +31,12 @@ public abstract class PcGuiMixin extends Screen {
             this.addDrawable(new PcEnhancements.IvWidget(cast()));
         }
 
+        if (ModConfig.isEnabled("custom_pc_wallpapers")) {
+            this.addDrawableChild(new PcEnhancements.WallpaperButton(x + 210, y - 13));
+        }
+
         if (ModConfig.isEnabled("custom_pc_box_names")) {
-            this.addDrawableChild(new PcEnhancements.RenameButton(storageWidget, x + 233, y - 13));
+            this.addDrawableChild(new PcEnhancements.RenameButton(x + 233, y - 13));
         }
     }
 

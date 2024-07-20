@@ -4,8 +4,10 @@
   "package": "me.justahuman.dystoriantweaks.mixins",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "GuiUtilsMixin",
     "ItemStackMixin",
     "PcGuiMixin",
+    "StorageWidgetMixin",
     "TextMixin"
   ],
   "injectors": {

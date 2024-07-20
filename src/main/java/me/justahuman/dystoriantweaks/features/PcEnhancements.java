@@ -2,13 +2,16 @@ package me.justahuman.dystoriantweaks.features;
 
 import com.cobblemon.mod.common.api.pokemon.stats.Stats;
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
-import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import com.cobblemon.mod.common.client.render.RenderHelperKt;
 import com.cobblemon.mod.common.pokemon.IVs;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import me.justahuman.dystoriantweaks.DystorianTweaks;
+import me.justahuman.dystoriantweaks.Utils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
@@ -20,6 +23,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 import static net.minecraft.util.Formatting.*;
 
 public class PcEnhancements {
@@ -99,12 +103,8 @@ public class PcEnhancements {
     }
 
     public static class RenameButton extends ClickableWidget {
-        protected final StorageWidget storageWidget;
-
-        public RenameButton(StorageWidget storageWidget, int x, int y) {
+        public RenameButton(int x, int y) {
             super(x, y, RENAME_BUTTON_WIDTH, RENAME_BUTTON_HEIGHT, Text.empty());
-
-            this.storageWidget = storageWidget;
             setTooltip(Tooltip.of(Text.literal("Click to rename the current box!")));
         }
 
@@ -132,18 +132,14 @@ public class PcEnhancements {
             if (player != null) {
                 client.setScreen(null);
                 player.sendMessage(Text.literal("Enter new box name: ").formatted(YELLOW, BOLD));
-                DystorianTweaks.addChatConsumer(boxName -> ModConfig.setBoxName(storageWidget.getBox(), boxName));
+                DystorianTweaks.addChatConsumer(boxName -> ModConfig.setBoxName(Utils.currentBox, boxName));
             }
         }
     }
 
     public static class WallpaperButton extends ClickableWidget {
-        protected final StorageWidget storageWidget;
-
-        public WallpaperButton(StorageWidget storageWidget, int x, int y) {
+        public WallpaperButton(int x, int y) {
             super(x, y, WALLPAPER_BUTTON_WIDTH, WALLPAPER_BUTTON_HEIGHT, Text.empty());
-
-            this.storageWidget = storageWidget;
             setTooltip(Tooltip.of(Text.literal("Click to change the wallpaper of the current box!")));
         }
 
@@ -166,11 +162,12 @@ public class PcEnhancements {
 
         @Override
         public void onClick(double mouseX, double mouseY) {
-            MinecraftClient client = MinecraftClient.getInstance();
-            ClientPlayerEntity player = client.player;
-            if (player != null) {
-                
-            }
+
         }
+    }
+
+    public static void registerWallpaperCommand(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        dispatcher.register(literal("setWallpaper")
+                .then(argument("wallpaper", StringArgumentType.string())));
     }
 }

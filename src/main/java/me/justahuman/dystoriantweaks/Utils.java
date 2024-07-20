@@ -7,7 +7,13 @@ import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.NbtShort;
 import net.minecraft.nbt.NbtString;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Utils {
+    public static final Map<String, Boolean> HIDDEN_CACHE = new HashMap<>();
+    public static int currentBox = -1;
+
     public static String get(NbtCompound nbt, String key, String def) {
         if (nbt != null && nbt.get(key) instanceof NbtString nbtString) {
             return nbtString.asString();
