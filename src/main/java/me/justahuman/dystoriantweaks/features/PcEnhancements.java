@@ -25,14 +25,14 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
 import static net.minecraft.util.Formatting.*;
 
 public class PcEnhancements {
-    public static final List<Identifier> POSSIBLE_WALLPAPER_TEXTURES = new ArrayList<>();
+    public static final Map<String, Identifier> POSSIBLE_WALLPAPER_TEXTURES = new HashMap<>();
     public static final Identifier IV_WIDGET_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/iv_display.png");
     public static final Identifier RENAME_BUTTON_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/rename_button.png");
     public static final Identifier WALLPAPER_BUTTON_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/wallpaper_button.png");
@@ -178,15 +178,15 @@ public class PcEnhancements {
         dispatcher.register(literal("setWallpaper")
                 .then(argument("wallpaper", StringArgumentType.string())
                         .suggests((context, builder) -> {
-                            for (Identifier wallpaper : POSSIBLE_WALLPAPER_TEXTURES) {
-                                builder.suggest(wallpaper.toString());
+                            for (String shortName : POSSIBLE_WALLPAPER_TEXTURES.keySet()) {
+                                builder.suggest(shortName);
                             }
                             return builder.buildFuture();
                         })
                         .executes(context -> {
-                            String identifier = StringArgumentType.getString(context, "wallpaper");
-                            Identifier wallpaper = new Identifier(identifier);
-                            if (!POSSIBLE_WALLPAPER_TEXTURES.contains(wallpaper)) {
+                            String shortName = StringArgumentType.getString(context, "wallpaper");
+                            Identifier wallpaper = POSSIBLE_WALLPAPER_TEXTURES.get(shortName);
+                            if (wallpaper == null) {
                                 context.getSource().sendFeedback(Text.literal("Not a valid wallpaper identifier!").formatted(RED));
                                 return 1;
                             }

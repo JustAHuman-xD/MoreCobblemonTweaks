@@ -32,7 +32,11 @@ public class DystorianTweaks implements ClientModInitializer {
             public void reload(ResourceManager manager) {
                 ModConfig.loadFromFile();
                 PcEnhancements.POSSIBLE_WALLPAPER_TEXTURES.clear();
-                PcEnhancements.POSSIBLE_WALLPAPER_TEXTURES.addAll(manager.findAllResources("textures/gui/pc/wallpaper", identifier -> true).keySet());
+                for (Identifier wallpaper : manager.findAllResources("textures/gui/pc/wallpapers", identifier -> true).keySet()) {
+                    String path = wallpaper.getPath();
+                    String shortName = path.substring(path.lastIndexOf('/') + 1, path.indexOf('.'));
+                    PcEnhancements.POSSIBLE_WALLPAPER_TEXTURES.put(shortName, wallpaper);
+                }
             }
         });
 
