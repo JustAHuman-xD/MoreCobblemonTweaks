@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "ItemStackMixin",
-    "PcGuiMixin"
+    "PcGuiMixin",
+    "TextMixin"
   ],
   "injectors": {
     "defaultRequire": 1

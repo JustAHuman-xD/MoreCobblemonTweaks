@@ -6,6 +6,12 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import me.justahuman.dystoriantweaks.DystorianTweaks;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.DebugHud;
+import net.minecraft.client.network.ServerInfo;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.io.File;
 import java.io.FileReader;
@@ -24,6 +30,7 @@ public class ModConfig {
         DEFAULT_CONFIG.addProperty("wt_compact_lore", true);
         DEFAULT_CONFIG.addProperty("pc_iv_display", true);
         DEFAULT_CONFIG.addProperty("custom_pc_box_names", true);
+        DEFAULT_CONFIG.add("pc_box_names", new JsonObject());
     }
 
     public static void loadFromFile() {
@@ -47,6 +54,42 @@ public class ModConfig {
 
     public static void setEnabled(String key, boolean value) {
         INTERNAL_CONFIG.addProperty(key, value);
+    }
+
+    public static MutableText getBoxName(int box) {
+        JsonObject serverBoxes = INTERNAL_CONFIG.get("pc_box_names") instanceof JsonObject object ? object : null;
+        if (serverBoxes == null) {
+            return null;
+        }
+
+        ServerInfo info = MinecraftClient.getInstance().getCurrentServerEntry();
+        if (info == null) {
+            info = new ServerInfo("", "singleplayer", true);
+        }
+
+        JsonObject boxNames = serverBoxes.get(info.address) instanceof JsonObject object ? object : null;
+        if (boxNames == null) {
+            return null;
+        }
+
+        return boxNames.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
+                ? Text.literal(primitive.getAsString()).formatted(Formatting.BOLD)
+                : null;
+    }
+
+    public static void setBoxName(int box, String name) {
+        ServerInfo info = MinecraftClient.getInstance().getCurrentServerEntry();
+        if (info == null) {
+            info = new ServerInfo("", "singleplayer", true);
+        }
+
+        JsonObject serverBoxes = INTERNAL_CONFIG.get("pc_box_names") instanceof JsonObject object ? object : new JsonObject();
+        JsonObject boxNames = serverBoxes.get(info.address) instanceof JsonObject object ? object : new JsonObject();
+        boxNames.addProperty(String.valueOf(box), name);
+        serverBoxes.add(info.address, boxNames);
+        INTERNAL_CONFIG.add("pc_box_names", serverBoxes);
+
+        saveConfig();
     }
 
     public static void saveConfig() {

@@ -2,31 +2,36 @@ package me.justahuman.dystoriantweaks.features;
 
 import com.cobblemon.mod.common.api.pokemon.stats.Stats;
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
+import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import com.cobblemon.mod.common.client.render.RenderHelperKt;
 import com.cobblemon.mod.common.pokemon.IVs;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
+import me.justahuman.dystoriantweaks.DystorianTweaks;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import static net.minecraft.util.Formatting.AQUA;
-import static net.minecraft.util.Formatting.BLUE;
-import static net.minecraft.util.Formatting.GRAY;
-import static net.minecraft.util.Formatting.GREEN;
-import static net.minecraft.util.Formatting.RED;
-import static net.minecraft.util.Formatting.WHITE;
-import static net.minecraft.util.Formatting.YELLOW;
+import static net.minecraft.util.Formatting.*;
 
 public class PcEnhancements {
     public static final Identifier IV_WIDGET_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/iv_display.png");
+    public static final Identifier RENAME_BUTTON_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/rename_button.png");
+    public static final Identifier WALLPAPER_BUTTON_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/wallpaper_button.png");
     public static final int IV_WIDGET_WIDTH = 52;
     public static final int IV_WIDGET_HEIGHT = 98;
+    public static final int RENAME_BUTTON_WIDTH = 21;
+    public static final int RENAME_BUTTON_HEIGHT = 18;
+    public static final int WALLPAPER_BUTTON_WIDTH = 19;
+    public static final int WALLPAPER_BUTTON_HEIGHT = 18;
 
     public static class IvWidget implements Drawable {
         protected final PCGUI gui;
@@ -90,6 +95,82 @@ public class PcEnhancements {
 
         public void drawText(DrawContext context, MutableText text, double x, double y, int mouseX, int mouseY) {
             RenderHelperKt.drawScaledText(context, null, text, x, y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);
+        }
+    }
+
+    public static class RenameButton extends ClickableWidget {
+        protected final StorageWidget storageWidget;
+
+        public RenameButton(StorageWidget storageWidget, int x, int y) {
+            super(x, y, RENAME_BUTTON_WIDTH, RENAME_BUTTON_HEIGHT, Text.empty());
+
+            this.storageWidget = storageWidget;
+            setTooltip(Tooltip.of(Text.literal("Click to rename the current box!")));
+        }
+
+        @Override
+        protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+            context.drawTexture(RENAME_BUTTON_TEXTURE,
+                    getX(), getY(),
+                    RENAME_BUTTON_WIDTH,
+                    RENAME_BUTTON_HEIGHT,
+                    0, 0,
+                    RENAME_BUTTON_WIDTH,
+                    RENAME_BUTTON_HEIGHT,
+                    RENAME_BUTTON_WIDTH,
+                    RENAME_BUTTON_HEIGHT
+            );
+        }
+
+        @Override
+        protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
+
+        @Override
+        public void onClick(double mouseX, double mouseY) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            ClientPlayerEntity player = client.player;
+            if (player != null) {
+                client.setScreen(null);
+                player.sendMessage(Text.literal("Enter new box name: ").formatted(YELLOW, BOLD));
+                DystorianTweaks.addChatConsumer(boxName -> ModConfig.setBoxName(storageWidget.getBox(), boxName));
+            }
+        }
+    }
+
+    public static class WallpaperButton extends ClickableWidget {
+        protected final StorageWidget storageWidget;
+
+        public WallpaperButton(StorageWidget storageWidget, int x, int y) {
+            super(x, y, WALLPAPER_BUTTON_WIDTH, WALLPAPER_BUTTON_HEIGHT, Text.empty());
+
+            this.storageWidget = storageWidget;
+            setTooltip(Tooltip.of(Text.literal("Click to change the wallpaper of the current box!")));
+        }
+
+        @Override
+        protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+            context.drawTexture(WALLPAPER_BUTTON_TEXTURE,
+                    getX(), getY(),
+                    WALLPAPER_BUTTON_WIDTH,
+                    WALLPAPER_BUTTON_HEIGHT,
+                    0, 0,
+                    WALLPAPER_BUTTON_WIDTH,
+                    WALLPAPER_BUTTON_HEIGHT,
+                    WALLPAPER_BUTTON_WIDTH,
+                    WALLPAPER_BUTTON_HEIGHT
+            );
+        }
+
+        @Override
+        protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
+
+        @Override
+        public void onClick(double mouseX, double mouseY) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            ClientPlayerEntity player = client.player;
+            if (player != null) {
+                
+            }
         }
     }
 }
