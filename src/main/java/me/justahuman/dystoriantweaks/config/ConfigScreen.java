@@ -15,6 +15,7 @@ public class ConfigScreen {
         final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
         final ConfigCategory pcCategory = builder.getOrCreateCategory(Text.literal("Pc Enhancements"));
         final ConfigCategory loreCategory = builder.getOrCreateCategory(Text.literal("Lore Enhancements"));
+        final ConfigCategory otherCategory = builder.getOrCreateCategory(Text.literal("Other Tweaks"));
 
         /* Pc Config Options */
 
@@ -24,11 +25,23 @@ public class ConfigScreen {
                 .setSaveConsumer(value -> ModConfig.setEnabled("pc_iv_display", value))
                 .build());
 
-        /*pcCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Custom Box Names"), ModConfig.isEnabled("custom_pc_box_names"))
+        pcCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Open Box History"), ModConfig.isEnabled("open_box_history"))
+                .setDefaultValue(true)
+                .setTooltip(Text.literal("Should the PC remember and open to the last box you had open?"))
+                .setSaveConsumer(value -> ModConfig.setEnabled("open_box_history", value))
+                .build());
+
+        pcCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Custom Box Names"), ModConfig.isEnabled("custom_pc_box_names"))
                 .setDefaultValue(true)
                 .setTooltip(Text.literal("Allows the player to change PC box names."))
                 .setSaveConsumer(value -> ModConfig.setEnabled("custom_pc_box_names", value))
-                .build());*/
+                .build());
+
+        pcCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Box Wallpapers"), ModConfig.isEnabled("custom_pc_wallpapers"))
+                .setDefaultValue(true)
+                .setTooltip(Text.literal("Allows the player to change PC wallpaper."))
+                .setSaveConsumer(value -> ModConfig.setEnabled("custom_pc_wallpapers", value))
+                .build());
 
         /* Lore Config Options */
 
@@ -61,6 +74,14 @@ public class ConfigScreen {
                 .setTooltip(Text.literal("Compacts the lore displayed when hovering over a WT pokemon in the menu."))
                 .setSaveConsumer(value -> ModConfig.setEnabled("wt_compact_lore", value))
                 .build());*/
+
+        /* Other Tweaks */
+
+        otherCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Hidden Ability Indicator"), ModConfig.isEnabled("hidden_ability_indicator"))
+                .setDefaultValue(true)
+                .setTooltip(Text.literal("Adds (HA) before an ability in the Summary & Pc Screen if it is a hidden ability"))
+                .setSaveConsumer(value -> ModConfig.setEnabled("hidden_ability_indicator", value))
+                .build());
 
         builder.setSavingRunnable(ModConfig::saveConfig);
         return builder.build();

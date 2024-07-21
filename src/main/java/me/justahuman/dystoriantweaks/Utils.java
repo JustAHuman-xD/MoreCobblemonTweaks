@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class Utils {
     public static final Map<String, Boolean> HIDDEN_CACHE = new HashMap<>();
-    public static int currentBox = -1;
+    public static int currentBox = 0;
 
     public static String get(NbtCompound nbt, String key, String def) {
         if (nbt != null && nbt.get(key) instanceof NbtString nbtString) {

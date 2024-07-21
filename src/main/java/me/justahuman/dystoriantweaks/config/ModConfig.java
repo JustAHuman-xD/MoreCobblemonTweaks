@@ -8,7 +8,6 @@ import me.justahuman.dystoriantweaks.DystorianTweaks;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -29,10 +28,12 @@ public class ModConfig {
         DEFAULT_CONFIG.addProperty("enhanced_held_item_lore", true);
         DEFAULT_CONFIG.addProperty("wt_compact_lore", true);
         DEFAULT_CONFIG.addProperty("pc_iv_display", true);
+        DEFAULT_CONFIG.addProperty("open_box_history", true);
         DEFAULT_CONFIG.addProperty("custom_pc_wallpapers", true);
         DEFAULT_CONFIG.addProperty("custom_pc_box_names", true);
         DEFAULT_CONFIG.add("pc_wallpapers", new JsonObject());
         DEFAULT_CONFIG.add("pc_box_names", new JsonObject());
+        DEFAULT_CONFIG.addProperty("hidden_ability_indicator", true);
     }
 
     public static void loadFromFile() {

@@ -9,7 +9,6 @@ import com.cobblemon.mod.common.pokemon.abilities.HiddenAbilityType;
 import me.justahuman.dystoriantweaks.Utils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
@@ -24,6 +23,10 @@ import static me.justahuman.dystoriantweaks.Utils.HIDDEN_CACHE;
 public interface TextMixin {
     @Inject(at = @At("HEAD"), method = "translatable(Ljava/lang/String;)Lnet/minecraft/text/MutableText;", cancellable = true)
     private static void translatable(String key, CallbackInfoReturnable<MutableText> cir) {
+        if (!ModConfig.isEnabled("hidden_ability_indicator")) {
+            return;
+        }
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null || client.currentScreen == null) {
             return;
@@ -70,7 +73,7 @@ public interface TextMixin {
 
     @Inject(at = @At("HEAD"), method = "translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;", cancellable = true)
     private static void translatableArgs(String key, Object[] args, CallbackInfoReturnable<MutableText> cir) {
-        if (key.equals("cobblemon.ui.pc.box.title") && ModConfig.getBoxName(Utils.currentBox) instanceof MutableText text) {
+        if (key.equals("cobblemon.ui.pc.box.title") && ModConfig.isEnabled("custom_pc_box_names") && ModConfig.getBoxName(Utils.currentBox) instanceof MutableText text) {
             cir.setReturnValue(text);
         }
     }
