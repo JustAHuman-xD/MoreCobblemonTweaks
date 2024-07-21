@@ -136,7 +136,7 @@ public class PcEnhancements {
             MinecraftClient client = MinecraftClient.getInstance();
             ClientPlayerEntity player = client.player;
             if (player != null) {
-                client.setScreen(null);
+                MinecraftClient.getInstance().setScreen(new ChatScreen(""));
                 player.sendMessage(Text.literal("Enter new box name: ").formatted(YELLOW, BOLD));
                 DystorianTweaks.addChatConsumer(boxName -> ModConfig.setBoxName(Utils.currentBox, boxName));
             }
