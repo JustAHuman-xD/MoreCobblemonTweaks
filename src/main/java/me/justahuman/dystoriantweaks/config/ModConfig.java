@@ -29,6 +29,7 @@ public class ModConfig {
         DEFAULT_CONFIG.addProperty("wt_compact_lore", true);
         DEFAULT_CONFIG.addProperty("pc_iv_display", true);
         DEFAULT_CONFIG.addProperty("open_box_history", true);
+        DEFAULT_CONFIG.addProperty("pc_search", true);
         DEFAULT_CONFIG.addProperty("custom_pc_wallpapers", true);
         DEFAULT_CONFIG.addProperty("custom_pc_box_names", true);
         DEFAULT_CONFIG.add("pc_wallpapers", new JsonObject());

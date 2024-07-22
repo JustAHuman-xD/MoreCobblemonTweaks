@@ -31,12 +31,18 @@ public abstract class PcGuiMixin extends Screen {
             this.addDrawable(new PcEnhancements.IvWidget(cast()));
         }
 
-        if (ModConfig.isEnabled("custom_pc_wallpapers")) {
-            this.addDrawableChild(new PcEnhancements.WallpaperButton(x + 210, y - 13));
+        boolean wallpapers = ModConfig.isEnabled("custom_pc_wallpapers");
+        if (wallpapers) {
+            this.addDrawableChild(new PcEnhancements.WallpaperButton(x + 243, y - 13));
         }
 
         if (ModConfig.isEnabled("custom_pc_box_names")) {
-            this.addDrawableChild(new PcEnhancements.RenameButton(x + 233, y - 13));
+            this.addDrawableChild(new PcEnhancements.RenameButton(x + (wallpapers ? 220 : 241), y - 13));
+        }
+
+        if (ModConfig.isEnabled("pc_search")) {
+            PcEnhancements.SearchWidget widget = this.addDrawableChild(new PcEnhancements.SearchWidget(x + 104, y - 13));
+            this.addDrawableChild(new PcEnhancements.SearchButton(widget, x + 82, y -13));
         }
     }
 

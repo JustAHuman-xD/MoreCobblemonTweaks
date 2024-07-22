@@ -8,6 +8,8 @@
     "GuiUtilsMixin",
     "ItemStackMixin",
     "PcGuiMixin",
+    "QueenTradeMixin",
+    "StorageSlotMixin",
     "StorageWidgetMixin",
     "TextMixin"
   ],
