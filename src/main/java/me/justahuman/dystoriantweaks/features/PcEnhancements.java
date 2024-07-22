@@ -200,12 +200,12 @@ public class PcEnhancements {
             context.drawTexture(SEARCH_BUTTON_TEXTURE,
                     getX(), getY(),
                     SEARCH_BUTTON_WIDTH,
-                    SEARCH_FIELD_HEIGHT,
+                    BUTTON_HEIGHT,
                     0, 0,
                     SEARCH_BUTTON_WIDTH,
-                    SEARCH_FIELD_HEIGHT,
+                    BUTTON_HEIGHT,
                     SEARCH_BUTTON_WIDTH,
-                    SEARCH_FIELD_HEIGHT
+                    BUTTON_HEIGHT
             );
         }
 
@@ -237,12 +237,12 @@ public class PcEnhancements {
             context.drawTexture(SEARCH_FIELD_TEXTURE,
                     getX() - 4, getY() - 9,
                     SEARCH_FIELD_WIDTH,
-                    BUTTON_HEIGHT,
+                    SEARCH_FIELD_HEIGHT,
                     0, 0,
                     SEARCH_FIELD_WIDTH,
-                    BUTTON_HEIGHT,
+                    SEARCH_FIELD_HEIGHT,
                     SEARCH_FIELD_WIDTH,
-                    BUTTON_HEIGHT
+                    SEARCH_FIELD_HEIGHT
             );
             super.renderButton(context, mouseX, mouseY, delta);
         }
