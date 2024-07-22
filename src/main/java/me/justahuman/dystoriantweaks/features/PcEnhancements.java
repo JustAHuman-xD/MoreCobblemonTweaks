@@ -16,7 +16,6 @@ import me.justahuman.dystoriantweaks.config.ModConfig;
 import me.justahuman.dystoriantweaks.mixins.ChatScreenAccessor;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.ChatScreen;
@@ -25,14 +24,12 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
@@ -225,7 +222,7 @@ public class PcEnhancements {
 
     public static class SearchWidget extends TextFieldWidget {
         public SearchWidget(int x, int y) {
-            super(MinecraftClient.getInstance().textRenderer, x + 4, y + 9, SEARCH_FIELD_WIDTH - 8, SEARCH_FIELD_HEIGHT - 8, Text.empty());
+            super(MinecraftClient.getInstance().textRenderer, x + 4, y + 3, SEARCH_FIELD_WIDTH - 8, SEARCH_FIELD_HEIGHT - 8, Text.empty());
             setVisible(false);
             setDrawsBackground(false);
             setPlaceholder(Text.literal("(Edit me)").formatted(GRAY));
@@ -235,7 +232,7 @@ public class PcEnhancements {
         @Override
         public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
             context.drawTexture(SEARCH_FIELD_TEXTURE,
-                    getX() - 4, getY() - 9,
+                    getX() - 4, getY() - 4,
                     SEARCH_FIELD_WIDTH,
                     SEARCH_FIELD_HEIGHT,
                     0, 0,

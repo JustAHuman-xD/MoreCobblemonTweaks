@@ -41,8 +41,8 @@ public abstract class PcGuiMixin extends Screen {
         }
 
         if (ModConfig.isEnabled("pc_search")) {
-            PcEnhancements.SearchWidget widget = this.addDrawableChild(new PcEnhancements.SearchWidget(x + 104, y - 13));
-            this.addDrawableChild(new PcEnhancements.SearchButton(widget, x + 82, y - 7));
+            PcEnhancements.SearchWidget widget = this.addDrawableChild(new PcEnhancements.SearchWidget(x + 104, y - 7));
+            this.addDrawableChild(new PcEnhancements.SearchButton(widget, x + 82, y - 13));
         }
     }
 
