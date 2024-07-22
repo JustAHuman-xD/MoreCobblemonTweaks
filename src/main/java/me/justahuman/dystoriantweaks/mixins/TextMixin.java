@@ -1,11 +1,8 @@
 package me.justahuman.dystoriantweaks.mixins;
 
-import com.cobblemon.mod.common.api.abilities.Ability;
-import com.cobblemon.mod.common.api.abilities.PotentialAbility;
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
 import com.cobblemon.mod.common.client.gui.summary.Summary;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import com.cobblemon.mod.common.pokemon.abilities.HiddenAbilityType;
 import me.justahuman.dystoriantweaks.Utils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
@@ -16,8 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static me.justahuman.dystoriantweaks.Utils.HIDDEN_CACHE;
 
 @Mixin(Text.class)
 public interface TextMixin {
@@ -39,35 +34,8 @@ public interface TextMixin {
             pokemon = summary.getSelectedPokemon$common();
         }
 
-        if (pokemon == null) {
-            return;
-        }
-
-        Ability ability = pokemon.getAbility();
-        String abilityName = ability.getName();
-
-        if (ability.getDisplayName().equals(key)) {
-            Boolean cache = HIDDEN_CACHE.get(abilityName);
-            if (cache != null) {
-                if (Boolean.TRUE.equals(cache)) {
-                    cir.setReturnValue(Text.literal("(HA) ").append(MutableText.of(new TranslatableTextContent(key, null, TranslatableTextContent.EMPTY_ARGUMENTS))));
-                }
-                return;
-            }
-
-            for (PotentialAbility potentialAbility : pokemon.getForm().getAbilities()) {
-                if (potentialAbility.getTemplate() == ability.getTemplate()) {
-                    if (potentialAbility.getType() == HiddenAbilityType.INSTANCE) {
-                        HIDDEN_CACHE.put(abilityName, true);
-                        cir.setReturnValue(Text.literal("(HA) ").append(MutableText.of(new TranslatableTextContent(key, null, TranslatableTextContent.EMPTY_ARGUMENTS))));
-                        return;
-                    }
-                    HIDDEN_CACHE.put(abilityName, false);
-                    return;
-                }
-            }
-
-            HIDDEN_CACHE.put(abilityName, false);
+        if (pokemon != null && pokemon.getAbility().getDisplayName().equals(key) && Utils.hasHiddenAbility(pokemon)) {
+            cir.setReturnValue(Text.literal("(HA) ").append(MutableText.of(new TranslatableTextContent(key, null, TranslatableTextContent.EMPTY_ARGUMENTS))));
         }
     }
 

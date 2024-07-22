@@ -51,6 +51,7 @@ public class PcEnhancements {
     public static final int WALLPAPER_BUTTON_WIDTH = 19;
     public static final int SEARCH_BUTTON_WIDTH = 20;
     public static final int SEARCH_FIELD_WIDTH = 71;
+    public static final int SEARCH_FIELD_HEIGHT = 12;
     public static final int BUTTON_HEIGHT = 18;
 
     public static class IvWidget implements Drawable {
@@ -199,12 +200,12 @@ public class PcEnhancements {
             context.drawTexture(SEARCH_BUTTON_TEXTURE,
                     getX(), getY(),
                     SEARCH_BUTTON_WIDTH,
-                    BUTTON_HEIGHT,
+                    SEARCH_FIELD_HEIGHT,
                     0, 0,
                     SEARCH_BUTTON_WIDTH,
-                    BUTTON_HEIGHT,
+                    SEARCH_FIELD_HEIGHT,
                     SEARCH_BUTTON_WIDTH,
-                    BUTTON_HEIGHT
+                    SEARCH_FIELD_HEIGHT
             );
         }
 
@@ -224,15 +225,17 @@ public class PcEnhancements {
 
     public static class SearchWidget extends TextFieldWidget {
         public SearchWidget(int x, int y) {
-            super(MinecraftClient.getInstance().textRenderer, x + 4, y + 4, SEARCH_FIELD_WIDTH - 8, BUTTON_HEIGHT - 8, Text.empty());
+            super(MinecraftClient.getInstance().textRenderer, x + 4, y + 9, SEARCH_FIELD_WIDTH - 8, SEARCH_FIELD_HEIGHT - 8, Text.empty());
+            setVisible(false);
             setDrawsBackground(false);
-            setChangedListener(string -> Utils.search = string.toLowerCase(Locale.ROOT));
+            setPlaceholder(Text.literal("(Edit me)").formatted(GRAY));
+            setChangedListener(string -> Utils.search = Utils.Search.of(string));
         }
 
         @Override
         public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
             context.drawTexture(SEARCH_FIELD_TEXTURE,
-                    getX() - 4, getY() - 4,
+                    getX() - 4, getY() - 9,
                     SEARCH_FIELD_WIDTH,
                     BUTTON_HEIGHT,
                     0, 0,

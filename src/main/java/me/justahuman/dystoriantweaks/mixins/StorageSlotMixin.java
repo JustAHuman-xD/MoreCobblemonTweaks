@@ -3,7 +3,6 @@ package me.justahuman.dystoriantweaks.mixins;
 import com.cobblemon.mod.common.client.gui.pc.StorageSlot;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.justahuman.dystoriantweaks.DystorianTweaks;
 import me.justahuman.dystoriantweaks.Utils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import net.minecraft.client.gui.DrawContext;
@@ -12,8 +11,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Locale;
 
 @Mixin(StorageSlot.class)
 public abstract class StorageSlotMixin {
@@ -26,7 +23,7 @@ public abstract class StorageSlotMixin {
             return;
         }
 
-        if (!pokemon.getSpecies().getName().toLowerCase(Locale.ROOT).startsWith(Utils.search)) {
+        if (!Utils.search.passes(pokemon)) {
             RenderSystem.setShaderColor(0.3f, 0.3f, 0.3f, 0.65f);
         }
     }
