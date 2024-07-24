@@ -34,7 +34,6 @@ public class ModConfig {
         DEFAULT_CONFIG.addProperty("custom_pc_box_names", true);
         DEFAULT_CONFIG.add("pc_wallpapers", new JsonObject());
         DEFAULT_CONFIG.add("pc_box_names", new JsonObject());
-        DEFAULT_CONFIG.addProperty("hidden_ability_indicator", true);
     }
 
     public static void loadFromFile() {

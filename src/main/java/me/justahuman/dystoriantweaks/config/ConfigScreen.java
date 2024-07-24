@@ -15,20 +15,26 @@ public class ConfigScreen {
         final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
         final ConfigCategory pcCategory = builder.getOrCreateCategory(Text.literal("Pc Enhancements"));
         final ConfigCategory loreCategory = builder.getOrCreateCategory(Text.literal("Lore Enhancements"));
-        final ConfigCategory otherCategory = builder.getOrCreateCategory(Text.literal("Other Tweaks"));
+        //final ConfigCategory otherCategory = builder.getOrCreateCategory(Text.literal("Other Tweaks"));
 
         /* Pc Config Options */
 
-        pcCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("IV Display"), ModConfig.isEnabled("pc_iv_display"))
+        pcCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Box Search"), ModConfig.isEnabled("pc_search"))
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Adds a small widget to the pc menu showing the iv's of the previewed pokemon."))
-                .setSaveConsumer(value -> ModConfig.setEnabled("pc_iv_display", value))
+                .setTooltip(Text.literal("Adds a button to open/close a search bar"))
+                .setSaveConsumer(value -> ModConfig.setEnabled("pc_search", value))
                 .build());
 
         pcCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Open Box History"), ModConfig.isEnabled("open_box_history"))
                 .setDefaultValue(true)
                 .setTooltip(Text.literal("Should the PC remember and open to the last box you had open?"))
                 .setSaveConsumer(value -> ModConfig.setEnabled("open_box_history", value))
+                .build());
+
+        pcCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("IV Display"), ModConfig.isEnabled("pc_iv_display"))
+                .setDefaultValue(true)
+                .setTooltip(Text.literal("Adds a small widget to the pc menu showing the iv's of the previewed pokemon."))
+                .setSaveConsumer(value -> ModConfig.setEnabled("pc_iv_display", value))
                 .build());
 
         pcCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Custom Box Names"), ModConfig.isEnabled("custom_pc_box_names"))
@@ -77,11 +83,7 @@ public class ConfigScreen {
 
         /* Other Tweaks */
 
-        otherCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Hidden Ability Indicator"), ModConfig.isEnabled("hidden_ability_indicator"))
-                .setDefaultValue(true)
-                .setTooltip(Text.literal("Adds (HA) before an ability in the Summary & Pc Screen if it is a hidden ability"))
-                .setSaveConsumer(value -> ModConfig.setEnabled("hidden_ability_indicator", value))
-                .build());
+        // todo
 
         builder.setSavingRunnable(ModConfig::saveConfig);
         return builder.build();
