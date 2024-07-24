@@ -195,7 +195,19 @@ public class Utils {
                             || pokemon.getMintedNature() == natures.getSERIOUS();
                     case "timid" -> pokemon -> pokemon.getNature() == natures.getTIMID()
                             || pokemon.getMintedNature() == natures.getTIMID();
-                    default -> pokemon -> pokemon.getDisplayName().getString().toLowerCase(Locale.ROOT).contains(query);
+                    default -> pokemon -> {
+                        if (query.startsWith("ability=")) {
+                            return pokemon.getAbility().getDisplayName().toLowerCase(Locale.ROOT).startsWith(query.substring(8));
+                        } else if (query.startsWith("form=")) {
+                            return pokemon.getForm().getName().toLowerCase(Locale.ROOT).startsWith(query.substring(5));
+                        } else if (query.startsWith("knows=")) {
+                            return pokemon.getMoveSet().getMoves().stream().anyMatch(move -> move.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(query.substring(6)));
+                        } else if (query.startsWith("learns=")) {
+                            return pokemon.getAllAccessibleMoves().stream().anyMatch(move -> move.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(query.substring(7)));
+                        } else {
+                            return pokemon.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(query);
+                        }
+                    };
                 };
 
                 if (searchOption != null) {

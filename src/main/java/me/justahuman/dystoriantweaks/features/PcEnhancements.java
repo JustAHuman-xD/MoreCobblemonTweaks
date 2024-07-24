@@ -48,7 +48,7 @@ public class PcEnhancements {
     public static final int WALLPAPER_BUTTON_WIDTH = 19;
     public static final int SEARCH_BUTTON_WIDTH = 20;
     public static final int SEARCH_FIELD_WIDTH = 71;
-    public static final int SEARCH_FIELD_HEIGHT = 12;
+    public static final int SEARCH_FIELD_HEIGHT = 13;
     public static final int BUTTON_HEIGHT = 18;
 
     public static class IvWidget implements Drawable {
