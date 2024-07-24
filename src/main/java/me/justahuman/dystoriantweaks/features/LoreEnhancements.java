@@ -133,8 +133,8 @@ public class LoreEnhancements {
 
     public static void enhanceConsumablesLore(Item item, List<Text> newLore) {
         if (item instanceof MintItem mint) {
-            newLore.add(Text.literal("When used on a Pokémon, it changes the effect of a Pokémon's Nature on its stats to that of the %s Nature.".formatted(Text.translatable(mint.getNature().getDisplayName()).getString())).formatted(GRAY));
-            newLore.add(Text.literal("This does not change the Pokémon's actual Nature.").formatted(GRAY));
+            newLore.add(Text.literal("Changes the stat effect of a Pokémon's Nature to %s.".formatted(Text.translatable(mint.getNature().getDisplayName()).getString())).formatted(GRAY));
+            newLore.add(Text.literal("Note: This does not change the Pokémon's actual Nature.").formatted(GRAY));
         } else if (item instanceof FeatherItem feather) {
             evFeather(newLore, feather.getStat().getDisplayName().getString());
         } else if (item instanceof VitaminItem vitamin) {
@@ -188,7 +188,8 @@ public class LoreEnhancements {
 
             List<String> lines = null;
             if (item == STICKY_BARB) {
-                lines = List.of("Damages the holder by 1/8 of the holder's maximum HP at the end of each turn.", "If a Pokémon with no held item hits the holder with a contact move, the Sticky Barb is transferred to the attacker.");
+                lines = List.of("Damages the holder by 1/8 of the holder's maximum HP at the end of each turn.",
+                        "If a Pokémon with no held item hits the holder with a contact move, the Sticky Barb is transferred to the attacker.");
             }
 
             if (line != null) {
