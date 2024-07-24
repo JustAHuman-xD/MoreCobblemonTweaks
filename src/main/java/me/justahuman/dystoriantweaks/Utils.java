@@ -10,6 +10,7 @@ import net.minecraft.nbt.NbtDouble;
 import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.NbtShort;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.text.Text;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -197,7 +198,7 @@ public class Utils {
                             || pokemon.getMintedNature() == natures.getTIMID();
                     default -> pokemon -> {
                         if (query.startsWith("ability=")) {
-                            return pokemon.getAbility().getDisplayName().toLowerCase(Locale.ROOT).startsWith(query.substring(8));
+                            return Text.translatable(pokemon.getAbility().getDisplayName()).getString().toLowerCase(Locale.ROOT).startsWith(query.substring(8));
                         } else if (query.startsWith("form=")) {
                             return pokemon.getForm().getName().toLowerCase(Locale.ROOT).startsWith(query.substring(5));
                         } else if (query.startsWith("knows=")) {
