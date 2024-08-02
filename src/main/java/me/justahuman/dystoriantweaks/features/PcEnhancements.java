@@ -29,7 +29,9 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
@@ -37,6 +39,7 @@ import static net.minecraft.util.Formatting.*;
 
 public class PcEnhancements {
     public static final Map<String, Identifier> POSSIBLE_WALLPAPER_TEXTURES = new HashMap<>();
+    public static final List<Integer> BOX_ORDER = new ArrayList<>();
     public static final Identifier IV_WIDGET_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/iv_display.png");
     public static final Identifier RENAME_BUTTON_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/rename_button.png");
     public static final Identifier WALLPAPER_BUTTON_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/wallpaper_button.png");
@@ -151,6 +154,30 @@ public class PcEnhancements {
         }
     }
 
+    public static class RenameWidget extends TextFieldWidget {
+        public RenameWidget(int x, int y) {
+            super(MinecraftClient.getInstance().textRenderer, x, y, 1, 1, Text.empty());
+            setVisible(false);
+            setDrawsBackground(false);
+            setPlaceholder(Text.literal("(New Name)").formatted(GRAY));
+        }
+
+        @Override
+        public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+            context.drawTexture(SEARCH_FIELD_TEXTURE,
+                    getX() - 4, getY() - 4,
+                    SEARCH_FIELD_WIDTH,
+                    SEARCH_FIELD_HEIGHT,
+                    0, 0,
+                    SEARCH_FIELD_WIDTH,
+                    SEARCH_FIELD_HEIGHT,
+                    SEARCH_FIELD_WIDTH,
+                    SEARCH_FIELD_HEIGHT
+            );
+            super.renderButton(context, mouseX, mouseY, delta);
+        }
+    }
+
     public static class WallpaperButton extends ClickableWidget {
         public WallpaperButton(int x, int y) {
             super(x, y, WALLPAPER_BUTTON_WIDTH, BUTTON_HEIGHT, Text.empty());
@@ -181,6 +208,10 @@ public class PcEnhancements {
             MinecraftClient.getInstance().setScreen(chatScreen);
             ((ChatScreenAccessor) chatScreen).getChatField().setText("/setWallpaper ");
         }
+    }
+
+    public static class WallpaperWidget {
+
     }
 
     public static class SearchButton extends ClickableWidget {
@@ -274,5 +305,14 @@ public class PcEnhancements {
                             ModConfig.setBoxTexture(Utils.currentBox, wallpaper);
                             return 1;
                         })));
+    }
+
+    public static int getBoxIndex(int box) {
+        if (BOX_ORDER.size() <= box) {
+            for (int i = BOX_ORDER.size(); i <= box; i++) {
+                BOX_ORDER.add(i);
+            }
+        }
+        return BOX_ORDER.indexOf(box);
     }
 }

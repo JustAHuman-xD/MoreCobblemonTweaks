@@ -13,8 +13,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public interface TextMixin {
     @Inject(at = @At("HEAD"), method = "translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;", cancellable = true)
     private static void translatableArgs(String key, Object[] args, CallbackInfoReturnable<MutableText> cir) {
-        if (key.equals("cobblemon.ui.pc.box.title") && ModConfig.isEnabled("custom_pc_box_names") && ModConfig.getBoxName(Utils.currentBox) instanceof MutableText text) {
-            cir.setReturnValue(text);
+        if (key.equals("cobblemon.ui.pc.box.title") && args.length == 1) {
+            if (ModConfig.isEnabled("custom_pc_box_names") && ModConfig.getBoxName(Utils.currentBox) instanceof MutableText text){
+                cir.setReturnValue(text);
+            }
         }
     }
 }

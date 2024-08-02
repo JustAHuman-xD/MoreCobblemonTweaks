@@ -8,6 +8,8 @@
     "GuiUtilsMixin",
     "ItemStackMixin",
     "PcGuiMixin",
+    "PcPositionAccessor",
+    "PcPositionMixin",
     "QueenTradeMixin",
     "StorageSlotMixin",
     "StorageWidgetMixin",
