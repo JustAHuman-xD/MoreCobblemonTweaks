@@ -21,7 +21,6 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
         super(MinecraftClient.getInstance(), 174, 155, y, y + 155, ENTRY_HEIGHT);
         this.button = button;
         centerListVertically = false;
-        setRenderSelection(false);
         setRenderBackground(false);
         setRenderHeader(false, 0);
         setRenderHorizontalShadows(false);
@@ -85,7 +84,7 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             if (hovered) {
-                context.drawTooltip(MinecraftClient.getInstance().textRenderer, Text.of("\"" + name + "\""), mouseX, mouseY);
+                context.drawText(MinecraftClient.getInstance().textRenderer, "\"" + name + "\"", mouseX, mouseY, 0xFFFFFF, false);
                 RenderSystem.disableBlend();
                 context.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
             }

@@ -1,6 +1,5 @@
 package me.justahuman.dystoriantweaks.features.pc.search;
 
-import com.cobblemon.mod.common.CobblemonSounds;
 import me.justahuman.dystoriantweaks.utils.CustomButton;
 import me.justahuman.dystoriantweaks.utils.Textures;
 import me.justahuman.dystoriantweaks.utils.Utils;

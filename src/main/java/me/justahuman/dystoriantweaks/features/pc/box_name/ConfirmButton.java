@@ -1,6 +1,5 @@
 package me.justahuman.dystoriantweaks.features.pc.box_name;
 
-import com.cobblemon.mod.common.CobblemonSounds;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import me.justahuman.dystoriantweaks.features.pc.search.SearchButton;
 import me.justahuman.dystoriantweaks.features.pc.wallpaper.WallpaperButton;
@@ -20,7 +19,7 @@ public class ConfirmButton extends CustomButton {
     @Override
     public void onClick(double mouseX, double mouseY) {
         handleSibling(RenameWidget.class, widget -> {
-            ModConfig.setBoxName(Utils.currentBox, widget.getText().replace('&', '§'));
+            ModConfig.setBoxName(Utils.currentBox, widget.getText());
             widget.setText("");
             widget.setFocused(false);
             widget.setVisible(false);

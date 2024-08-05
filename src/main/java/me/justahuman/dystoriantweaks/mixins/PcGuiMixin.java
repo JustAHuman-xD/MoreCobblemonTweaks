@@ -58,14 +58,13 @@ public abstract class PcGuiMixin extends Screen {
         if (ModConfig.isEnabled("custom_pc_box_names")) {
             siblings.add(this.addDrawableChild(new CancelButton(x + 243, y - 13, siblings)));
             siblings.add(this.addDrawableChild(new ConfirmButton(x + 222, y - 13, siblings)));
-            siblings.add(this.addDrawableChild(new RenameWidget(x + 149, y - 7)));
+            siblings.add(this.addDrawableChild(new RenameWidget(x + 106, y - 13)));
             siblings.add(this.addDrawableChild(new RenameButton(x + (wallpapers ? 220 : 241), y - 13, siblings)));
         }
 
         if (ModConfig.isEnabled("pc_search")) {
-            SearchWidget widget = this.addDrawableChild(new SearchWidget(x + 104, y - 7));
             siblings.add(this.addDrawableChild(new SearchButton(x + 82, y - 13, siblings)));
-            siblings.add(widget);
+            siblings.add(this.addDrawableChild(new SearchWidget(x + 104, y - 13)));
         }
     }
 

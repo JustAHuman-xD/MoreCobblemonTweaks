@@ -1,11 +1,9 @@
 package me.justahuman.dystoriantweaks.features.pc.wallpaper;
 
-import com.cobblemon.mod.common.CobblemonSounds;
 import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import me.justahuman.dystoriantweaks.mixins.StorageWidgetAccessor;
 import me.justahuman.dystoriantweaks.utils.CustomButton;
 import me.justahuman.dystoriantweaks.utils.Textures;
-import me.justahuman.dystoriantweaks.utils.Utils;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.text.Text;
