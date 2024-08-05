@@ -2,7 +2,7 @@ package me.justahuman.dystoriantweaks.mixins;
 
 import com.cobblemon.mod.common.api.gui.GuiUtilsKt;
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
-import me.justahuman.dystoriantweaks.Utils;
+import me.justahuman.dystoriantweaks.utils.Utils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;

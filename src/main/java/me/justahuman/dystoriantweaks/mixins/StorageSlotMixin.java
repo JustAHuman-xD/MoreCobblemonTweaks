@@ -1,19 +1,23 @@
 package me.justahuman.dystoriantweaks.mixins;
 
 import com.cobblemon.mod.common.client.gui.pc.StorageSlot;
+import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.justahuman.dystoriantweaks.Utils;
+import me.justahuman.dystoriantweaks.utils.Utils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import net.minecraft.client.gui.DrawContext;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StorageSlot.class)
 public abstract class StorageSlotMixin {
+    @Shadow(remap = false) @Final private StorageWidget parent;
     @Shadow(remap = false) public abstract Pokemon getPokemon();
 
     @Inject(at = @At("HEAD"), method = "render")
@@ -25,6 +29,13 @@ public abstract class StorageSlotMixin {
 
         if (!Utils.search.passes(pokemon)) {
             RenderSystem.setShaderColor(0.3f, 0.3f, 0.3f, 0.65f);
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "isHovered", remap = false, cancellable = true)
+    public void isHovered(int mouseX, int mouseY, CallbackInfoReturnable<Boolean> cir) {
+        if (!this.parent.visible) {
+            cir.setReturnValue(false);
         }
     }
 }

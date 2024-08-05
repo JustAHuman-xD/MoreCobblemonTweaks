@@ -1,4 +1,4 @@
-package me.justahuman.dystoriantweaks;
+package me.justahuman.dystoriantweaks.utils;
 
 import com.cobblemon.mod.common.api.pokemon.Natures;
 import com.cobblemon.mod.common.api.types.ElementalTypes;
@@ -86,6 +86,10 @@ public class Utils {
         }
 
         public static Search of(String search) {
+            if (search == null || search.isBlank()) {
+                return null;
+            }
+
             search = search.toLowerCase(Locale.ROOT).trim();
             String[] options = search.split(" ");
             Set<SearchPredicate> searchOptions = new HashSet<>();

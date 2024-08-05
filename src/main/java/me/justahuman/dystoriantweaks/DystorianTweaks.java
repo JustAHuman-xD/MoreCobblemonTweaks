@@ -3,6 +3,7 @@ package me.justahuman.dystoriantweaks;
 import com.mojang.logging.LogUtils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import me.justahuman.dystoriantweaks.features.PcEnhancements;
+import me.justahuman.dystoriantweaks.utils.Textures;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
@@ -30,11 +31,11 @@ public class DystorianTweaks implements ClientModInitializer {
             @Override
             public void reload(ResourceManager manager) {
                 ModConfig.loadFromFile();
-                PcEnhancements.POSSIBLE_WALLPAPER_TEXTURES.clear();
+                Textures.POSSIBLE_WALLPAPER_TEXTURES.clear();
                 for (Identifier wallpaper : manager.findAllResources("textures/gui/pc/wallpapers", identifier -> true).keySet()) {
                     String path = wallpaper.getPath();
                     String shortName = path.substring(path.lastIndexOf('/') + 1, path.indexOf('.'));
-                    PcEnhancements.POSSIBLE_WALLPAPER_TEXTURES.put(shortName, wallpaper);
+                    Textures.POSSIBLE_WALLPAPER_TEXTURES.put(shortName, wallpaper);
                 }
             }
         });

@@ -4,9 +4,12 @@ import com.cobblemon.mod.common.client.gui.pc.PCGUI;
 import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import com.cobblemon.mod.common.client.storage.ClientPC;
 import com.cobblemon.mod.common.client.storage.ClientParty;
-import me.justahuman.dystoriantweaks.Utils;
+import me.justahuman.dystoriantweaks.utils.Utils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +17,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(StorageWidget.class)
-public abstract class StorageWidgetMixin {
+public abstract class StorageWidgetMixin extends ClickableWidget {
+    private StorageWidgetMixin(int x, int y, int width, int height, Text message) {
+        super(x, y, width, height, message);
+    }
+
     @Shadow(remap = false) private int box;
 
     @Shadow(remap = false) public abstract void setBox(int value);
@@ -29,5 +36,12 @@ public abstract class StorageWidgetMixin {
     @Inject(at = @At("HEAD"), method = "renderButton")
     public void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         Utils.currentBox = this.box;
+    }
+
+    @Inject(at = @At("HEAD"), method = "onStorageSlotClicked", remap = false, cancellable = true)
+    public void clickSlot(ButtonWidget button, CallbackInfo ci) {
+        if (!this.visible) {
+            ci.cancel();
+        }
     }
 }

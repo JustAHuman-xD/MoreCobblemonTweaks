@@ -8,7 +8,7 @@ import com.cobblemon.mod.common.item.interactive.MintItem;
 import com.cobblemon.mod.common.item.interactive.PPUpItem;
 import com.cobblemon.mod.common.item.interactive.VitaminItem;
 import com.cobblemon.mod.common.item.interactive.ability.AbilityChangeItem;
-import me.justahuman.dystoriantweaks.Utils;
+import me.justahuman.dystoriantweaks.utils.Utils;
 import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;

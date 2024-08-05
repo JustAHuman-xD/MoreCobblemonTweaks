@@ -88,7 +88,7 @@ public class ModConfig {
 
         JsonObject serverBoxes = INTERNAL_CONFIG.get("pc_box_names") instanceof JsonObject object ? object : new JsonObject();
         JsonObject boxNames = serverBoxes.get(info.address) instanceof JsonObject object ? object : new JsonObject();
-        if (name.equals(Text.translatable("cobblemon.ui.pc.box.title", box + 1, null).getString())) {
+        if (name == null || name.isBlank()) {
             boxNames.remove(String.valueOf(box));
         } else {
             boxNames.addProperty(String.valueOf(box), name);
