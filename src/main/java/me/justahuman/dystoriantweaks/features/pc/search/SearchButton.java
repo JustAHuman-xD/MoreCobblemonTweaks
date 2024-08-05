@@ -24,7 +24,7 @@ public class SearchButton extends CustomButton {
                 return;
             }
             widget.setVisible(true);
-            Utils.search = Utils.Search.of(widget.getText());
+            Utils.search = Search.of(widget.getText());
         });
     }
 }

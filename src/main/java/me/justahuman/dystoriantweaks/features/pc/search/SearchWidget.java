@@ -12,6 +12,6 @@ public class SearchWidget extends CustomTextField {
         setVisible(false);
         setDrawsBackground(false);
         setPlaceholder(Text.literal("No Search Provided").formatted(GRAY));
-        setChangedListener(string -> Utils.search = Utils.Search.of(string));
+        setChangedListener(string -> Utils.search = Search.of(string));
     }
 }
