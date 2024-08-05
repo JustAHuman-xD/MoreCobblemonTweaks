@@ -1,9 +1,11 @@
 package me.justahuman.dystoriantweaks.features.pc.box_name;
 
+import com.cobblemon.mod.common.CobblemonSounds;
 import me.justahuman.dystoriantweaks.features.pc.search.SearchButton;
 import me.justahuman.dystoriantweaks.features.pc.wallpaper.WallpaperButton;
 import me.justahuman.dystoriantweaks.utils.CustomButton;
 import me.justahuman.dystoriantweaks.utils.Textures;
+import me.justahuman.dystoriantweaks.utils.Utils;
 import net.minecraft.client.gui.Drawable;
 
 import java.util.Set;

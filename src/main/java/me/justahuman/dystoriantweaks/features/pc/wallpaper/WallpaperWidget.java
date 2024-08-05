@@ -1,5 +1,6 @@
 package me.justahuman.dystoriantweaks.features.pc.wallpaper;
 
+import com.cobblemon.mod.common.CobblemonSounds;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import me.justahuman.dystoriantweaks.utils.Textures;
@@ -40,6 +41,16 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
     }
 
     @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.isMouseOver(mouseX, mouseY) && getFocused() != null) {
+            Utils.playSound(CobblemonSounds.PC_CLICK);
+            getFocused().mouseClicked(mouseX, mouseY, button);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         if (visible) {
             super.render(context, mouseX, mouseY, delta);
@@ -65,7 +76,6 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
     public class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> {
         protected final String name;
         protected final Identifier wallpaper;
-        protected boolean hovered = false;
 
         public Entry(String name, Identifier wallpaper) {
             this.name = name;
@@ -74,13 +84,10 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
 
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            this.hovered = hovered;
             if (hovered) {
+                context.drawTooltip(MinecraftClient.getInstance().textRenderer, Text.of("\"" + name + "\""), mouseX, mouseY);
                 RenderSystem.disableBlend();
                 context.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
-            } else {
-                RenderSystem.enableBlend();
-                context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             }
 
             context.drawTexture(wallpaper,
@@ -91,15 +98,15 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
                     Textures.WALLPAPER_HEIGHT,
                     Textures.WALLPAPER_WIDTH,
                     Textures.WALLPAPER_HEIGHT);
+
+            RenderSystem.enableBlend();
+            context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (hovered) {
-                ModConfig.setBoxTexture(Utils.currentBox, this.wallpaper);
-                WallpaperWidget.this.button.onClick(mouseX, mouseY);
-                return true;
-            }
+            ModConfig.setBoxTexture(Utils.currentBox, this.wallpaper);
+            WallpaperWidget.this.button.onClick(mouseX, mouseY);
             return false;
         }
 

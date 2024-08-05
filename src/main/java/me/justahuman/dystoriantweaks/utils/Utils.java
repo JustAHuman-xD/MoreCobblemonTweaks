@@ -4,12 +4,15 @@ import com.cobblemon.mod.common.api.pokemon.Natures;
 import com.cobblemon.mod.common.api.types.ElementalTypes;
 import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtDouble;
 import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.NbtShort;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 
 import java.util.HashSet;
@@ -21,6 +24,10 @@ public class Utils {
     public static int currentBox = 0;
     public static boolean allBoxes = false;
     public static Search search = null;
+
+    public static void playSound(SoundEvent sound) {
+        MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(sound, 1.0F));
+    }
 
     public static String get(NbtCompound nbt, String key, String def) {
         if (nbt != null && nbt.get(key) instanceof NbtString nbtString) {

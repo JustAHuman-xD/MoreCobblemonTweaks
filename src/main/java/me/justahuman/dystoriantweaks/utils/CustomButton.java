@@ -1,9 +1,12 @@
 package me.justahuman.dystoriantweaks.utils;
 
+import com.cobblemon.mod.common.CobblemonSounds;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -40,6 +43,11 @@ public abstract class CustomButton extends ClickableWidget {
 
     @Override
     protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
+
+    @Override
+    public void playDownSound(SoundManager soundManager) {
+        soundManager.play(PositionedSoundInstance.master(CobblemonSounds.PC_CLICK, 1.0F));
+    }
 
     protected <T> void handleSibling(Class<T> clazz, Consumer<T> consumer) {
         for (Drawable sibling : siblings) {

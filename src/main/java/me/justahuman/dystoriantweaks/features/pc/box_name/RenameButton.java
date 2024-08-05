@@ -1,5 +1,6 @@
 package me.justahuman.dystoriantweaks.features.pc.box_name;
 
+import com.cobblemon.mod.common.CobblemonSounds;
 import me.justahuman.dystoriantweaks.features.pc.search.SearchButton;
 import me.justahuman.dystoriantweaks.features.pc.search.SearchWidget;
 import me.justahuman.dystoriantweaks.features.pc.wallpaper.WallpaperButton;
@@ -29,8 +30,6 @@ public class RenameButton extends CustomButton {
         handleSibling(SearchButton.class, button -> button.setVisible(false));
         handleSibling(SearchWidget.class, widget -> {
             widget.setVisible(false);
-            widget.setFocused(false);
-            widget.active = false;
             Utils.search = null;
         });
     }

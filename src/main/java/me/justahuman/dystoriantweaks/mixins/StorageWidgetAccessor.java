@@ -7,5 +7,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(StorageWidget.class)
 public interface StorageWidgetAccessor {
     @Invoker(value = "resetSelected", remap = false)
-    void resetSelected();
+    void resetSelectedInvoker();
 }

@@ -1,12 +1,12 @@
 package me.justahuman.dystoriantweaks.features.pc.wallpaper;
 
+import com.cobblemon.mod.common.CobblemonSounds;
 import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import me.justahuman.dystoriantweaks.mixins.StorageWidgetAccessor;
 import me.justahuman.dystoriantweaks.utils.CustomButton;
 import me.justahuman.dystoriantweaks.utils.Textures;
 import me.justahuman.dystoriantweaks.utils.Utils;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.text.Text;
 
@@ -21,10 +21,12 @@ public class WallpaperButton extends CustomButton {
     @Override
     public void onClick(double mouseX, double mouseY) {
         handleSibling(WallpaperWidget.class, widget -> {
+            handleSibling(StorageWidget.class, storageWidget -> {
+                storageWidget.visible = widget.visible;
+                storageWidget.active = widget.visible;
+            });
+            handleSibling(StorageWidgetAccessor.class, StorageWidgetAccessor::resetSelectedInvoker);
             widget.setVisible(!widget.visible);
-            handleSibling(StorageWidget.class, storageWidget -> storageWidget.visible = !widget.visible);
-            handleSibling(StorageWidgetAccessor.class, StorageWidgetAccessor::resetSelected);
         });
-        Utils.allBoxes = Screen.hasControlDown();
     }
 }
