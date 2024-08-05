@@ -7,7 +7,6 @@ import com.cobblemon.mod.common.client.storage.ClientParty;
 import me.justahuman.dystoriantweaks.utils.Utils;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StorageWidget.class)
 public abstract class StorageWidgetMixin extends ClickableWidget {
@@ -38,10 +38,10 @@ public abstract class StorageWidgetMixin extends ClickableWidget {
         Utils.currentBox = this.box;
     }
 
-    @Inject(at = @At("HEAD"), method = "onStorageSlotClicked", remap = false, cancellable = true)
-    public void clickSlot(ButtonWidget button, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "mouseClicked", cancellable = true)
+    public void mouseClicked(double pMouseX, double pMouseY, int pButton, CallbackInfoReturnable<Boolean> cir) {
         if (!this.visible) {
-            ci.cancel();
+            cir.setReturnValue(false);
         }
     }
 }

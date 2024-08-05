@@ -1,8 +1,10 @@
 package me.justahuman.dystoriantweaks.utils;
 
 import com.cobblemon.mod.common.api.pokemon.Natures;
+import com.cobblemon.mod.common.api.types.ElementalType;
 import com.cobblemon.mod.common.api.types.ElementalTypes;
 import com.cobblemon.mod.common.pokemon.Gender;
+import com.cobblemon.mod.common.pokemon.Nature;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -115,111 +117,48 @@ public class Utils {
                     case "male" -> pokemon -> pokemon.getGender() != Gender.FEMALE;
                     case "female" -> pokemon -> pokemon.getGender() != Gender.MALE;
                     case "genderless" -> pokemon -> pokemon.getGender() == Gender.GENDERLESS;
-                    case "bug" -> pokemon -> pokemon.getPrimaryType() == types.getBUG()
-                            || pokemon.getSecondaryType() == types.getBUG();
-                    case "dark" -> pokemon -> pokemon.getPrimaryType() == types.getDARK()
-                            || pokemon.getSecondaryType() == types.getDARK();
-                    case "dragon" -> pokemon -> pokemon.getPrimaryType() == types.getDRAGON()
-                            || pokemon.getSecondaryType() == types.getDRAGON();
-                    case "electric" -> pokemon -> pokemon.getPrimaryType() == types.getELECTRIC()
-                            || pokemon.getSecondaryType() == types.getELECTRIC();
-                    case "fairy" -> pokemon -> pokemon.getPrimaryType() == types.getFAIRY()
-                            || pokemon.getSecondaryType() == types.getFAIRY();
-                    case "fighting" -> pokemon -> pokemon.getPrimaryType() == types.getFIGHTING()
-                            || pokemon.getSecondaryType() == types.getFIGHTING();
-                    case "fire" -> pokemon -> pokemon.getPrimaryType() == types.getFIRE()
-                            || pokemon.getSecondaryType() == types.getFIRE();
-                    case "flying" -> pokemon -> pokemon.getPrimaryType() == types.getFLYING()
-                            || pokemon.getSecondaryType() == types.getFLYING();
-                    case "ghost" -> pokemon -> pokemon.getPrimaryType() == types.getGHOST()
-                            || pokemon.getSecondaryType() == types.getGHOST();
-                    case "grass" -> pokemon -> pokemon.getPrimaryType() == types.getGRASS()
-                            || pokemon.getSecondaryType() == types.getGRASS();
-                    case "ground" -> pokemon -> pokemon.getPrimaryType() == types.getGROUND()
-                            || pokemon.getSecondaryType() == types.getGROUND();
-                    case "ice" -> pokemon -> pokemon.getPrimaryType() == types.getICE()
-                            || pokemon.getSecondaryType() == types.getICE();
-                    case "normal" -> pokemon -> pokemon.getPrimaryType() == types.getNORMAL()
-                            || pokemon.getSecondaryType() == types.getNORMAL();
-                    case "poison" -> pokemon -> pokemon.getPrimaryType() == types.getPOISON()
-                            || pokemon.getSecondaryType() == types.getPOISON();
-                    case "psychic" -> pokemon -> pokemon.getPrimaryType() == types.getPSYCHIC()
-                            || pokemon.getSecondaryType() == types.getPSYCHIC();
-                    case "rock" -> pokemon -> pokemon.getPrimaryType() == types.getROCK()
-                            || pokemon.getSecondaryType() == types.getROCK();
-                    case "steel" -> pokemon -> pokemon.getPrimaryType() == types.getSTEEL()
-                            || pokemon.getSecondaryType() == types.getSTEEL();
-                    case "water" -> pokemon -> pokemon.getPrimaryType() == types.getWATER()
-                            || pokemon.getSecondaryType() == types.getWATER();
                     case "holding" -> pokemon -> !pokemon.heldItem().isEmpty();
                     case "tradeable" -> Pokemon::getTradeable;
                     case "fainted" -> Pokemon::isFainted;
                     case "legendary" -> Pokemon::isLegendary;
                     case "mythical" -> Pokemon::isMythical;
                     case "ultrabeast", "ultra_beast" -> Pokemon::isUltraBeast;
-                    case "adamant" -> pokemon -> pokemon.getNature() == natures.getADAMANT()
-                            || pokemon.getMintedNature() == natures.getADAMANT();
-                    case "bashful" -> pokemon -> pokemon.getNature() == natures.getBASHFUL()
-                            || pokemon.getMintedNature() == natures.getBASHFUL();
-                    case "bold" -> pokemon -> pokemon.getNature() == natures.getBOLD()
-                            || pokemon.getMintedNature() == natures.getBOLD();
-                    case "brave" -> pokemon -> pokemon.getNature() == natures.getBRAVE()
-                            || pokemon.getMintedNature() == natures.getBRAVE();
-                    case "calm" -> pokemon -> pokemon.getNature() == natures.getCALM()
-                            || pokemon.getMintedNature() == natures.getCALM();
-                    case "careful" -> pokemon -> pokemon.getNature() == natures.getCAREFUL()
-                            || pokemon.getMintedNature() == natures.getCAREFUL();
-                    case "docile" -> pokemon -> pokemon.getNature() == natures.getDOCILE()
-                            || pokemon.getMintedNature() == natures.getDOCILE();
-                    case "gentle" -> pokemon -> pokemon.getNature() == natures.getGENTLE()
-                            || pokemon.getMintedNature() == natures.getGENTLE();
-                    case "hardy" -> pokemon -> pokemon.getNature() == natures.getHARDY()
-                            || pokemon.getMintedNature() == natures.getHARDY();
-                    case "hasty" -> pokemon -> pokemon.getNature() == natures.getHASTY()
-                            || pokemon.getMintedNature() == natures.getHASTY();
-                    case "impish" -> pokemon -> pokemon.getNature() == natures.getIMPISH()
-                            || pokemon.getMintedNature() == natures.getIMPISH();
-                    case "jolly" -> pokemon -> pokemon.getNature() == natures.getJOLLY()
-                            || pokemon.getMintedNature() == natures.getJOLLY();
-                    case "lax" -> pokemon -> pokemon.getNature() == natures.getLAX()
-                            || pokemon.getMintedNature() == natures.getLAX();
-                    case "lonely" -> pokemon -> pokemon.getNature() == natures.getLONELY()
-                            || pokemon.getMintedNature() == natures.getLONELY();
-                    case "mild" -> pokemon -> pokemon.getNature() == natures.getMILD()
-                            || pokemon.getMintedNature() == natures.getMILD();
-                    case "modest" -> pokemon -> pokemon.getNature() == natures.getMODEST()
-                            || pokemon.getMintedNature() == natures.getMODEST();
-                    case "naive" -> pokemon -> pokemon.getNature() == natures.getNAIVE()
-                            || pokemon.getMintedNature() == natures.getNAIVE();
-                    case "naughty" -> pokemon -> pokemon.getNature() == natures.getNAUGHTY()
-                            || pokemon.getMintedNature() == natures.getNAUGHTY();
-                    case "quiet" -> pokemon -> pokemon.getNature() == natures.getQUIET()
-                            || pokemon.getMintedNature() == natures.getQUIET();
-                    case "quirky" -> pokemon -> pokemon.getNature() == natures.getQUIRKY()
-                            || pokemon.getMintedNature() == natures.getQUIRKY();
-                    case "rash" -> pokemon -> pokemon.getNature() == natures.getRASH()
-                            || pokemon.getMintedNature() == natures.getRASH();
-                    case "relaxed" -> pokemon -> pokemon.getNature() == natures.getRELAXED()
-                            || pokemon.getMintedNature() == natures.getRELAXED();
-                    case "sassy" -> pokemon -> pokemon.getNature() == natures.getSASSY()
-                            || pokemon.getMintedNature() == natures.getSASSY();
-                    case "serious" -> pokemon -> pokemon.getNature() == natures.getSERIOUS()
-                            || pokemon.getMintedNature() == natures.getSERIOUS();
-                    case "timid" -> pokemon -> pokemon.getNature() == natures.getTIMID()
-                            || pokemon.getMintedNature() == natures.getTIMID();
-                    default -> pokemon -> {
-                        if (query.startsWith("ability=")) {
-                            return Text.translatable(pokemon.getAbility().getDisplayName()).getString().toLowerCase(Locale.ROOT).startsWith(query.substring(8));
-                        } else if (query.startsWith("form=")) {
-                            return pokemon.getForm().getName().toLowerCase(Locale.ROOT).startsWith(query.substring(5));
-                        } else if (query.startsWith("knows=")) {
-                            return pokemon.getMoveSet().getMoves().stream().anyMatch(move -> move.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(query.substring(6)));
-                        } else if (query.startsWith("learns=")) {
-                            return pokemon.getAllAccessibleMoves().stream().anyMatch(move -> move.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(query.substring(7)));
-                        } else {
-                            return pokemon.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(query);
+                    default -> {
+                        Nature nature = natures.getNature(query);
+                        if (nature != null) {
+                            yield pokemon -> pokemon.getNature() == nature || pokemon.getMintedNature() == nature;
                         }
-                    };
+
+                        ElementalType type = types.get(query);
+                        if (type != null) {
+                            yield pokemon -> {
+                                for (ElementalType pokemonType : pokemon.getTypes()) {
+                                    if (pokemonType == type) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            };
+                        }
+
+                        if (query.startsWith("ability=")) {
+                            String ability = query.substring(8);
+                            yield pokemon -> Text.translatable(pokemon.getAbility().getDisplayName()).getString().toLowerCase(Locale.ROOT).startsWith(ability);
+                        } else if (query.startsWith("form=")) {
+                            String form = query.substring(5);
+                            yield pokemon -> pokemon.getForm().getName().toLowerCase(Locale.ROOT).startsWith(form);
+                        } else if (query.startsWith("knows=")) {
+                            String move = query.substring(6);
+                            yield pokemon -> pokemon.getMoveSet().getMoves().stream().anyMatch(pokemonMove
+                                    -> pokemonMove.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(move));
+                        } else if (query.startsWith("learns=")) {
+                            String move = query.substring(7);
+                            yield pokemon -> pokemon.getAllAccessibleMoves().stream().anyMatch(pokemonMove
+                                    -> pokemonMove.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(move));
+                        } else {
+                            yield pokemon -> pokemon.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(query);
+                        }
+                    }
                 };
 
                 if (searchOption != null) {

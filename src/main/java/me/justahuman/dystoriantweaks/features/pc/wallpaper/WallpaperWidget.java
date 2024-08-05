@@ -11,6 +11,8 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.Map;
+
 public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidget.Entry> {
     protected static final int ENTRY_WIDTH = 156;
     protected static final int ENTRY_HEIGHT = 142;
@@ -29,7 +31,7 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
 
     public void setVisible(boolean visible) {
         if (visible) {
-            for (var entry : Textures.POSSIBLE_WALLPAPER_TEXTURES.entrySet()) {
+            for (Map.Entry<String, Identifier> entry : Textures.POSSIBLE_WALLPAPER_TEXTURES.entrySet()) {
                 addEntry(new Entry(entry.getKey(), entry.getValue()));
             }
             this.visible = true;
@@ -41,9 +43,9 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isMouseOver(mouseX, mouseY) && getFocused() != null) {
+        if (isMouseOver(mouseX, mouseY) && getHoveredEntry() != null) {
             Utils.playSound(CobblemonSounds.PC_CLICK);
-            getFocused().mouseClicked(mouseX, mouseY, button);
+            getHoveredEntry().mouseClicked(mouseX, mouseY, button);
             return true;
         }
         return false;
@@ -84,7 +86,7 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             if (hovered) {
-                context.drawText(MinecraftClient.getInstance().textRenderer, "\"" + name + "\"", mouseX, mouseY, 0xFFFFFF, false);
+                context.drawTooltip(MinecraftClient.getInstance().textRenderer, Text.of(name), x, y);
                 RenderSystem.disableBlend();
                 context.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
             }
