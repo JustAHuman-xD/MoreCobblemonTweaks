@@ -1,13 +1,17 @@
 package me.justahuman.dystoriantweaks.features.pc.wallpaper;
 
+import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.CobblemonSounds;
+import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.justahuman.dystoriantweaks.config.ModConfig;
 import me.justahuman.dystoriantweaks.utils.Textures;
 import me.justahuman.dystoriantweaks.utils.Utils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -86,7 +90,10 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             if (hovered) {
-                context.drawTooltip(MinecraftClient.getInstance().textRenderer, Text.of(name), x, y);
+                TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+                if (y + textRenderer.fontHeight + 2 > WallpaperWidget.this.top) {
+                    context.drawTooltip(textRenderer, Text.of(name), x, y + textRenderer.fontHeight + 2);
+                }
                 RenderSystem.disableBlend();
                 context.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
             }
@@ -107,6 +114,15 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
             ModConfig.setBoxTexture(Utils.currentBox, this.wallpaper);
+            ClientPlayerEntity player = WallpaperWidget.this.client.player;
+            if (Utils.allBoxes && player != null) {
+                try {
+                    int boxes = Cobblemon.INSTANCE.getStorage().getPC(player.getUuid()).getBoxes().size();
+                    for (int i = 0; i < boxes; i++) {
+                        ModConfig.setBoxTexture(i, wallpaper);
+                    }
+                } catch (NoPokemonStoreException ignored) {}
+            }
             WallpaperWidget.this.button.onClick(mouseX, mouseY);
             return false;
         }

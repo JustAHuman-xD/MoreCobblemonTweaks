@@ -16,6 +16,7 @@ import net.minecraft.nbt.NbtShort;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -124,21 +125,23 @@ public class Utils {
                     case "mythical" -> Pokemon::isMythical;
                     case "ultrabeast", "ultra_beast" -> Pokemon::isUltraBeast;
                     default -> {
-                        Nature nature = natures.getNature(query);
-                        if (nature != null) {
-                            yield pokemon -> pokemon.getNature() == nature || pokemon.getMintedNature() == nature;
-                        }
+                        if (Identifier.isValid(query)) {
+                            Nature nature = natures.getNature(query);
+                            if (nature != null) {
+                                yield pokemon -> pokemon.getNature() == nature || pokemon.getMintedNature() == nature;
+                            }
 
-                        ElementalType type = types.get(query);
-                        if (type != null) {
-                            yield pokemon -> {
-                                for (ElementalType pokemonType : pokemon.getTypes()) {
-                                    if (pokemonType == type) {
-                                        return true;
+                            ElementalType type = types.get(query);
+                            if (type != null) {
+                                yield pokemon -> {
+                                    for (ElementalType pokemonType : pokemon.getTypes()) {
+                                        if (pokemonType == type) {
+                                            return true;
+                                        }
                                     }
-                                }
-                                return false;
-                            };
+                                    return false;
+                                };
+                            }
                         }
 
                         if (query.startsWith("ability=")) {
