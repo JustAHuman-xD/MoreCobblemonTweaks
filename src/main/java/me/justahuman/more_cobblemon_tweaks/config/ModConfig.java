@@ -118,7 +118,7 @@ public class ModConfig {
         }
 
         return wallpapers.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
-                ? new Identifier(primitive.getAsString())
+                ? new Identifier(primitive.getAsString().replace("dystoriantweaks:", "more_cobblemon_tweaks:"))
                 : null;
     }
 
