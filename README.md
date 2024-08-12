@@ -1,12 +1,12 @@
-# DystorianTweaks
-A simple client sided mod for use on the Cobblemon Dystoria server!
+# MoreCobblemonTweaks
+more_cobblemon_tweaks
 
 # Config
-- All of the features listed in the section below can be indivudally tweaked in the mod's config. You can change them in the config file itself located in `configs/dystorian_tweaks.json` or if mod menu & cloth config are installed, by using the in game editor (recommended) 
+- All of the features listed in the section below can be indivudally tweaked in the mod's config. You can change them in the config file itself located in `configs/more_cobblemon_tweaks.json` or if mod menu & cloth config are installed, by using the in game editor (recommended) 
 
 # Features
 - Enhanced Item Lore
-  - Enhanced Egg Lore
+  - Enhanced Egg Lore (Hulis)
     - Eggs will now show the gender, shiny status, hatch status, ivs and more in the lore of the item!
       ![Screenshot of egg tooltip](https://cdn.modrinth.com/data/cached_images/4a6c64576bd6d13c8cd078b92b8286eec11e02b3.png)
   - Enhanced Berry Lore
@@ -25,6 +25,9 @@ A simple client sided mod for use on the Cobblemon Dystoria server!
     - ![Screenshot of open PC](https://cdn.modrinth.com/data/cached_images/d996f9e83662834be11e9c04fabd410958e12ce1.png)
   - Open Box History
     - When opening the PC it will open to the box you last had open
+  - PC Search
+    - Adds a search button on the top left that opens a search field allowing you to search & filter through your pokemon!
+    - ![Screenshot of the search open]()
   - Custom Box Names
     - Adds a new button on the top right of the PC that will prompt you to rename the current box!
     - ![Screenshot of open PC with box title of The Bestest Box](https://cdn.modrinth.com/data/cached_images/d3d037dca877251521ac4f25f3ba8dd9f00af454.png)

@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.justahuman.more_cobblemon_tweaks.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "GuiUtilsMixin",
+    "ItemStackMixin",
+    "PcGuiMixin",
+    "PcPositionMixin",
+    "QueenTradeMixin",
+    "StorageSlotMixin",
+    "StorageWidgetAccessor",
+    "StorageWidgetMixin",
+    "TextMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
