@@ -2,6 +2,7 @@ package me.justahuman.more_cobblemon_tweaks.mixins;
 
 import com.cobblemon.mod.common.api.gui.GuiUtilsKt;
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
+import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import net.minecraft.client.MinecraftClient;
@@ -18,7 +19,7 @@ public abstract class GuiUtilsMixin {
     @Unique
     private static final String BOX_OLD_TEXTURE = "textures/gui/pc/pc_screen_overlay.png";
     @Unique
-    private static final Identifier DEFAULT_TEXTURE = new Identifier("dystoriantweaks", "textures/gui/pc/wallpapers/default_wallpaper.png");
+    private static final Identifier DEFAULT_TEXTURE = new Identifier(MoreCobblemonTweaks.MOD_ID, "textures/gui/pc/wallpapers/default_wallpaper.png");
 
     @Inject(at = @At("HEAD"), method = "blitk", cancellable = true)
     private static void blitk(MatrixStack matrixStack, Identifier texture, Number x, Number y, Number height, Number width, Number uOffset, Number vOffset, Number textureWidth, Number textureHeight, Number blitOffset, Number red, Number green, Number blue, Number alpha, boolean blend, float scale, CallbackInfo ci) {
