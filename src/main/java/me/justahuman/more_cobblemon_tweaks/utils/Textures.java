@@ -1,5 +1,6 @@
 package me.justahuman.more_cobblemon_tweaks.utils;
 
+import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class Textures {
     public static final Identifier TEXT_FIELD_TEXTURE = new Identifier(MOD_ID, "textures/gui/pc/text_field.png");
     public static final Identifier CANCEL_BUTTON_TEXTURE = new Identifier(MOD_ID, "textures/gui/pc/cancel_button.png");
     public static final Identifier CONFIRM_BUTTON_TEXTURE = new Identifier(MOD_ID, "textures/gui/pc/confirm_button.png");
+    public static final Identifier WALLPAPER_DEFAULT_TEXTURE = new Identifier(MoreCobblemonTweaks.MOD_ID, "textures/gui/pc/wallpapers/default_wallpaper.png");
     public static final int IV_WIDGET_WIDTH = 52;
     public static final int IV_WIDGET_HEIGHT = 98;
     public static final int RENAME_BUTTON_WIDTH = 21;

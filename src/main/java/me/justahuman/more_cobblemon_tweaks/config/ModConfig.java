@@ -5,9 +5,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
+import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -16,6 +18,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks.MOD_ID;
 
@@ -23,6 +27,8 @@ public class ModConfig {
     private static final Gson GSON = new Gson().newBuilder().setPrettyPrinting().create();
     public static final JsonObject INTERNAL_CONFIG = new JsonObject();
     public static final JsonObject DEFAULT_CONFIG = new JsonObject();
+    private static final Map<Integer, Text> BOX_NAME_CACHE = new HashMap<>();
+    private static final Map<Integer, Identifier> WALLPAPER_CACHE = new HashMap<>();
     static {
         DEFAULT_CONFIG.addProperty("enhanced_egg_lore", true);
         DEFAULT_CONFIG.addProperty("enhanced_berry_lore", true);
@@ -40,6 +46,8 @@ public class ModConfig {
 
     public static void loadFromFile() {
         INTERNAL_CONFIG.asMap().clear();
+        WALLPAPER_CACHE.clear();
+        BOX_NAME_CACHE.clear();
 
         try (final FileReader reader = new FileReader(getConfigFile())) {
             if (JsonParser.parseReader(reader) instanceof JsonObject jsonObject) {
@@ -62,8 +70,14 @@ public class ModConfig {
     }
 
     public static Text getBoxName(int box) {
+        Text cache = BOX_NAME_CACHE.get(box);
+        if (cache != null) {
+            return cache;
+        }
+
         JsonObject serverBoxes = INTERNAL_CONFIG.get("pc_box_names") instanceof JsonObject object ? object : null;
         if (serverBoxes == null) {
+            BOX_NAME_CACHE.put(box, ScreenTexts.EMPTY);
             return null;
         }
 
@@ -74,12 +88,15 @@ public class ModConfig {
 
         JsonObject boxNames = serverBoxes.get(info.address) instanceof JsonObject object ? object : null;
         if (boxNames == null) {
+            BOX_NAME_CACHE.put(box, ScreenTexts.EMPTY);
             return null;
         }
 
-        return boxNames.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
+        Text name = boxNames.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
                 ? Text.literal(primitive.getAsString()).formatted(Formatting.BOLD)
-                : null;
+                : ScreenTexts.EMPTY;
+        BOX_NAME_CACHE.put(box, name);
+        return name;
     }
 
     public static void setBoxName(int box, String name) {
@@ -97,14 +114,20 @@ public class ModConfig {
         }
         serverBoxes.add(info.address, boxNames);
         INTERNAL_CONFIG.add("pc_box_names", serverBoxes);
-
-        saveConfig();
+        BOX_NAME_CACHE.put(box, Text.literal(name).formatted(Formatting.BOLD));
+        saveConfig(false);
     }
 
     public static Identifier getBoxTexture(int box) {
+        Identifier cache = WALLPAPER_CACHE.get(box);
+        if (cache != null) {
+            return cache;
+        }
+
         JsonObject pcWallpapers = INTERNAL_CONFIG.get("pc_wallpapers") instanceof JsonObject object ? object : null;
         if (pcWallpapers == null) {
-            return null;
+            WALLPAPER_CACHE.put(box, Textures.WALLPAPER_DEFAULT_TEXTURE);
+            return Textures.WALLPAPER_DEFAULT_TEXTURE;
         }
 
         ServerInfo info = MinecraftClient.getInstance().getCurrentServerEntry();
@@ -114,12 +137,15 @@ public class ModConfig {
 
         JsonObject wallpapers = pcWallpapers.get(info.address) instanceof JsonObject object ? object : null;
         if (wallpapers == null) {
-            return null;
+            WALLPAPER_CACHE.put(box, Textures.WALLPAPER_DEFAULT_TEXTURE);
+            return Textures.WALLPAPER_DEFAULT_TEXTURE;
         }
 
-        return wallpapers.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
+        Identifier wallpaper = wallpapers.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
                 ? new Identifier(primitive.getAsString().replace("dystoriantweaks:", "more_cobblemon_tweaks:"))
-                : null;
+                : Textures.WALLPAPER_DEFAULT_TEXTURE;
+        WALLPAPER_CACHE.put(box, wallpaper);
+        return wallpaper;
     }
 
     public static void setBoxTexture(int box, Identifier texture) {
@@ -133,11 +159,20 @@ public class ModConfig {
         wallpapers.addProperty(String.valueOf(box), texture.toString());
         pcWallpapers.add(info.address, wallpapers);
         INTERNAL_CONFIG.add("pc_wallpapers", pcWallpapers);
-
-        saveConfig();
+        WALLPAPER_CACHE.put(box, texture);
+        saveConfig(false);
     }
 
     public static void saveConfig() {
+        saveConfig(true);
+    }
+
+    public static void saveConfig(boolean resetCache) {
+        if (resetCache) {
+            BOX_NAME_CACHE.clear();
+            WALLPAPER_CACHE.clear();
+        }
+
         try (final FileWriter fileWriter = new FileWriter(getConfigFile())) {
             GSON.toJson(INTERNAL_CONFIG, fileWriter);
             fileWriter.flush();

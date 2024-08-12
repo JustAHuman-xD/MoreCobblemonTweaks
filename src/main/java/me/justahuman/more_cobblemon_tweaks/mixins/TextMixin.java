@@ -2,6 +2,7 @@ package me.justahuman.more_cobblemon_tweaks.mixins;
 
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,9 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public interface TextMixin {
     @Inject(at = @At("HEAD"), method = "translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/text/MutableText;", cancellable = true)
     private static void translatableArgs(String key, Object[] args, CallbackInfoReturnable<MutableText> cir) {
-        if (args.length == 1 && key.equals("cobblemon.ui.pc.box.title")) {
-            if (ModConfig.isEnabled("custom_pc_box_names") && ModConfig.getBoxName(Utils.currentBox) instanceof MutableText text){
-                cir.setReturnValue(text);
+        if (args.length == 1 && key.equals("cobblemon.ui.pc.box.title") && ModConfig.isEnabled("custom_pc_box_names")) {
+            Text text = ModConfig.getBoxName(Utils.currentBox);
+            if (text instanceof MutableText mutable && text != ScreenTexts.EMPTY) {
+                cir.setReturnValue(mutable);
             }
         }
     }
