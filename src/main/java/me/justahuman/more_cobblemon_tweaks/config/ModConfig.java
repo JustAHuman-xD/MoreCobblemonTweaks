@@ -109,12 +109,13 @@ public class ModConfig {
         JsonObject boxNames = serverBoxes.get(info.address) instanceof JsonObject object ? object : new JsonObject();
         if (name == null || name.isBlank()) {
             boxNames.remove(String.valueOf(box));
+            BOX_NAME_CACHE.put(box, ScreenTexts.EMPTY);
         } else {
             boxNames.addProperty(String.valueOf(box), name);
+            BOX_NAME_CACHE.put(box, Text.literal(name).formatted(Formatting.BOLD));
         }
         serverBoxes.add(info.address, boxNames);
         INTERNAL_CONFIG.add("pc_box_names", serverBoxes);
-        BOX_NAME_CACHE.put(box, Text.literal(name).formatted(Formatting.BOLD));
         saveConfig(false);
     }
 

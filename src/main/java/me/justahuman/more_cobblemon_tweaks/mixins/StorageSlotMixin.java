@@ -23,11 +23,11 @@ public abstract class StorageSlotMixin {
     @Inject(at = @At("HEAD"), method = "render")
     public void renderSlotHead(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         Pokemon pokemon = this.getPokemon();
-        if (pokemon == null || Utils.search == null || !ModConfig.isEnabled("pc_search")) {
+        if (pokemon == null) {
             return;
         }
 
-        if (!Utils.search.passes(pokemon)) {
+        if (Utils.search != null && ModConfig.isEnabled("pc_search") && !Utils.search.passes(pokemon)) {
             RenderSystem.setShaderColor(0.3f, 0.3f, 0.3f, 0.65f);
         }
     }
