@@ -51,9 +51,9 @@ public class ConfigScreen {
 
         /* Lore Config Options */
 
-        loreCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Enhanced Egg Lore (Hulis)"), ModConfig.isEnabled("enhanced_egg_lore"))
+        loreCategory.addEntry(entryBuilder.startBooleanToggle(Text.literal("Enhanced Egg Lore"), ModConfig.isEnabled("enhanced_egg_lore"))
                 .setDefaultValue(true)
-                .setTooltip(Text.literal("Adds the results of /eggstats directly to a Pokemon Egg's lore."))
+                .setTooltip(Text.literal("Adds lore describing various information about the pokemon contained in an egg."))
                 .setSaveConsumer(value -> ModConfig.setEnabled("enhanced_egg_lore", value))
                 .build());
 

@@ -7,7 +7,7 @@ Formerly called `DystorianTweaks` but rebranded as the scope of the mod expanded
 
 # Features
 - Enhanced Item Lore
-  - Enhanced Egg Lore (Hulis)
+  - Enhanced Egg Lore (Supports: HulisCobblebreeding, Cobbbreeding, and BetterBreeding)
     - Eggs will now show the gender, shiny status, hatch status, ivs and more in the lore of the item!
     - ![Screenshot of egg tooltip](https://cdn.modrinth.com/data/cached_images/4a6c64576bd6d13c8cd078b92b8286eec11e02b3.png)
   - Enhanced Berry Lore

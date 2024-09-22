@@ -12,6 +12,8 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.sound.SoundEvent;
 
 public class Utils {
+    public static final String POLYMER_ITEM_ID = "Polymer$itemId";
+    public static final String POLYMER_NBT_TAG = "Polymer$itemTag";
     public static int currentBox = 0;
     public static boolean allBoxes = false;
     public static Search search = null;

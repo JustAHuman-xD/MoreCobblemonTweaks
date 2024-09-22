@@ -2,12 +2,18 @@ package me.justahuman.more_cobblemon_tweaks.mixins;
 
 import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
+import me.justahuman.more_cobblemon_tweaks.features.egg.BetterBreedingIntegration;
+import me.justahuman.more_cobblemon_tweaks.features.egg.CobBreedingIntegration;
+import me.justahuman.more_cobblemon_tweaks.features.egg.HulisIntegration;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,12 +41,19 @@ public abstract class ItemStackMixin {
         }
 
         final Item item = getItem();
+        final String itemId = Registries.ITEM.getId(item).toString();
         final List<Text> lore = cir.getReturnValue();
         final List<Text> newLore = new ArrayList<>();
         final String polymerItem = nbt.get("Polymer$itemId") instanceof NbtString nbtString ? nbtString.asString() : null;
         final NbtCompound customData = nbt.get("Polymer$itemTag") instanceof NbtCompound compound ? compound : null;
-        if (ModConfig.isEnabled("enhanced_egg_lore") && "huliscobblebreeding:pokemonegg".equals(polymerItem) && customData != null) {
-            LoreEnhancements.enhanceEggLore(lore, newLore, customData);
+        if (ModConfig.isEnabled("enhanced_egg_lore")) {
+            if (HulisIntegration.POLYMER_ID.equals(polymerItem) && customData != null) {
+                LoreEnhancements.enhanceEggLore(lore, newLore, new HulisIntegration(nbt));
+            } else if (CobBreedingIntegration.ITEM_ID.equals(itemId)) {
+                LoreEnhancements.enhanceEggLore(lore, newLore, new CobBreedingIntegration(nbt));
+            } else if (item == Items.TURTLE_EGG && nbt.contains("species", NbtElement.STRING_TYPE)) {
+                LoreEnhancements.enhanceEggLore(lore, newLore, new BetterBreedingIntegration(nbt));
+            }
         }
 
         if (ModConfig.isEnabled("enhanced_berry_lore")) {

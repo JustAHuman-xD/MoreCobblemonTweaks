@@ -8,10 +8,9 @@ import com.cobblemon.mod.common.item.interactive.MintItem;
 import com.cobblemon.mod.common.item.interactive.PPUpItem;
 import com.cobblemon.mod.common.item.interactive.VitaminItem;
 import com.cobblemon.mod.common.item.interactive.ability.AbilityChangeItem;
-import me.justahuman.more_cobblemon_tweaks.utils.Utils;
+import me.justahuman.more_cobblemon_tweaks.features.egg.EnhancedEggLore;
 import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -24,13 +23,13 @@ public class LoreEnhancements {
     private static final Set<Item> TYPE_GEMS = Set.of(NORMAL_GEM, FIRE_GEM, WATER_GEM, GRASS_GEM, ELECTRIC_GEM, ICE_GEM, FIGHTING_GEM,
             POISON_GEM, GROUND_GEM, FLYING_GEM, PSYCHIC_GEM, BUG_GEM, ROCK_GEM, GHOST_GEM, DRAGON_GEM, DARK_GEM, STEEL_GEM, FAIRY_GEM);
 
-    public static void enhanceEggLore(List<Text> lore, List<Text> newLore, NbtCompound customData) {
-        Text name = lore.get(0);
-        final boolean shiny = Utils.get(customData, "Shiny", false);
+    public static void enhanceEggLore(List<Text> lore, List<Text> newLore, EnhancedEggLore enhancedEggLore) {
+        Text name = enhancedEggLore.getName(lore);
+        final boolean shiny = enhancedEggLore.isShiny();
         if (shiny) {
             name = name.copy().append(Text.literal(" ★").formatted(YELLOW, BOLD));
         }
-        final String gender = Utils.get(customData, "Gender", "NONE");
+        final String gender = enhancedEggLore.getGender();
         if (gender.equals("MALE") || gender.equals("FEMALE")) {
             boolean male = gender.equals("MALE");
             name = name.copy().append(Text.literal(male ? " ♂" : " ♀")
@@ -38,25 +37,17 @@ public class LoreEnhancements {
         }
         lore.set(0, name);
 
-        final int cycles = Utils.get(customData, "currentEggCycle", -1);
-        final double steps = Utils.get(customData, "stepsLeftInCycle", -1d);
+        final List<Text> hatchProgress = enhancedEggLore.getHatchProgress();
         boolean spacer = false;
 
-        if (cycles != -1) {
-            newLore.add(Text.literal("Egg Cycles Remaining: ").formatted(GREEN)
-                    .append(Text.literal(String.valueOf(cycles)).formatted(WHITE)));
-            spacer = true;
-        }
-        if (steps != -1) {
-            newLore.add(Text.literal("Steps Left: ").formatted(AQUA)
-                    .append(Text.literal(String.valueOf(Math.round(steps))).formatted(WHITE)));
+        if (hatchProgress != null && !hatchProgress.isEmpty()) {
+            newLore.addAll(hatchProgress);
             spacer = true;
         }
 
-        String nature = Utils.get(customData, "Nature", "");
-        NbtCompound ability = customData.get("Ability") instanceof NbtCompound compound ? compound : null;
-        String abilityName = Utils.get(ability, "AbilityName", "");
-        String form = Utils.get(customData, "FormId", "");
+        String nature = enhancedEggLore.getNature();
+        String abilityName = enhancedEggLore.getAbility();
+        String form = enhancedEggLore.getForm();
         if ((!nature.isBlank() || !abilityName.isBlank() || !form.isBlank()) && spacer) {
             newLore.add(Text.literal(" "));
             spacer = false;
@@ -83,14 +74,13 @@ public class LoreEnhancements {
             spacer = true;
         }
 
-        NbtCompound ivs = customData.get("IVs") instanceof NbtCompound compound ? compound : null;
-        if (ivs != null) {
-            short hp = Utils.get(ivs, "hp", (short) -1);
-            short attack = Utils.get(ivs, "attack", (short) -1);
-            short defense = Utils.get(ivs, "defence", (short) -1);
-            short spAttack = Utils.get(ivs, "special_attack", (short) -1);
-            short spDefense = Utils.get(ivs, "special_defence", (short) -1);
-            short speed = Utils.get(ivs, "speed", (short) -1);
+        if (enhancedEggLore.hasIVs()) {
+            short hp = enhancedEggLore.getHpIV();
+            short attack = enhancedEggLore.getAtkIV();
+            short defense = enhancedEggLore.getDefIV();
+            short spAttack = enhancedEggLore.getSpAtkIV();
+            short spDefense = enhancedEggLore.getSpDefIV();
+            short speed = enhancedEggLore.getSpeedIV();
 
             if (spacer) {
                 newLore.add(Text.literal(" "));
