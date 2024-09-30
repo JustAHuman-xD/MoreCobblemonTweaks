@@ -2,6 +2,7 @@ package me.justahuman.more_cobblemon_tweaks.features.egg;
 
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies;
 import com.cobblemon.mod.common.pokemon.Species;
+import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
@@ -36,7 +37,7 @@ public class BetterBreedingIntegration extends CobBreedingIntegration{
         if (ticks != -1) {
             int minutes = (int) Math.floor(ticks / 1200d);
             int seconds = (int) Math.floor((ticks % 1200) / 20d);
-            return List.of(Text.of("Time Remaining: " + minutes + "m " + seconds + "s"));
+            return List.of(LoreEnhancements.translate("egg.better_breeding.hatch_progress", minutes, seconds));
         }
         return null;
     }

@@ -14,13 +14,13 @@ public class RenameWidget extends CustomTextField {
         super(x, y);
         setVisible(false);
         setDrawsBackground(false);
-        setPlaceholder(Text.literal("Box " + (Utils.currentBox + 1)).formatted(GRAY));
+        setPlaceholder(Text.translatable("cobblemon.ui.pc.box.title", Utils.currentBox + 1).formatted(GRAY));
     }
 
     @Override
     public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
         if (boxPlaceholder != Utils.currentBox) {
-            setPlaceholder(Text.literal("Box " + (Utils.currentBox + 1)).formatted(GRAY));
+            setPlaceholder(Text.translatable("cobblemon.ui.pc.box.title", Utils.currentBox + 1).formatted(GRAY));
             boxPlaceholder = Utils.currentBox;
         }
         super.renderButton(context, mouseX, mouseY, delta);

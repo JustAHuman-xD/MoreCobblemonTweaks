@@ -4,12 +4,18 @@ import com.mojang.logging.LogUtils;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
+
+import java.util.List;
+import java.util.Map;
 
 public class MoreCobblemonTweaks implements ClientModInitializer {
     public static final String MOD_ID = "more_cobblemon_tweaks";
@@ -17,6 +23,8 @@ public class MoreCobblemonTweaks implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> ModConfig.clearServerConfig());
+
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public Identifier getFabricId() {
@@ -31,6 +39,18 @@ public class MoreCobblemonTweaks implements ClientModInitializer {
                     String path = wallpaper.getPath();
                     String shortName = path.substring(path.lastIndexOf('/') + 1, path.indexOf('.'));
                     Textures.POSSIBLE_WALLPAPER_TEXTURES.put(shortName, wallpaper);
+                }
+
+                for (Map.Entry<Identifier, Resource> entry : manager.findResources("config/", identifier -> identifier.getPath().equals("config/" + MOD_ID + ".json")).entrySet()) {
+                    Resource resource = entry.getValue();
+                    try {
+                        ModConfig.loadServerConfig(resource.getReader());
+                    } catch (Exception e) {
+                        LOGGER.error("Failed to load server config file \"{}\" from pack \"{}\"",
+                                entry.getKey(), resource.getResourcePackName());
+                        LOGGER.error("Error: ", e);
+                    }
+                    break;
                 }
             }
         });

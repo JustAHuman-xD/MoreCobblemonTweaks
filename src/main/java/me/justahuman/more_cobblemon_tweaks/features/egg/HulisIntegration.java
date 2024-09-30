@@ -1,8 +1,8 @@
 package me.justahuman.more_cobblemon_tweaks.features.egg;
 
+import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -40,11 +40,11 @@ public class HulisIntegration extends EnhancedEggLore {
         final double steps = Utils.get(customData, "stepsLeftInCycle", -1d);
         List<Text> lines = new ArrayList<>();
         if (cycles != -1) {
-            lines.add(Text.literal("Egg Cycles Remaining: ").formatted(GREEN)
+            lines.add(LoreEnhancements.translate("egg.hulis.hatch_progress.cycles").formatted(GREEN)
                     .append(Text.literal(String.valueOf(cycles)).formatted(WHITE)));
         }
         if (steps != -1) {
-            lines.add(Text.literal("Steps Left: ").formatted(AQUA)
+            lines.add(LoreEnhancements.translate("egg.hulis.hatch_progress.steps").formatted(AQUA)
                     .append(Text.literal(String.valueOf(Math.round(steps))).formatted(WHITE)));
         }
         return lines;

@@ -14,6 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -26,11 +27,13 @@ import static me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks.MOD_ID;
 public class ModConfig {
     private static final Gson GSON = new Gson().newBuilder().setPrettyPrinting().create();
     public static final JsonObject INTERNAL_CONFIG = new JsonObject();
+    public static final JsonObject SERVER_CONFIG = new JsonObject();
     public static final JsonObject DEFAULT_CONFIG = new JsonObject();
     private static final Map<Integer, Text> BOX_NAME_CACHE = new HashMap<>();
     private static final Map<Integer, Identifier> WALLPAPER_CACHE = new HashMap<>();
     static {
         DEFAULT_CONFIG.addProperty("enhanced_egg_lore", true);
+        DEFAULT_CONFIG.addProperty("shiny_egg_indicator", true);
         DEFAULT_CONFIG.addProperty("enhanced_berry_lore", true);
         DEFAULT_CONFIG.addProperty("enhanced_consumable_lore", true);
         DEFAULT_CONFIG.addProperty("enhanced_held_item_lore", true);
@@ -59,7 +62,25 @@ public class ModConfig {
         }
     }
 
+    public static void clearServerConfig() {
+        SERVER_CONFIG.asMap().clear();
+    }
+
+    public static void loadServerConfig(BufferedReader reader) {
+        if (JsonParser.parseReader(reader) instanceof JsonObject jsonObject) {
+            jsonObject.entrySet().forEach(entry -> SERVER_CONFIG.add(entry.getKey(), entry.getValue()));
+        }
+    }
+
+    public static boolean serverOverride(String option) {
+        return SERVER_CONFIG.get(option) instanceof JsonPrimitive primitive && primitive.isBoolean();
+    }
+
     public static boolean isEnabled(String option) {
+        if (SERVER_CONFIG.get(option) instanceof JsonPrimitive primitive && primitive.isBoolean()) {
+            return primitive.getAsBoolean();
+        }
+
         return INTERNAL_CONFIG.get(option) instanceof JsonPrimitive primitive && primitive.isBoolean()
                 ? primitive.getAsBoolean()
                 : DEFAULT_CONFIG.get(option).getAsBoolean();

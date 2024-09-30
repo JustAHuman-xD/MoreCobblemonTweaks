@@ -8,9 +8,11 @@ import com.cobblemon.mod.common.item.interactive.MintItem;
 import com.cobblemon.mod.common.item.interactive.PPUpItem;
 import com.cobblemon.mod.common.item.interactive.VitaminItem;
 import com.cobblemon.mod.common.item.interactive.ability.AbilityChangeItem;
+import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.egg.EnhancedEggLore;
 import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.item.Item;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -20,15 +22,17 @@ import static com.cobblemon.mod.common.CobblemonItems.*;
 import static net.minecraft.util.Formatting.*;
 
 public class LoreEnhancements {
+    private static final String BASE_KEY = "more_cobblemon_tweaks.lore_enhancements.";
     private static final Set<Item> TYPE_GEMS = Set.of(NORMAL_GEM, FIRE_GEM, WATER_GEM, GRASS_GEM, ELECTRIC_GEM, ICE_GEM, FIGHTING_GEM,
             POISON_GEM, GROUND_GEM, FLYING_GEM, PSYCHIC_GEM, BUG_GEM, ROCK_GEM, GHOST_GEM, DRAGON_GEM, DARK_GEM, STEEL_GEM, FAIRY_GEM);
 
     public static void enhanceEggLore(List<Text> lore, List<Text> newLore, EnhancedEggLore enhancedEggLore) {
         Text name = enhancedEggLore.getName(lore);
         final boolean shiny = enhancedEggLore.isShiny();
-        if (shiny) {
+        if (ModConfig.isEnabled("shiny_egg_indicator") && shiny) {
             name = name.copy().append(Text.literal(" ★").formatted(YELLOW, BOLD));
         }
+
         final String gender = enhancedEggLore.getGender();
         if (gender.equals("MALE") || gender.equals("FEMALE")) {
             boolean male = gender.equals("MALE");
@@ -57,19 +61,19 @@ public class LoreEnhancements {
             if (nature.contains(":")) {
                 nature = StringUtil.capitalize(nature.substring(nature.indexOf(':') + 1));
             }
-            newLore.add(Text.literal("Nature: ").formatted(YELLOW)
+            newLore.add(translate("egg.nature").formatted(YELLOW)
                     .append(Text.literal(nature).formatted(WHITE)));
             spacer = true;
         }
 
         if (!abilityName.isBlank()) {
-            newLore.add(Text.literal("Ability: ").formatted(GOLD)
+            newLore.add(translate("egg.ability").formatted(GOLD)
                     .append(Text.literal(StringUtil.capitalize(abilityName)).formatted(WHITE)));
             spacer = true;
         }
 
         if (!form.isBlank()) {
-            newLore.add(Text.literal("Form: ").formatted(WHITE)
+            newLore.add(translate("egg.form").formatted(WHITE)
                     .append(Text.literal(StringUtil.capitalize(form))));
             spacer = true;
         }
@@ -87,27 +91,27 @@ public class LoreEnhancements {
             }
 
             if (hp != -1) {
-                newLore.add(Text.literal("HP: ").formatted(RED)
+                newLore.add(translate("egg.iv.hp").formatted(RED)
                         .append(Text.literal(String.valueOf(hp)).formatted(WHITE)));
             }
             if (attack != -1) {
-                newLore.add(Text.literal("Attack: ").formatted(BLUE)
+                newLore.add(translate("egg.iv.attack").formatted(BLUE)
                         .append(Text.literal(String.valueOf(attack)).formatted(WHITE)));
             }
             if (defense != -1) {
-                newLore.add(Text.literal("Defense: ").formatted(GRAY)
+                newLore.add(translate("egg.iv.defense").formatted(GRAY)
                         .append(Text.literal(String.valueOf(defense)).formatted(WHITE)));
             }
             if (spAttack != -1) {
-                newLore.add(Text.literal("Sp. Attack: ").formatted(AQUA)
+                newLore.add(translate("egg.iv.sp_attack").formatted(AQUA)
                         .append(Text.literal(String.valueOf(spAttack)).formatted(WHITE)));
             }
             if (spDefense != -1) {
-                newLore.add(Text.literal("Sp. Defense: ").formatted(YELLOW)
+                newLore.add(translate("egg.iv.sp_defense").formatted(YELLOW)
                         .append(Text.literal(String.valueOf(spDefense)).formatted(WHITE)));
             }
             if (speed != -1) {
-                newLore.add(Text.literal("Speed: ").formatted(GREEN)
+                newLore.add(translate("egg.iv.speed").formatted(GREEN)
                         .append(Text.literal(String.valueOf(speed)).formatted(WHITE)));
             }
         }
@@ -115,39 +119,44 @@ public class LoreEnhancements {
 
     public static void enhanceBerryLore(Item item, List<Text> newLore) {
         if (item instanceof FriendshipRaisingBerryItem friendshipBerry) {
-            evBerry(newLore, friendshipBerry.getStat().getDisplayName().getString());
+            newLore.add(translate("berry.ev", friendshipBerry.getStat().getDisplayName().getString()).formatted(GRAY));
         } else if (item instanceof PPRestoringBerryItem) {
-            newLore.add(Text.literal("Restores a selected move's PP when fed").formatted(GRAY));
+            newLore.add(translate("berry.pp").formatted(GRAY));
         }
     }
 
     public static void enhanceConsumablesLore(Item item, List<Text> newLore) {
         if (item instanceof MintItem mint) {
-            newLore.add(Text.literal("Changes the stat effect of a Pokémon's Nature to %s.".formatted(Text.translatable(mint.getNature().getDisplayName()).getString())).formatted(GRAY));
-            newLore.add(Text.literal("Note: This does not change the Pokémon's actual Nature.").formatted(GRAY));
+            newLore.add(translate("consumable.mint", Text.translatable(mint.getNature().getDisplayName()).getString()).formatted(GRAY));
+            newLore.add(translate("consumable.mint_note").formatted(GRAY));
         } else if (item instanceof FeatherItem feather) {
-            evFeather(newLore, feather.getStat().getDisplayName().getString());
+            newLore.add(translate("consumable.feather", feather.getStat().getDisplayName().getString()).formatted(GRAY));
         } else if (item instanceof VitaminItem vitamin) {
-            evMedicine(newLore, vitamin.getStat().getDisplayName().getString());
+            newLore.add(translate("consumable.vitamin", vitamin.getStat().getDisplayName().getString()).formatted(GRAY));
         } else if (item instanceof PPUpItem) {
             if (item == PP_UP) {
-                newLore.add(Text.literal("Increases the maximum PP of a selected move by 20% it's base PP. Can be stacked 3 times.").formatted(GRAY));
+                newLore.add(translate("consumable.pp_up").formatted(GRAY));
             } else if (item == PP_MAX) {
-                newLore.add(Text.literal("Increases the maximum PP of a selected move to 160% it's base PP."));
+                newLore.add(translate("consumable.pp_max"));
             }
         } else if (item instanceof CandyItem) {
+            String amount = null;
             if (item == EXPERIENCE_CANDY_XS) {
-                expCandy(newLore, "100");
+                amount = "100";
             } else if (item == EXPERIENCE_CANDY_S) {
-                expCandy(newLore, "800");
+                amount = "800";
             } else if (item == EXPERIENCE_CANDY_M) {
-                expCandy(newLore, "3,000");
+                amount = "3,000";
             } else if (item == EXPERIENCE_CANDY_L) {
-                expCandy(newLore, "10,000");
+                amount = "10,000";
             } else if (item == EXPERIENCE_CANDY_XL) {
-                expCandy(newLore, "30,000");
+                amount = "30,000";
             } else if (item == RARE_CANDY) {
-                newLore.add(Text.literal("Increases the Pokémon's level by 1.").formatted(GRAY));
+                newLore.add(translate("consumable.rare_candy").formatted(GRAY));
+            }
+
+            if (amount != null) {
+                newLore.add(translate("consumable.candy", amount).formatted(GRAY));
             }
         }
     }
@@ -155,54 +164,41 @@ public class LoreEnhancements {
     public static void enhanceHeldItemLore(Item item, List<Text> newLore) {
         if (TYPE_GEMS.contains(item)) {
             String type = StringUtil.capitalize(item.toString().replace("_gem", ""));
-            newLore.add(Text.literal("Increases the power of a " + type + " type move by 30%.").formatted(GRAY));
+            newLore.add(translate("held_item.type_gem", type).formatted(GRAY));
             newLore.add(Text.literal(" "));
-            newLore.add(Text.literal("⇢ ").formatted(GRAY).append(Text.literal("Only activates once per battle.").formatted(RED)));
+            newLore.add(Text.literal("⇢ ").formatted(GRAY).append(translate("held_item.type_gem_note").formatted(RED)));
         } else if (item instanceof AbilityChangeItem<?>) {
             if (item == ABILITY_CAPSULE) {
-                newLore.add(Text.literal("Changes the ability of a Pokémon to it's alternative standard ability if possible.").formatted(GRAY));
+                newLore.add(translate("held_item.ability_capsule").formatted(GRAY));
             } else if (item == ABILITY_PATCH) {
-                newLore.add(Text.literal("Changes the ability of a Pokémon to it's hidden ability.").formatted(GRAY));
+                newLore.add(translate("held_item.ability_patch").formatted(GRAY));
             }
         } else {
-            String line = null;
+            String key = null;
             if (item == EJECT_BUTTON) {
-                line = "Causes the holder to switch out if hit by a damaging move. Activates only once per battle.";
+                key = "held_item.eject_button";
             } else if (item == FLOAT_STONE) {
-                line = "Halves the holder's weight to a minimum of 0.1kg.";
+                key = "held_item.float_stone";
             } else if (item == EVIOLITE) {
-                line = "Boosts the holders Defense and Sp. Defense by 50% if they are not fully evolved.";
+                key = "held_item.eviolite";
             } else if (item == WEAKNESS_POLICY) {
-                line = "Raises the holder's Attack and Sp. Attack by two stages when hit by a super-effective move. Activates only once per battle.";
+                key = "held_item.weakness_policy";
             }
 
-            List<String> lines = null;
+            List<String> keys = null;
             if (item == STICKY_BARB) {
-                lines = List.of("Damages the holder by 1/8 of the holder's maximum HP at the end of each turn.",
-                        "If a Pokémon with no held item hits the holder with a contact move, the Sticky Barb is transferred to the attacker.");
+                keys = List.of("held_item.sticky_barb", "held_item.sticky_barb_secondary");
             }
 
-            if (line != null) {
-                newLore.add(Text.literal(line).formatted(GRAY));
-            } else if (lines != null) {
-                newLore.addAll(lines.stream().map(Text::literal).map(text -> text.formatted(GRAY)).toList());
+            if (key != null) {
+                newLore.add(translate(key).formatted(GRAY));
+            } else if (keys != null) {
+                newLore.addAll(keys.stream().map(LoreEnhancements::translate).map(text -> text.formatted(GRAY)).toList());
             }
         }
     }
 
-    private static void evBerry(List<Text> lore, String ev) {
-        lore.add(Text.literal("Decreases the Pokémon's %s EV by 10 (if possible), while raising friendship.".formatted(ev)).formatted(GRAY));
-    }
-
-    private static void evFeather(List<Text> lore, String ev) {
-        lore.add(Text.literal("Increases the Pokémon's %s by 1 if possible.".formatted(ev)).formatted(GRAY));
-    }
-
-    private static void expCandy(List<Text> lore, String amount) {
-        lore.add(Text.literal("Increases a Pokémon's experience by %s when used.".formatted(amount)).formatted(GRAY));
-    }
-
-    private static void evMedicine(List<Text> lore, String ev) {
-        lore.add(Text.literal("Increases the Pokémon's %s EV by 10 if possible.".formatted(ev)).formatted(GRAY));
+    public static MutableText translate(String key, Object... args) {
+        return Text.translatable(BASE_KEY + key, args);
     }
 }
