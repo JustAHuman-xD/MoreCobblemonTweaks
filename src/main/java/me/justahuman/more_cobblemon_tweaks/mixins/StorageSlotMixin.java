@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(StorageSlot.class)
+@Mixin(value = StorageSlot.class, remap = false)
 public abstract class StorageSlotMixin {
-    @Shadow(remap = false) @Final private StorageWidget parent;
-    @Shadow(remap = false) public abstract Pokemon getPokemon();
+    @Shadow @Final private StorageWidget parent;
+    @Shadow public abstract Pokemon getPokemon();
 
-    @Inject(at = @At("HEAD"), method = "render")
-    public void renderSlotHead(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "renderSlot")
+    public void renderSlotHead(DrawContext context, int posX, int posY, float partialTicks, CallbackInfo ci) {
         Pokemon pokemon = this.getPokemon();
         if (pokemon == null) {
             return;
@@ -32,7 +32,7 @@ public abstract class StorageSlotMixin {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "isHovered", remap = false, cancellable = true)
+    @Inject(at = @At("HEAD"), method = "isHovered", cancellable = true)
     public void isHovered(int mouseX, int mouseY, CallbackInfoReturnable<Boolean> cir) {
         if (!this.parent.visible) {
             cir.setReturnValue(false);
