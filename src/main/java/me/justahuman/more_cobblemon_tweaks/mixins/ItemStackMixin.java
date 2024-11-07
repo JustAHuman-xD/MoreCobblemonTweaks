@@ -51,7 +51,7 @@ public abstract class ItemStackMixin {
                 LoreEnhancements.enhanceEggLore(lore, newLore, new HulisIntegration(nbt));
             } else if (CobBreedingIntegration.ITEM_ID.equals(itemId)) {
                 LoreEnhancements.enhanceEggLore(lore, newLore, new CobBreedingIntegration(nbt));
-            } else if (item == Items.TURTLE_EGG && nbt.contains("species", NbtElement.STRING_TYPE)) {
+            } else if (BetterBreedingIntegration.isEgg(nbt)) {
                 LoreEnhancements.enhanceEggLore(lore, newLore, new BetterBreedingIntegration(nbt));
             }
         }

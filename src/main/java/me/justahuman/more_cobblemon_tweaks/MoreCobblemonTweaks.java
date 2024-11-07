@@ -8,8 +8,12 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourcePackManager;
+import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.resource.ResourcePackSource;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -41,16 +45,22 @@ public class MoreCobblemonTweaks implements ClientModInitializer {
                     Textures.POSSIBLE_WALLPAPER_TEXTURES.put(shortName, wallpaper);
                 }
 
-                for (Map.Entry<Identifier, Resource> entry : manager.findResources("config/", identifier -> identifier.getPath().equals("config/" + MOD_ID + ".json")).entrySet()) {
-                    Resource resource = entry.getValue();
-                    try {
-                        ModConfig.loadServerConfig(resource.getReader());
-                    } catch (Exception e) {
-                        LOGGER.error("Failed to load server config file \"{}\" from pack \"{}\"",
-                                entry.getKey(), resource.getResourcePackName());
-                        LOGGER.error("Error: ", e);
+                ResourcePackManager resourcePackManager = MinecraftClient.getInstance().getResourcePackManager();
+                List<String> serverPackIds = resourcePackManager.getProfiles().stream().filter(profile -> profile.getSource() == ResourcePackSource.SERVER).map(ResourcePackProfile::getName).toList();
+                for (Map.Entry<Identifier, List<Resource>> entry : manager.findAllResources("config", identifier -> identifier.getPath().equals("config/" + MOD_ID + ".json")).entrySet()) {
+                    for (Resource resource : entry.getValue()) {
+                        if (!serverPackIds.contains(resource.getResourcePackName())) {
+                            continue;
+                        }
+
+                        try {
+                            ModConfig.loadServerConfig(resource.getReader());
+                        } catch (Exception e) {
+                            LOGGER.error("Failed to load server config file \"{}\" from pack \"{}\"",
+                                    entry.getKey(), resource.getResourcePackName());
+                            LOGGER.error("Error: ", e);
+                        }
                     }
-                    break;
                 }
             }
         });

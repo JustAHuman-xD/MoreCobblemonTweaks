@@ -11,7 +11,7 @@ import java.util.Set;
 public class SearchButton extends CustomButton {
     public SearchButton(int x, int y, Set<Drawable> siblings) {
         super(x, y, Textures.SEARCH_BUTTON_WIDTH, Textures.BUTTON_HEIGHT, Textures.SEARCH_BUTTON_TEXTURE, siblings);
-        setTooltip(PcEnhancements.tooltip("search.tooltip"));
+        setTooltip(PcEnhancements.tooltip("pc_search.tooltip"));
     }
 
     @Override

@@ -5,11 +5,12 @@ import com.cobblemon.mod.common.pokemon.Species;
 import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 
 import java.util.List;
 
-public class BetterBreedingIntegration extends CobBreedingIntegration{
+public class BetterBreedingIntegration extends CobBreedingIntegration {
     public BetterBreedingIntegration(NbtCompound nbt) {
         super(nbt);
     }
@@ -45,5 +46,9 @@ public class BetterBreedingIntegration extends CobBreedingIntegration{
     @Override
     public String getForm() {
         return Utils.get(nbt, "form", "");
+    }
+
+    public static boolean isEgg(NbtCompound nbt) {
+        return nbt.contains("species", NbtElement.STRING_TYPE) && nbt.contains("timer", NbtElement.INT_TYPE);
     }
 }

@@ -20,23 +20,8 @@ repositories {
         url = "https://maven.terraformersmc.com/"
     }
     maven {
-        name = "Jei"
-        url = "https://maven.blamejared.com/"
-    }
-    maven {
         name = "Cloth Config"
         url = "https://maven.shedaniel.me/"
-    }
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = "Modrinth"
-                url = "https://api.modrinth.com/maven"
-            }
-        }
-        filter {
-            includeGroup "maven.modrinth"
-        }
     }
     mavenCentral()
 }
@@ -48,14 +33,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation("com.cobblemon:fabric:${project.cobblemon_version}")
-    modImplementation "maven.modrinth:the-bumblezone-fabric:${project.bumblezone_version}"
-
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
-
-    modImplementation("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}") {
-        exclude(group: "mezz.jei")
-    }
-
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }

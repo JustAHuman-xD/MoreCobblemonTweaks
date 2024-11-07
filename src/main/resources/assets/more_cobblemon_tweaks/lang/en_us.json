@@ -1,5 +1,5 @@
 {
-  "more_cobblemon_tweaks.config.option.overridden_tooltip": "Override by Server",
+  "more_cobblemon_tweaks.config.option.overridden_tooltip": "Overridden by Server",
 
   "more_cobblemon_tweaks.config.option.pc_search": "Box Search",
   "more_cobblemon_tweaks.config.option.pc_search.tooltip": "Adds a button to open/close a search bar.",
@@ -62,7 +62,7 @@
   "more_cobblemon_tweaks.lore_enhancements.consumable.candy": "Increases a Pokémon's experience by %s when used.",
   "more_cobblemon_tweaks.lore_enhancements.consumable.rare_candy": "Increases the Pokémon's level by 1.",
 
-  "more_cobblemon_tweaks.lore_enhancements.held_item.type_gem": "Increases the power of a %s type move by 30%.",
+  "more_cobblemon_tweaks.lore_enhancements.held_item.type_gem": "Increases the power of a %s type move by 30 percent.",
   "more_cobblemon_tweaks.lore_enhancements.held_item.type_gem_note": "Only activates once per battle.",
   "more_cobblemon_tweaks.lore_enhancements.held_item.ability_capsule": "Changes the ability of a Pokémon to it's alternative standard ability if possible.",
   "more_cobblemon_tweaks.lore_enhancements.held_item.ability_patch": "Changes the ability of a Pokémon to it's hidden ability.",

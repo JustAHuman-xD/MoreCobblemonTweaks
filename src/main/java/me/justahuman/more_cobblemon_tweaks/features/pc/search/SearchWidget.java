@@ -11,7 +11,7 @@ public class SearchWidget extends CustomTextField {
         super(x, y);
         setVisible(false);
         setDrawsBackground(false);
-        setPlaceholder(PcEnhancements.translate("search.blank").formatted(GRAY));
+        setPlaceholder(PcEnhancements.translate("pc_search.blank").formatted(GRAY));
         setChangedListener(string -> Utils.search = Search.of(string));
     }
 }
