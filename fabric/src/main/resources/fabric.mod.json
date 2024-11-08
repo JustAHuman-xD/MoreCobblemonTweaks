@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "more_cobblemon_tweaks",
+  "version": "${version}",
+  "name": "MoreCobblemonTweaks",
+  "description": "A qol cobblemon client mod introducing pc box names, wallpapers, and more!",
+  "authors": [ "JustAHuman" ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/more-cobblemon-tweaks",
+    "sources": "https://github.com/JustAHuman-xD/MoreCobblemonTweaks",
+    "issues": "https://github.com/JustAHuman-xD/MoreCobblemonTweaks/issues",
+    "discord": "https://discord.gg/y6fV6pbgHB"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/y6fV6pbgHB"
+      },
+      "update_checker": true
+    }
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/more_cobblemon_tweaks/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaksFabric"
+    ],
+    "modmenu": [
+      "me.justahuman.more_cobblemon_tweaks.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "more_cobblemon_tweaks.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "minecraft": "~1.21",
+    "java": ">=21",
+    "architectury": ">=13.0.2",
+    "fabric-api": "*",
+    "cobblemon": "*"
+  },
+  "suggests": {
+    "cloth-config2": ">=16.0.141"
+  }
+}

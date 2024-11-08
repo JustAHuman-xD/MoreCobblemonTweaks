@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "me.justahuman.more_cobblemon_tweaks.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+    "ItemStackMixin",
+    "PcGuiMixin",
+    "StorageSlotMixin",
+    "StorageWidgetAccessor",
+    "StorageWidgetMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

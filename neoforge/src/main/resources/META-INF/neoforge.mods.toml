@@ -1,0 +1,53 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+issueTrackerURL = "https://github.com/JustAHuman-xD/MoreCobblemonTweaks/issues"
+license = "Insert License Here"
+
+[[mods]]
+modId = "more_cobblemon_tweaks"
+version = "${version}"
+displayName = "MoreCobblemonTweaks"
+authors = "JustAHuman"
+description = '''
+A qol cobblemon client mod introducing pc box names, wallpapers, and more!
+'''
+logoFile = "assets/more_cobblemon_tweaks/icon.png"
+displayURL = "https://github.com/JustAHuman-xD/MoreCobblemonTweaks"
+
+[[dependencies.more_cobblemon_tweaks]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.0,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.more_cobblemon_tweaks]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.more_cobblemon_tweaks]]
+modId = "architectury"
+type = "required"
+versionRange = "[13.0.2,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.more_cobblemon_tweaks]]
+modId = "cobblemon"
+type = "required"
+versionRange = "[1.6.0+1.21.1-HEAD-c75c5e4,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies.more_cobblemon_tweaks]]
+modId = "cloth-config2"
+type = "optional"
+versionRange = "[16.0.141,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[mixins]]
+config = "more_cobblemon_tweaks.mixins.json"
