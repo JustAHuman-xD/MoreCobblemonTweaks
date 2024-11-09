@@ -6,7 +6,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +21,7 @@ public abstract class StorageSlotMixin {
     @Shadow public abstract Pokemon getPokemon();
 
     @Inject(at = @At("HEAD"), method = "renderSlot")
-    public void renderSlotHead(DrawContext context, int posX, int posY, float partialTicks, CallbackInfo ci) {
+    public void renderSlotHead(GuiGraphics context, int posX, int posY, float partialTicks, CallbackInfo ci) {
         Pokemon pokemon = this.getPokemon();
         if (pokemon == null) {
             return;

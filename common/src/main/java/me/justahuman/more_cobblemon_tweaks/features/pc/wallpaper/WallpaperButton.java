@@ -6,13 +6,13 @@ import me.justahuman.more_cobblemon_tweaks.mixins.StorageWidgetAccessor;
 import me.justahuman.more_cobblemon_tweaks.utils.CustomButton;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.Set;
 
 public class WallpaperButton extends CustomButton {
-    public WallpaperButton(int x, int y, Set<Drawable> siblings) {
+    public WallpaperButton(int x, int y, Set<Renderable> siblings) {
         super(x, y, Textures.WALLPAPER_BUTTON_WIDTH, Textures.BUTTON_HEIGHT, Textures.WALLPAPER_BUTTON_TEXTURE, siblings);
         setTooltip(PcEnhancements.tooltip("custom_pc_wallpapers.tooltip"));
     }

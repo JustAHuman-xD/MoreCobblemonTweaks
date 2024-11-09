@@ -6,8 +6,8 @@ import com.cobblemon.mod.common.api.types.ElementalTypes;
 import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.Nature;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -72,7 +72,7 @@ public class Search {
                 case "mythical" -> Pokemon::isMythical;
                 case "ultrabeast", "ultra_beast" -> Pokemon::isUltraBeast;
                 default -> {
-                    if (Identifier.validate(query).isSuccess()) {
+                    if (ResourceLocation.read(query).isSuccess()) {
                         Nature nature = natures.getNature(query);
                         if (nature != null) {
                             yield pokemon -> pokemon.getNature() == nature || pokemon.getMintedNature() == nature;
@@ -93,7 +93,7 @@ public class Search {
 
                     if (query.startsWith("ability=")) {
                         String ability = query.substring(8);
-                        yield pokemon -> Text.translatable(pokemon.getAbility().getDisplayName()).getString().toLowerCase(Locale.ROOT).startsWith(ability);
+                        yield pokemon -> Component.translatable(pokemon.getAbility().getDisplayName()).getString().toLowerCase(Locale.ROOT).startsWith(ability);
                     } else if (query.startsWith("form=")) {
                         String form = query.substring(5);
                         yield pokemon -> pokemon.getForm().getName().toLowerCase(Locale.ROOT).startsWith(form);

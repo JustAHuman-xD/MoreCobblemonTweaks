@@ -5,16 +5,16 @@ import com.cobblemon.mod.common.api.abilities.AbilityTemplate;
 import com.cobblemon.mod.common.api.pokemon.Natures;
 import com.cobblemon.mod.common.pokemon.Nature;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
 public class CobBreedingIntegration extends EnhancedEggLore {
     public static final String ITEM_ID = "cobbreeding:pokemon_egg";
-    public CobBreedingIntegration(NbtCompound nbt) {
+    public CobBreedingIntegration(CompoundTag nbt) {
         super(nbt);
     }
 
@@ -29,20 +29,20 @@ public class CobBreedingIntegration extends EnhancedEggLore {
     }
 
     @Override
-    public List<Text> getHatchProgress() {
+    public List<Component> getHatchProgress() {
         // Cobb Breeding does this themselves
         return null;
     }
 
     @Override
     public String getNature() {
-        Identifier identifier = Identifier.tryParse(Utils.get(nbt, "nature", ""));
+        ResourceLocation identifier = ResourceLocation.tryParse(Utils.get(nbt, "nature", ""));
         if (identifier == null) {
             return "";
         }
         Nature nature = Natures.INSTANCE.getNature(identifier);
         if (nature != null) {
-            return Text.translatable(nature.getDisplayName()).getString();
+            return Component.translatable(nature.getDisplayName()).getString();
         }
         return "";
     }
@@ -52,7 +52,7 @@ public class CobBreedingIntegration extends EnhancedEggLore {
         String id = Utils.get(nbt, "ability", "");
         AbilityTemplate ability = Abilities.INSTANCE.get(id);
         if (ability != null) {
-            return Text.translatable(ability.getDisplayName()).getString();
+            return Component.translatable(ability.getDisplayName()).getString();
         }
         return id;
     }
@@ -65,7 +65,7 @@ public class CobBreedingIntegration extends EnhancedEggLore {
 
     @Override
     public boolean hasIVs() {
-        return nbt.contains("ivs", NbtElement.INT_ARRAY_TYPE);
+        return nbt.contains("ivs", Tag.TAG_INT_ARRAY);
     }
 
     @Override

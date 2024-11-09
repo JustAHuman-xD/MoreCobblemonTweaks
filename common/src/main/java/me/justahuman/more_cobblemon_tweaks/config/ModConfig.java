@@ -6,12 +6,12 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ServerInfo;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,9 +26,9 @@ public class ModConfig {
     private static final JsonObject INTERNAL_CONFIG = new JsonObject();
     private static final JsonObject SERVER_CONFIG = new JsonObject();
     private static final JsonObject DEFAULT_CONFIG = new JsonObject();
-    private static final ServerInfo SINGLE_PLAYER = new ServerInfo("", "singleplayer", ServerInfo.ServerType.OTHER);
-    private static final Map<Integer, Text> BOX_NAME_CACHE = new HashMap<>();
-    private static final Map<Integer, Identifier> WALLPAPER_CACHE = new HashMap<>();
+    private static final ServerData SINGLE_PLAYER = new ServerData("", "singleplayer", ServerData.Type.OTHER);
+    private static final Map<Integer, Component> BOX_NAME_CACHE = new HashMap<>();
+    private static final Map<Integer, ResourceLocation> WALLPAPER_CACHE = new HashMap<>();
     static {
         DEFAULT_CONFIG.addProperty("enhanced_egg_lore", true);
         DEFAULT_CONFIG.addProperty("shiny_egg_indicator", true);
@@ -88,58 +88,58 @@ public class ModConfig {
         INTERNAL_CONFIG.addProperty(key, value);
     }
 
-    public static Text getBoxName(int box) {
-        Text cache = BOX_NAME_CACHE.get(box);
+    public static Component getBoxName(int box) {
+        Component cache = BOX_NAME_CACHE.get(box);
         if (cache != null) {
             return cache;
         }
 
         JsonObject serverBoxes = INTERNAL_CONFIG.get("pc_box_names") instanceof JsonObject object ? object : null;
         if (serverBoxes == null) {
-            BOX_NAME_CACHE.put(box, ScreenTexts.EMPTY);
+            BOX_NAME_CACHE.put(box, CommonComponents.EMPTY);
             return null;
         }
 
-        ServerInfo info = MinecraftClient.getInstance().getCurrentServerEntry();
-        if (info == null) {
-            info = SINGLE_PLAYER;
+        ServerData data = Minecraft.getInstance().getCurrentServer();
+        if (data == null) {
+            data = SINGLE_PLAYER;
         }
 
-        JsonObject boxNames = serverBoxes.get(info.address) instanceof JsonObject object ? object : null;
+        JsonObject boxNames = serverBoxes.get(data.ip) instanceof JsonObject object ? object : null;
         if (boxNames == null) {
-            BOX_NAME_CACHE.put(box, ScreenTexts.EMPTY);
+            BOX_NAME_CACHE.put(box, CommonComponents.EMPTY);
             return null;
         }
 
-        Text name = boxNames.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
-                ? Text.literal(primitive.getAsString()).formatted(Formatting.BOLD)
-                : ScreenTexts.EMPTY;
+        Component name = boxNames.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
+                ? Component.literal(primitive.getAsString()).withStyle(ChatFormatting.BOLD)
+                : CommonComponents.EMPTY;
         BOX_NAME_CACHE.put(box, name);
         return name;
     }
 
     public static void setBoxName(int box, String name) {
-        ServerInfo info = MinecraftClient.getInstance().getCurrentServerEntry();
-        if (info == null) {
-            info = SINGLE_PLAYER;
+        ServerData data = Minecraft.getInstance().getCurrentServer();
+        if (data == null) {
+            data = SINGLE_PLAYER;
         }
 
         JsonObject serverBoxes = INTERNAL_CONFIG.get("pc_box_names") instanceof JsonObject object ? object : new JsonObject();
-        JsonObject boxNames = serverBoxes.get(info.address) instanceof JsonObject object ? object : new JsonObject();
+        JsonObject boxNames = serverBoxes.get(data.ip) instanceof JsonObject object ? object : new JsonObject();
         if (name == null || name.isBlank()) {
             boxNames.remove(String.valueOf(box));
-            BOX_NAME_CACHE.put(box, ScreenTexts.EMPTY);
+            BOX_NAME_CACHE.put(box, CommonComponents.EMPTY);
         } else {
             boxNames.addProperty(String.valueOf(box), name);
-            BOX_NAME_CACHE.put(box, Text.literal(name).formatted(Formatting.BOLD));
+            BOX_NAME_CACHE.put(box, Component.literal(name).withStyle(ChatFormatting.BOLD));
         }
-        serverBoxes.add(info.address, boxNames);
+        serverBoxes.add(data.ip, boxNames);
         INTERNAL_CONFIG.add("pc_box_names", serverBoxes);
         saveConfig(false);
     }
 
-    public static Identifier getBoxTexture(int box) {
-        Identifier cache = WALLPAPER_CACHE.get(box);
+    public static ResourceLocation getBoxTexture(int box) {
+        ResourceLocation cache = WALLPAPER_CACHE.get(box);
         if (cache != null) {
             return cache;
         }
@@ -150,34 +150,34 @@ public class ModConfig {
             return Textures.WALLPAPER_DEFAULT_TEXTURE;
         }
 
-        ServerInfo info = MinecraftClient.getInstance().getCurrentServerEntry();
-        if (info == null) {
-            info = SINGLE_PLAYER;
+        ServerData data = Minecraft.getInstance().getCurrentServer();
+        if (data == null) {
+            data = SINGLE_PLAYER;
         }
 
-        JsonObject wallpapers = pcWallpapers.get(info.address) instanceof JsonObject object ? object : null;
+        JsonObject wallpapers = pcWallpapers.get(data.ip) instanceof JsonObject object ? object : null;
         if (wallpapers == null) {
             WALLPAPER_CACHE.put(box, Textures.WALLPAPER_DEFAULT_TEXTURE);
             return Textures.WALLPAPER_DEFAULT_TEXTURE;
         }
 
-        Identifier wallpaper = wallpapers.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
-                ? Identifier.of(primitive.getAsString())
+        ResourceLocation wallpaper = wallpapers.get(String.valueOf(box)) instanceof JsonPrimitive primitive && primitive.isString()
+                ? ResourceLocation.parse(primitive.getAsString())
                 : Textures.WALLPAPER_DEFAULT_TEXTURE;
         WALLPAPER_CACHE.put(box, wallpaper);
         return wallpaper;
     }
 
-    public static void setBoxTexture(int box, Identifier texture) {
-        ServerInfo info = MinecraftClient.getInstance().getCurrentServerEntry();
-        if (info == null) {
-            info = SINGLE_PLAYER;
+    public static void setBoxTexture(int box, ResourceLocation texture) {
+        ServerData data = Minecraft.getInstance().getCurrentServer();
+        if (data == null) {
+            data = SINGLE_PLAYER;
         }
 
         JsonObject pcWallpapers = INTERNAL_CONFIG.get("pc_wallpapers") instanceof JsonObject object ? object : new JsonObject();
-        JsonObject wallpapers = pcWallpapers.get(info.address) instanceof JsonObject object ? object : new JsonObject();
+        JsonObject wallpapers = pcWallpapers.get(data.ip) instanceof JsonObject object ? object : new JsonObject();
         wallpapers.addProperty(String.valueOf(box), texture.toString());
-        pcWallpapers.add(info.address, wallpapers);
+        pcWallpapers.add(data.ip, wallpapers);
         INTERNAL_CONFIG.add("pc_wallpapers", pcWallpapers);
         WALLPAPER_CACHE.put(box, texture);
         saveConfig(false);

@@ -1,24 +1,24 @@
 package me.justahuman.more_cobblemon_tweaks.features.egg;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
 public abstract class EnhancedEggLore {
-    protected final NbtCompound nbt;
+    protected final CompoundTag nbt;
 
-    protected EnhancedEggLore(NbtCompound nbt) {
+    protected EnhancedEggLore(CompoundTag nbt) {
         this.nbt = nbt;
     }
 
-    public Text getName(List<Text> lore) {
+    public Component getName(List<Component> lore) {
         return lore.get(0);
     }
 
     public abstract boolean isShiny();
     public abstract String getGender();
-    public abstract List<Text> getHatchProgress();
+    public abstract List<Component> getHatchProgress();
     public abstract String getNature();
     public abstract String getAbility();
     public abstract String getForm();

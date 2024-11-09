@@ -12,12 +12,11 @@ import me.justahuman.more_cobblemon_tweaks.features.pc.search.SearchWidget;
 import me.justahuman.more_cobblemon_tweaks.features.pc.wallpaper.WallpaperButton;
 import me.justahuman.more_cobblemon_tweaks.features.pc.wallpaper.WallpaperWidget;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,7 +34,7 @@ public abstract class PcGuiMixin extends Screen {
     @Shadow(remap = false) @Final public static int BASE_WIDTH;
     @Shadow(remap = false) @Final public static int BASE_HEIGHT;
 
-    protected PcGuiMixin(Text title) {
+    protected PcGuiMixin(Component title) {
         super(title);
     }
 
@@ -47,36 +46,36 @@ public abstract class PcGuiMixin extends Screen {
         int y = (height - BASE_HEIGHT) / 2;
 
         if (ModConfig.isEnabled("pc_iv_display")) {
-            this.addDrawable(new IvWidget(cast()));
+            this.addRenderableOnly(new IvWidget(cast()));
         }
 
-        Set<Drawable> siblings = new HashSet<>(this.children().stream().filter(Drawable.class::isInstance).map(Drawable.class::cast).toList());
+        Set<Renderable> siblings = new HashSet<>(this.children().stream().filter(Renderable.class::isInstance).map(Renderable.class::cast).toList());
         boolean wallpapers = ModConfig.isEnabled("custom_pc_wallpapers");
 
         if (wallpapers) {
-            WallpaperButton button = this.addDrawableChild(new WallpaperButton(x + 243, y - 13, siblings));
-            siblings.add(this.addDrawableChild(new WallpaperWidget(button, x + 85, y + 27)));
+            WallpaperButton button = this.addRenderableWidget(new WallpaperButton(x + 243, y - 13, siblings));
+            siblings.add(this.addRenderableWidget(new WallpaperWidget(button, x + 85, y + 27)));
             siblings.add(button);
         }
 
         if (ModConfig.isEnabled("custom_pc_box_names")) {
-            siblings.add(this.addDrawableChild(new CancelButton(x + 243, y - 13, siblings)));
-            siblings.add(this.addDrawableChild(new ConfirmButton(x + 222, y - 13, siblings)));
-            siblings.add(this.addDrawableChild(new RenameWidget(x + 106, y - 13)));
-            siblings.add(this.addDrawableChild(new RenameButton(x + (wallpapers ? 220 : 241), y - 13, siblings)));
+            siblings.add(this.addRenderableWidget(new CancelButton(x + 243, y - 13, siblings)));
+            siblings.add(this.addRenderableWidget(new ConfirmButton(x + 222, y - 13, siblings)));
+            siblings.add(this.addRenderableWidget(new RenameWidget(x + 106, y - 13)));
+            siblings.add(this.addRenderableWidget(new RenameButton(x + (wallpapers ? 220 : 241), y - 13, siblings)));
         }
 
         if (ModConfig.isEnabled("pc_search")) {
-            siblings.add(this.addDrawableChild(new SearchButton(x + 82, y - 13, siblings)));
-            siblings.add(this.addDrawableChild(new SearchWidget(x + 104, y - 13)));
+            siblings.add(this.addRenderableWidget(new SearchButton(x + 82, y - 13, siblings)));
+            siblings.add(this.addRenderableWidget(new SearchWidget(x + 104, y - 13)));
         }
     }
 
-    @ModifyArg(method = "render", index = 2, at = @At(value = "INVOKE", target = "Lcom/cobblemon/mod/common/client/render/RenderHelperKt;drawScaledText$default(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;Lnet/minecraft/text/MutableText;Ljava/lang/Number;Ljava/lang/Number;FLjava/lang/Number;IIZZLjava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)V", ordinal = 12))
-    public MutableText overrideBoxTitle(MutableText text) {
+    @ModifyArg(method = "render", index = 2, at = @At(value = "INVOKE", target = "Lcom/cobblemon/mod/common/client/render/RenderHelperKt;drawScaledText$default(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/Number;Ljava/lang/Number;FLjava/lang/Number;IIZZLjava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)V", ordinal = 12))
+    public MutableComponent overrideBoxTitle(MutableComponent text) {
         if (ModConfig.isEnabled("custom_pc_box_names")) {
-            Text newTitle = ModConfig.getBoxName(Utils.currentBox);
-            if (newTitle instanceof MutableText mutable && newTitle != ScreenTexts.EMPTY) {
+            Component newTitle = ModConfig.getBoxName(Utils.currentBox);
+            if (newTitle instanceof MutableComponent mutable && newTitle != CommonComponents.EMPTY) {
                 return mutable;
             }
         }

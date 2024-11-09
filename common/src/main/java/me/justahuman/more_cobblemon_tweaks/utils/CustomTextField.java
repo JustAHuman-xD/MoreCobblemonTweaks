@@ -1,20 +1,20 @@
 package me.justahuman.more_cobblemon_tweaks.utils;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
 
-public abstract class CustomTextField extends TextFieldWidget {
+public abstract class CustomTextField extends EditBox {
     protected CustomTextField(int x, int y) {
-        super(MinecraftClient.getInstance().textRenderer, x + 6, y + 7, Textures.TEXT_FIELD_WIDTH - 8, Textures.BUTTON_HEIGHT - 8, Text.empty());
+        super(Minecraft.getInstance().font, x + 6, y + 7, Textures.TEXT_FIELD_WIDTH - 8, Textures.BUTTON_HEIGHT - 8, Component.empty());
         setVisible(false);
-        setDrawsBackground(false);
+        setBordered(false);
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTexture(Textures.TEXT_FIELD_TEXTURE,
+    public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        context.blit(Textures.TEXT_FIELD_TEXTURE,
                 getX() - 6, getY() - 7,
                 Textures.TEXT_FIELD_WIDTH,
                 Textures.BUTTON_HEIGHT,

@@ -4,19 +4,19 @@ import com.cobblemon.mod.common.api.pokemon.PokemonSpecies;
 import com.cobblemon.mod.common.pokemon.Species;
 import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.text.Text;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
 public class BetterBreedingIntegration extends CobBreedingIntegration {
-    public BetterBreedingIntegration(NbtCompound nbt) {
+    public BetterBreedingIntegration(CompoundTag nbt) {
         super(nbt);
     }
 
     @Override
-    public Text getName(List<Text> lore) {
+    public Component getName(List<Component> lore) {
         String speciesName = Utils.get(nbt, "species", "");
         Species species = speciesName.isBlank()
                 ? PokemonSpecies.INSTANCE.getByPokedexNumber(Utils.get(nbt, "species", -1), "cobblemon")
@@ -33,7 +33,7 @@ public class BetterBreedingIntegration extends CobBreedingIntegration {
     }
 
     @Override
-    public List<Text> getHatchProgress() {
+    public List<Component> getHatchProgress() {
         int ticks = Utils.get(nbt, "timer", -1);
         if (ticks != -1) {
             int minutes = (int) Math.floor(ticks / 1200d);
@@ -48,7 +48,7 @@ public class BetterBreedingIntegration extends CobBreedingIntegration {
         return Utils.get(nbt, "form", "");
     }
 
-    public static boolean isEgg(NbtCompound nbt) {
-        return nbt.contains("species", NbtElement.STRING_TYPE) && nbt.contains("timer", NbtElement.INT_TYPE);
+    public static boolean isEgg(CompoundTag nbt) {
+        return nbt.contains("species", Tag.TAG_STRING) && nbt.contains("timer", Tag.TAG_INT);
     }
 }

@@ -6,26 +6,26 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
-public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidget.Entry> {
-    private static final DynamicRegistryManager REGISTRY_MANAGER = DynamicRegistryManager.of(Registries.REGISTRIES);
+public class WallpaperWidget extends ObjectSelectionList<WallpaperWidget.Entry> {
+    private static final RegistryAccess REGISTRY_MANAGER = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
     protected static final int ENTRY_WIDTH = 156;
     protected static final int ENTRY_HEIGHT = 142;
     protected final WallpaperButton button;
 
     public WallpaperWidget(WallpaperButton button, int x, int y) {
-        super(MinecraftClient.getInstance(), 174, 155, y, ENTRY_HEIGHT);
+        super(Minecraft.getInstance(), 174, 155, y, ENTRY_HEIGHT);
         this.button = button;
         this.centerListVertically = false;
         this.visible = false;
@@ -35,7 +35,7 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
 
     public void setVisible(boolean visible) {
         if (visible) {
-            for (Map.Entry<String, Identifier> entry : Textures.POSSIBLE_WALLPAPER_TEXTURES.entrySet()) {
+            for (Map.Entry<String, ResourceLocation> entry : Textures.POSSIBLE_WALLPAPER_TEXTURES.entrySet()) {
                 addEntry(new Entry(entry.getKey(), entry.getValue()));
             }
             this.visible = true;
@@ -47,51 +47,52 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (isMouseOver(mouseX, mouseY) && getHoveredEntry() != null) {
+        if (isMouseOver(mouseX, mouseY) && getHovered() != null) {
             Utils.playSound(CobblemonSounds.PC_CLICK);
-            getHoveredEntry().mouseClicked(mouseX, mouseY, button);
+            getHovered().mouseClicked(mouseX, mouseY, button);
             return true;
         }
         return false;
     }
 
     @Override
-    protected void renderList(DrawContext context, int mouseX, int mouseY, float delta) {
-        for (int i = 0; i < getEntryCount(); i++) {
+    protected void renderListItems(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        for (int i = 0; i < getItemCount(); i++) {
             int top = getRowTop(i) + 2;
             int bottom = top + ENTRY_HEIGHT;
             if (bottom >= this.getY() && top <= this.getBottom() - 2) {
-                this.renderEntry(context, mouseX, mouseY, delta, i, this.getX() + (this.width / 2) - (ENTRY_WIDTH / 2), top, ENTRY_WIDTH, ENTRY_HEIGHT);
+                this.renderItem(context, mouseX, mouseY, delta, i, this.getX() + (this.width / 2) - (ENTRY_WIDTH / 2), top, ENTRY_WIDTH, ENTRY_HEIGHT);
             }
         }
     }
 
     @Override
-    protected int getScrollbarX() {
+    protected int getScrollbarPosition() {
         return this.getRight();
     }
 
-    public class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> {
+    public class Entry extends ObjectSelectionList.Entry<Entry> {
         protected final String name;
-        protected final Identifier wallpaper;
+        protected final ResourceLocation wallpaper;
 
-        public Entry(String name, Identifier wallpaper) {
+        public Entry(String name, ResourceLocation wallpaper) {
             this.name = name;
             this.wallpaper = wallpaper;
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            RenderSystem.enableBlend();
             if (hovered) {
-                TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-                if (y + textRenderer.fontHeight + 2 > WallpaperWidget.this.getY()) {
-                    context.drawTooltip(textRenderer, Text.of(name), x, y + textRenderer.fontHeight + 2);
+                Font font = Minecraft.getInstance().font;
+                if (y + font.lineHeight + 2 > WallpaperWidget.this.getY()) {
+                    graphics.renderTooltip(font, Component.literal(name), x, y + font.lineHeight + 2);
                 }
                 RenderSystem.disableBlend();
-                context.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
+                graphics.setColor(1.0F, 1.0F, 1.0F, 0.5F);
             }
 
-            context.drawTexture(wallpaper,
+            graphics.blit(wallpaper,
                     x, y,
                     entryWidth, entryHeight,
                     0, 0,
@@ -101,16 +102,16 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
                     Textures.WALLPAPER_HEIGHT);
 
             RenderSystem.enableBlend();
-            context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
             ModConfig.setBoxTexture(Utils.currentBox, this.wallpaper);
-            ClientPlayerEntity player = WallpaperWidget.this.client.player;
+            LocalPlayer player = WallpaperWidget.this.minecraft.player;
             if (Utils.allBoxes && player != null) {
                 try {
-                    int boxes = Cobblemon.INSTANCE.getStorage().getPC(player.getUuid(), REGISTRY_MANAGER).getBoxes().size();
+                    int boxes = Cobblemon.INSTANCE.getStorage().getPC(player.getUUID(), REGISTRY_MANAGER).getBoxes().size();
                     for (int i = 0; i < boxes; i++) {
                         ModConfig.setBoxTexture(i, wallpaper);
                     }
@@ -121,8 +122,8 @@ public class WallpaperWidget extends AlwaysSelectedEntryListWidget<WallpaperWidg
         }
 
         @Override
-        public Text getNarration() {
-            return Text.empty();
+        public Component getNarration() {
+            return Component.empty();
         }
     }
 }

@@ -6,10 +6,10 @@ import com.cobblemon.mod.common.client.storage.ClientPC;
 import com.cobblemon.mod.common.client.storage.ClientParty;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StorageWidget.class)
-public abstract class StorageWidgetMixin extends ClickableWidget {
-    private StorageWidgetMixin(int x, int y, int width, int height, Text message) {
+public abstract class StorageWidgetMixin extends AbstractWidget {
+    private StorageWidgetMixin(int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
     }
 
@@ -36,14 +36,14 @@ public abstract class StorageWidgetMixin extends ClickableWidget {
     }
 
     @Inject(at = @At("HEAD"), method = "renderWidget")
-    public void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         Utils.currentBox = this.box;
     }
 
-    @ModifyArg(method = "renderWidget", index = 1, at = @At(value = "INVOKE", target = "Lcom/cobblemon/mod/common/api/gui/GuiUtilsKt;blitk$default(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/Identifier;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;ZFILjava/lang/Object;)V", ordinal = 1))
-    public Identifier overrideOverlayTexture(Identifier texture) {
+    @ModifyArg(method = "renderWidget", index = 1, at = @At(value = "INVOKE", target = "Lcom/cobblemon/mod/common/api/gui/GuiUtilsKt;blitk$default(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/resources/ResourceLocation;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;ZFILjava/lang/Object;)V", ordinal = 1))
+    public ResourceLocation overrideOverlayTexture(ResourceLocation texture) {
         if (ModConfig.isEnabled("custom_pc_wallpapers")) {
-            Identifier newTexture = ModConfig.getBoxTexture(Utils.currentBox);
+            ResourceLocation newTexture = ModConfig.getBoxTexture(Utils.currentBox);
             if (newTexture != null) {
                 return newTexture;
             }

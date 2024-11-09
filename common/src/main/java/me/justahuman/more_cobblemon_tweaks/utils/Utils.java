@@ -1,15 +1,15 @@
 package me.justahuman.more_cobblemon_tweaks.utils;
 
 import me.justahuman.more_cobblemon_tweaks.features.pc.search.Search;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.nbt.NbtByte;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtDouble;
-import net.minecraft.nbt.NbtInt;
-import net.minecraft.nbt.NbtShort;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ShortTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.sounds.SoundEvent;
 
 public class Utils {
     public static final String POLYMER_ITEM_ID = "Polymer$itemId";
@@ -19,40 +19,40 @@ public class Utils {
     public static Search search = null;
 
     public static void playSound(SoundEvent sound) {
-        MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(sound, 1.0F));
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
     }
 
-    public static String get(NbtCompound nbt, String key, String def) {
-        if (nbt != null && nbt.get(key) instanceof NbtString nbtString) {
-            return nbtString.asString();
+    public static String get(CompoundTag nbt, String key, String def) {
+        if (nbt != null && nbt.get(key) instanceof StringTag nbtString) {
+            return nbtString.getAsString();
         }
         return def;
     }
 
-    public static boolean get(NbtCompound nbt, String key, boolean def) {
-        if (nbt != null && nbt.get(key) instanceof NbtByte nbtByte) {
-            return nbtByte.byteValue() == 1;
+    public static boolean get(CompoundTag nbt, String key, boolean def) {
+        if (nbt != null && nbt.get(key) instanceof ByteTag nbtByte) {
+            return nbtByte.getAsByte() == 1;
         }
         return def;
     }
 
-    public static int get(NbtCompound nbt, String key, int def) {
-        if (nbt != null && nbt.get(key) instanceof NbtInt nbtInt) {
-            return nbtInt.intValue();
+    public static int get(CompoundTag nbt, String key, int def) {
+        if (nbt != null && nbt.get(key) instanceof IntTag nbtInt) {
+            return nbtInt.getAsInt();
         }
         return def;
     }
 
-    public static short get(NbtCompound nbt, String key, short def) {
-        if (nbt != null && nbt.get(key) instanceof NbtShort nbtShort) {
-            return nbtShort.shortValue();
+    public static short get(CompoundTag nbt, String key, short def) {
+        if (nbt != null && nbt.get(key) instanceof ShortTag nbtShort) {
+            return nbtShort.getAsShort();
         }
         return def;
     }
 
-    public static double get(NbtCompound nbt, String key, double def) {
-        if (nbt != null && nbt.get(key) instanceof NbtDouble nbtDouble) {
-            return nbtDouble.doubleValue();
+    public static double get(CompoundTag nbt, String key, double def) {
+        if (nbt != null && nbt.get(key) instanceof DoubleTag nbtDouble) {
+            return nbtDouble.getAsDouble();
         }
         return def;
     }

@@ -1,24 +1,24 @@
 package me.justahuman.more_cobblemon_tweaks.utils;
 
 import com.cobblemon.mod.common.CobblemonSounds;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Set;
 import java.util.function.Consumer;
 
-public abstract class CustomButton extends ClickableWidget {
-    protected final Set<Drawable> siblings;
-    protected final Identifier texture;
+public abstract class CustomButton extends AbstractWidget {
+    protected final Set<Renderable> siblings;
+    protected final ResourceLocation texture;
 
-    public CustomButton(int x, int y, int width, int height, Identifier texture, Set<Drawable> siblings) {
-        super(x, y, width, height, Text.empty());
+    public CustomButton(int x, int y, int width, int height, ResourceLocation texture, Set<Renderable> siblings) {
+        super(x, y, width, height, Component.empty());
         this.texture = texture;
         this.siblings = siblings;
     }
@@ -31,8 +31,8 @@ public abstract class CustomButton extends ClickableWidget {
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTexture(texture,
+    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        context.blit(texture,
                 getX(), getY(),
                 width, height,
                 0, 0,
@@ -42,15 +42,15 @@ public abstract class CustomButton extends ClickableWidget {
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     @Override
     public void playDownSound(SoundManager soundManager) {
-        soundManager.play(PositionedSoundInstance.master(CobblemonSounds.PC_CLICK, 1.0F));
+        soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.PC_CLICK, 1.0F));
     }
 
     protected <T> void handleSibling(Class<T> clazz, Consumer<T> consumer) {
-        for (Drawable sibling : siblings) {
+        for (Renderable sibling : siblings) {
             if (clazz.isInstance(sibling)) {
                 consumer.accept(clazz.cast(sibling));
             }

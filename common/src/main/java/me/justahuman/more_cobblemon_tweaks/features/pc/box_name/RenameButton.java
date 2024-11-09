@@ -7,12 +7,12 @@ import me.justahuman.more_cobblemon_tweaks.features.pc.wallpaper.WallpaperButton
 import me.justahuman.more_cobblemon_tweaks.utils.CustomButton;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
-import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.components.Renderable;
 
 import java.util.Set;
 
 public class RenameButton extends CustomButton {
-    public RenameButton(int x, int y, Set<Drawable> siblings) {
+    public RenameButton(int x, int y, Set<Renderable> siblings) {
         super(x, y, Textures.RENAME_BUTTON_WIDTH, Textures.BUTTON_HEIGHT, Textures.RENAME_BUTTON_TEXTURE, siblings);
         setTooltip(PcEnhancements.tooltip("custom_pc_box_names.tooltip"));
     }

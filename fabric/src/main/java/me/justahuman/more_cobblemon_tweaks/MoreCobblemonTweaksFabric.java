@@ -10,9 +10,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 public final class MoreCobblemonTweaksFabric implements ClientModInitializer {
     @Override
@@ -21,21 +21,21 @@ public final class MoreCobblemonTweaksFabric implements ClientModInitializer {
 
         KeyBindingHelper.registerKeyBinding(Keybinds.OPEN_CONFIG);
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (Keybinds.OPEN_CONFIG.wasPressed() && FabricLoader.getInstance().isModLoaded("cloth-config2")) {
-                client.setScreen(ConfigScreen.buildScreen(client.currentScreen));
+            if (Keybinds.OPEN_CONFIG.consumeClick() && FabricLoader.getInstance().isModLoaded("cloth-config2")) {
+                client.setScreen(ConfigScreen.buildScreen(client.screen));
             }
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ModConfig.clearServerConfig());
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
-            public void reload(ResourceManager manager) {
+            public void onResourceManagerReload(ResourceManager manager) {
                 MoreCobblemonTweaks.onReload(manager);
             }
 
             @Override
-            public Identifier getFabricId() {
+            public ResourceLocation getFabricId() {
                 return MoreCobblemonTweaks.id("reload_listener");
             }
         });

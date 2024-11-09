@@ -3,7 +3,7 @@ package me.justahuman.more_cobblemon_tweaks;
 import me.justahuman.more_cobblemon_tweaks.config.ConfigScreen;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.Keybinds;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
@@ -21,9 +21,9 @@ public final class MoreCobblemonTweaksNeoForge {
 
     @SubscribeEvent
     public void onInput(InputEvent.Key event) {
-        if (Keybinds.OPEN_CONFIG.wasPressed() && ModList.get().isLoaded("cloth-config2")) {
-            MinecraftClient client = MinecraftClient.getInstance();
-            client.setScreen(ConfigScreen.buildScreen(client.currentScreen));
+        if (Keybinds.OPEN_CONFIG.consumeClick() && ModList.get().isLoaded("cloth-config2")) {
+            Minecraft client = Minecraft.getInstance();
+            client.setScreen(ConfigScreen.buildScreen(client.screen));
         }
     }
 
