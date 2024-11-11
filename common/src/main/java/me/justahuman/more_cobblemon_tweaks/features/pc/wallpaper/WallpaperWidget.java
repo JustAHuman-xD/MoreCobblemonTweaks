@@ -11,15 +11,12 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
 public class WallpaperWidget extends ObjectSelectionList<WallpaperWidget.Entry> {
-    private static final RegistryAccess REGISTRY_MANAGER = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
     protected static final int ENTRY_WIDTH = 156;
     protected static final int ENTRY_HEIGHT = 142;
     protected final WallpaperButton button;
@@ -111,7 +108,7 @@ public class WallpaperWidget extends ObjectSelectionList<WallpaperWidget.Entry> 
             LocalPlayer player = WallpaperWidget.this.minecraft.player;
             if (Utils.allBoxes && player != null) {
                 try {
-                    int boxes = Cobblemon.INSTANCE.getStorage().getPC(player.getUUID(), REGISTRY_MANAGER).getBoxes().size();
+                    int boxes = Cobblemon.INSTANCE.getStorage().getPC(player.getUUID(), player.registryAccess()).getBoxes().size();
                     for (int i = 0; i < boxes; i++) {
                         ModConfig.setBoxTexture(i, wallpaper);
                     }
