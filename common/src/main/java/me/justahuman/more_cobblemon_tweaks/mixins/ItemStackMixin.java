@@ -23,12 +23,16 @@ public abstract class ItemStackMixin {
     @Shadow public abstract Item getItem();
     @Shadow public abstract DataComponentMap getComponents();
 
-    @Inject(method = "getTooltipLines", at = @At(value = "RETURN"))
+    @Inject(method = "getTooltipLines", at = @At(value = "RETURN"), cancellable = true)
     public void changeTooltip(Item.TooltipContext tooltipContext, Player player, TooltipFlag tooltipFlag, CallbackInfoReturnable<List<Component>> cir) {
+        final List<Component> lore = new ArrayList<>(cir.getReturnValue());
+        if (lore.isEmpty()) {
+            return;
+        }
+
         final Item item = getItem();
         final DataComponentMap components = getComponents();
         final String itemId = BuiltInRegistries.ITEM.getKey(item).toString();
-        final List<Component> lore = cir.getReturnValue();
         final List<Component> newLore = new ArrayList<>();
 
         if (ModConfig.isEnabled("enhanced_egg_lore")) {
@@ -42,18 +46,7 @@ public abstract class ItemStackMixin {
 //            }
         }
 
-        if (ModConfig.isEnabled("enhanced_berry_lore")) {
-            LoreEnhancements.enhanceBerryLore(item, newLore);
-        }
-
-        if (ModConfig.isEnabled("enhanced_consumable_lore")) {
-            LoreEnhancements.enhanceConsumablesLore(item, newLore);
-        }
-
-        if (ModConfig.isEnabled("enhanced_held_item_lore")) {
-            LoreEnhancements.enhanceHeldItemLore(item, newLore);
-        }
-
         lore.addAll(1, newLore);
+        cir.setReturnValue(lore);
     }
 }

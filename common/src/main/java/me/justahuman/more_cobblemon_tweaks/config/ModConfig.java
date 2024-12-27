@@ -32,10 +32,6 @@ public class ModConfig {
     static {
         DEFAULT_CONFIG.addProperty("enhanced_egg_lore", true);
         DEFAULT_CONFIG.addProperty("shiny_egg_indicator", true);
-        DEFAULT_CONFIG.addProperty("enhanced_berry_lore", true);
-        DEFAULT_CONFIG.addProperty("enhanced_consumable_lore", true);
-        DEFAULT_CONFIG.addProperty("enhanced_held_item_lore", true);
-        DEFAULT_CONFIG.addProperty("wt_compact_lore", true);
         DEFAULT_CONFIG.addProperty("pc_iv_display", true);
         DEFAULT_CONFIG.addProperty("open_box_history", true);
         DEFAULT_CONFIG.addProperty("pc_search", true);
