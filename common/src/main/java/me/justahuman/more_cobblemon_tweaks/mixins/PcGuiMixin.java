@@ -1,6 +1,7 @@
 package me.justahuman.more_cobblemon_tweaks.mixins;
 
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
+import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import com.cobblemon.mod.common.util.MiscUtilsKt;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.pc.IvWidget;
@@ -40,6 +41,9 @@ public abstract class PcGuiMixin extends Screen {
     @Unique private RenameWidget moreCobblemonTweaks$renameWidget;
     @Unique private SearchWidget moreCobblemonTweaks$searchWidget;
 
+    @Shadow(remap = false) private int openOnBox;
+    @Shadow(remap = false) private StorageWidget storageWidget;
+
     protected PcGuiMixin(Component title) {
         super(title);
     }
@@ -74,6 +78,12 @@ public abstract class PcGuiMixin extends Screen {
         if (ModConfig.isEnabled("pc_search")) {
             siblings.add(this.addRenderableWidget(new SearchButton(x + 82, y - 13, siblings)));
             siblings.add(this.addRenderableWidget(moreCobblemonTweaks$searchWidget = new SearchWidget(x + 104, y - 13)));
+        }
+
+        // Due to the new `/pc box` logic, if the player uses `/pc` without specifying a box number, openOnBox defaults to 0,
+        // meaning we should use the last selected box (Utils.currentBox).
+        if (this.openOnBox == 0) {
+            this.storageWidget.setBox(Utils.currentBox);
         }
     }
 
