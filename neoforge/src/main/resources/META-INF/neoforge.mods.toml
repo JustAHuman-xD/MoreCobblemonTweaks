@@ -49,5 +49,12 @@ versionRange = "[16.0.141,)"
 ordering = "AFTER"
 side = "CLIENT"
 
+[[dependencies.more_cobblemon_tweaks]]
+modId = "cobbreeding"
+type = "optional"
+versionRange = "[1.8.8,)"
+ordering = "AFTER"
+side = "CLIENT"
+
 [[mixins]]
 config = "more_cobblemon_tweaks.mixins.json"

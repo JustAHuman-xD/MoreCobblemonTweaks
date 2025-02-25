@@ -25,12 +25,24 @@ subprojects {
 
     repositories {
         maven { url = "https://maven.impactdev.net/repository/development/" }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Modrinth"
+                    url = "https://api.modrinth.com/maven"
+                }
+            }
+            filter {
+                includeGroup "maven.modrinth"
+            }
+        }
     }
 
     dependencies {
         minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
         mappings loom.officialMojangMappings()
         modImplementation("com.cobblemon:mod:${project.cobblemon_version}")
+        modImplementation "maven.modrinth:cobbreeding:${project.cobbreeding_version}"
         modApi("me.shedaniel.cloth:cloth-config:${project.cloth_config_version}")
     }
 

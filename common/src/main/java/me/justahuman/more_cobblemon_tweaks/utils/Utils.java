@@ -1,5 +1,6 @@
 package me.justahuman.more_cobblemon_tweaks.utils;
 
+import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
 import me.justahuman.more_cobblemon_tweaks.features.pc.search.Search;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -11,9 +12,13 @@ import net.minecraft.nbt.ShortTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.sounds.SoundEvent;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
 public class Utils {
-    public static final String POLYMER_ITEM_ID = "Polymer$itemId";
-    public static final String POLYMER_NBT_TAG = "Polymer$itemTag";
+    private static final Map<String, Boolean> MOD_ENABLED_CACHE = new HashMap<>();
+    private static Function<String, Boolean> modEnabledFunction = id -> false;
     public static int currentBox = 0;
     public static boolean allBoxes = false;
     public static Search search = null;
@@ -55,5 +60,19 @@ public class Utils {
             return nbtDouble.getAsDouble();
         }
         return def;
+    }
+
+    public static boolean modEnabled(String id) {
+        Boolean cached = MOD_ENABLED_CACHE.get(id);
+        if (cached != null) {
+            return cached;
+        }
+        boolean enabled = modEnabledFunction.apply(id);
+        MOD_ENABLED_CACHE.put(id, enabled);
+        return enabled;
+    }
+
+    public static void setModEnabledFunction(Function<String, Boolean> function) {
+        modEnabledFunction = function;
     }
 }

@@ -33,14 +33,10 @@ public class ConfigScreen {
 
         /* Lore Config Options */
 
-        loreCategory.addEntry(basicToggle(entryBuilder, "enhanced_egg_lore", entry ->
-                entry.setRequirement(() -> false).setTooltip(Component.translatable("more_cobblemon_tweaks.config.option.waiting_for_updates"))));
+        loreCategory.addEntry(basicToggle(entryBuilder, "enhanced_egg_lore"));
         loreCategory.addEntry(basicToggle(entryBuilder, "shiny_egg_indicator", entry ->
-                entry.setRequirement(() -> false && ModConfig.isEnabled("enhanced_egg_lore") && !ModConfig.serverOverride("shiny_egg_indicator"))
+                entry.setRequirement(() -> ModConfig.isEnabled("enhanced_egg_lore") && !ModConfig.serverOverride("shiny_egg_indicator"))
                         .setTooltipSupplier(() -> {
-                            if (true) {
-                                return Optional.of(new Component[] { Component.translatable("more_cobblemon_tweaks.config.option.waiting_for_updates") });
-                            }
                             if (ModConfig.serverOverride("shiny_egg_indicator")) {
                                 return Optional.of(new Component[] { Component.translatable("more_cobblemon_tweaks.config.option.overridden_tooltip") });
                             } else if (!ModConfig.isEnabled("enhanced_egg_lore")) {

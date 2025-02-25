@@ -42,6 +42,7 @@
     "cobblemon": "*"
   },
   "suggests": {
-    "cloth-config2": ">=16.0.141"
+    "cloth-config2": ">=16.0.141",
+    "cobbreeding": ">=1.8.8"
   }
 }

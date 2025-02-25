@@ -1,6 +1,7 @@
 package me.justahuman.more_cobblemon_tweaks.mixins;
 
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
+import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import com.cobblemon.mod.common.util.MiscUtilsKt;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.pc.IvWidget;
@@ -26,6 +27,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -42,6 +44,11 @@ public abstract class PcGuiMixin extends Screen {
 
     protected PcGuiMixin(Component title) {
         super(title);
+    }
+
+    @ModifyVariable(at = @At("HEAD"), index = 4, name = "openOnBox", method = "<init>(Lcom/cobblemon/mod/common/client/storage/ClientPC;Lcom/cobblemon/mod/common/client/storage/ClientParty;Lcom/cobblemon/mod/common/client/gui/pc/PCGUIConfiguration;I)V", argsOnly = true, remap = false)
+    private static int fixOpenOnBox(int value) {
+        return value <= 1 ? Utils.currentBox : value;
     }
 
     @Inject(at = @At("TAIL"), method = "init")

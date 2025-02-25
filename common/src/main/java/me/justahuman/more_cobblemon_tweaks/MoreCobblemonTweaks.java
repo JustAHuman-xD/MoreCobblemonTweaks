@@ -3,6 +3,7 @@ package me.justahuman.more_cobblemon_tweaks;
 import com.mojang.logging.LogUtils;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
+import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.Pack;
@@ -15,15 +16,17 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class MoreCobblemonTweaks {
     public static final String MOD_ID = "more_cobblemon_tweaks";
     public static final Logger LOGGER = LogUtils.getLogger();
     private static File configFile;
 
-    public static void initClient(File configFile) {
+    public static void initClient(File configFile, Function<String, Boolean> modEnabledFunction) {
         LOGGER.info("Starting MoreCobblemonTweaks");
         MoreCobblemonTweaks.configFile = configFile;
+        Utils.setModEnabledFunction(modEnabledFunction);
     }
 
     public static void onReload(ResourceManager manager) {
