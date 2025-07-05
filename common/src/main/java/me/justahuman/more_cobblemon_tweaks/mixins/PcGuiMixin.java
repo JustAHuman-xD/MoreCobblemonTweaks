@@ -1,14 +1,17 @@
 package me.justahuman.more_cobblemon_tweaks.mixins;
 
+import com.cobblemon.mod.common.client.gui.pasture.PasturePCGUIConfiguration;
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
-import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
+import com.cobblemon.mod.common.client.gui.pc.PCGUIConfiguration;
 import com.cobblemon.mod.common.util.MiscUtilsKt;
+import me.justahuman.more_cobblemon_tweaks.api.MultiSelectorState;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.pc.IvWidget;
 import me.justahuman.more_cobblemon_tweaks.features.pc.box_name.CancelButton;
 import me.justahuman.more_cobblemon_tweaks.features.pc.box_name.ConfirmButton;
 import me.justahuman.more_cobblemon_tweaks.features.pc.box_name.RenameButton;
 import me.justahuman.more_cobblemon_tweaks.features.pc.box_name.RenameWidget;
+import me.justahuman.more_cobblemon_tweaks.features.pc.multiselect.MultiSelectButton;
 import me.justahuman.more_cobblemon_tweaks.features.pc.search.SearchButton;
 import me.justahuman.more_cobblemon_tweaks.features.pc.search.SearchWidget;
 import me.justahuman.more_cobblemon_tweaks.features.pc.wallpaper.WallpaperButton;
@@ -35,9 +38,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Mixin(PCGUI.class)
-public abstract class PcGuiMixin extends Screen {
+public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
     @Shadow(remap = false) @Final public static int BASE_WIDTH;
     @Shadow(remap = false) @Final public static int BASE_HEIGHT;
+
+    @Shadow(remap = false) @Final private PCGUIConfiguration configuration;
+
+    @Unique private MultiSelectButton moreCobblemonTweaks$multiSelectButton;
 
     @Unique private RenameWidget moreCobblemonTweaks$renameWidget;
     @Unique private SearchWidget moreCobblemonTweaks$searchWidget;
@@ -63,8 +70,11 @@ public abstract class PcGuiMixin extends Screen {
         }
 
         Set<Renderable> siblings = new HashSet<>(this.children().stream().filter(Renderable.class::isInstance).map(Renderable.class::cast).toList());
-        boolean wallpapers = ModConfig.isEnabled("custom_pc_wallpapers");
+        if (!(configuration instanceof PasturePCGUIConfiguration) && ModConfig.isEnabled("pc_multi_select")) {
+            siblings.add(this.addRenderableWidget(moreCobblemonTweaks$multiSelectButton = new MultiSelectButton(x + 271, y + 179, siblings)));
+        }
 
+        boolean wallpapers = ModConfig.isEnabled("custom_pc_wallpapers");
         if (wallpapers) {
             WallpaperButton button = this.addRenderableWidget(new WallpaperButton(x + 243, y - 13, siblings));
             siblings.add(this.addRenderableWidget(new WallpaperWidget(button, x + 85, y + 27)));
@@ -100,6 +110,11 @@ public abstract class PcGuiMixin extends Screen {
         boolean renameSelected = moreCobblemonTweaks$renameWidget != null && moreCobblemonTweaks$renameWidget.isFocused();
         boolean searchSelected = moreCobblemonTweaks$searchWidget != null && moreCobblemonTweaks$searchWidget.isFocused();
         return MiscUtilsKt.isInventoryKeyPressed($this$isInventoryKeyPressed, client, keyCode, scanCode) && !renameSelected && !searchSelected;
+    }
+
+    @Override
+    public boolean moreCobblemonTweaks$isMultiSelecting() {
+        return moreCobblemonTweaks$multiSelectButton != null && moreCobblemonTweaks$multiSelectButton.isToggled();
     }
 
     @Unique

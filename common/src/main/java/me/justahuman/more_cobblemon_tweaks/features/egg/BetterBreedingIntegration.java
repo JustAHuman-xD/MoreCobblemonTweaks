@@ -120,6 +120,7 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
         return customData.getIntArray("ivs")[5];
     }
 
+    @SuppressWarnings("deprecation")
     public static BetterBreedingIntegration get(ItemStack itemStack) {
         CustomData customData = itemStack.get(DataComponents.CUSTOM_DATA);
         if (customData != null) {

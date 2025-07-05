@@ -44,7 +44,7 @@ public class WallpaperWidget extends ObjectSelectionList<WallpaperWidget.Entry> 
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (isMouseOver(mouseX, mouseY) && getHovered() != null) {
+        if (this.visible && isMouseOver(mouseX, mouseY) && getHovered() != null) {
             Utils.playSound(CobblemonSounds.PC_CLICK);
             getHovered().mouseClicked(mouseX, mouseY, button);
             return true;

@@ -15,6 +15,8 @@ public class Textures {
     public static final ResourceLocation TEXT_FIELD_TEXTURE = MoreCobblemonTweaks.id("textures/gui/pc/text_field.png");
     public static final ResourceLocation CANCEL_BUTTON_TEXTURE = MoreCobblemonTweaks.id("textures/gui/pc/cancel_button.png");
     public static final ResourceLocation CONFIRM_BUTTON_TEXTURE = MoreCobblemonTweaks.id("textures/gui/pc/confirm_button.png");
+    public static final ResourceLocation MULTI_SELECT_BUTTON_TEXTURE = MoreCobblemonTweaks.id("textures/gui/pc/multiselect_button.png");
+    public static final ResourceLocation SELECTED_SLOT_OVERLAY = MoreCobblemonTweaks.id("textures/gui/pc/pc_slot_selected_overlay.png");
     public static final ResourceLocation WALLPAPER_DEFAULT_TEXTURE = MoreCobblemonTweaks.id("textures/gui/pc/wallpapers/default_wallpaper.png");
     public static final int IV_WIDGET_WIDTH = 52;
     public static final int IV_WIDGET_HEIGHT = 98;
@@ -22,6 +24,8 @@ public class Textures {
     public static final int WALLPAPER_BUTTON_WIDTH = 19;
     public static final int CONTROL_BUTTON_WIDTH = 19;
     public static final int SEARCH_BUTTON_WIDTH = 20;
+    public static final int MULTI_SELECT_BUTTON_WIDTH = 44;
+    public static final int MULTI_SELECT_BUTTON_HEIGHT = 19;
     public static final int TEXT_FIELD_WIDTH = 114;
     public static final int BUTTON_HEIGHT = 18;
     public static final int WALLPAPER_WIDTH = 208;

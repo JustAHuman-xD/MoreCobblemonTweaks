@@ -1,10 +1,14 @@
 package me.justahuman.more_cobblemon_tweaks.mixins;
 
+import com.cobblemon.mod.common.api.gui.GuiUtilsKt;
+import com.cobblemon.mod.common.client.gui.pc.BoxStorageSlot;
 import com.cobblemon.mod.common.client.gui.pc.StorageSlot;
 import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
+import me.justahuman.more_cobblemon_tweaks.api.MultiSelector;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
+import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Final;
@@ -29,6 +33,18 @@ public abstract class StorageSlotMixin {
             } else {
                 RenderSystem.setShaderColor(0.3f, 0.3f, 0.3f, 0.65f);
             }
+        }
+
+        MultiSelector selector = (MultiSelector) (Object) this.parent;
+        if (((Object) this) instanceof BoxStorageSlot slot && selector.moreCobblemonTweaks$getSelectedPositions().contains(slot.getPosition())) {
+            GuiUtilsKt.blitk(
+                    context.pose(),
+                    Textures.SELECTED_SLOT_OVERLAY,
+                    posX,
+                    posY,
+                    StorageSlot.SIZE,
+                    StorageSlot.SIZE
+            );
         }
     }
 
