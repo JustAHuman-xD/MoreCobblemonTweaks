@@ -7,8 +7,6 @@ import com.google.gson.JsonPrimitive;
 import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,15 +24,17 @@ public class ModConfig {
     private static final JsonObject INTERNAL_CONFIG = new JsonObject();
     private static final JsonObject SERVER_CONFIG = new JsonObject();
     private static final JsonObject DEFAULT_CONFIG = new JsonObject();
-    private static final ServerData SINGLE_PLAYER = new ServerData("", "singleplayer", ServerData.Type.OTHER);
     private static final Map<Integer, Component> BOX_NAME_CACHE = new HashMap<>();
     private static final Map<Integer, ResourceLocation> WALLPAPER_CACHE = new HashMap<>();
     static {
         DEFAULT_CONFIG.addProperty("enhanced_egg_lore", true);
         DEFAULT_CONFIG.addProperty("shiny_egg_indicator", true);
+        DEFAULT_CONFIG.addProperty("perfect_iv_egg_indicator", true);
         DEFAULT_CONFIG.addProperty("pc_iv_display", true);
+        DEFAULT_CONFIG.addProperty("pc_colored_ivs", true);
         DEFAULT_CONFIG.addProperty("open_box_history", true);
         DEFAULT_CONFIG.addProperty("pc_search", true);
+        DEFAULT_CONFIG.addProperty("pc_search_hide", false);
         DEFAULT_CONFIG.addProperty("custom_pc_wallpapers", true);
         DEFAULT_CONFIG.addProperty("custom_pc_box_names", true);
         DEFAULT_CONFIG.add("pc_wallpapers", new JsonObject());
@@ -96,12 +96,7 @@ public class ModConfig {
             return null;
         }
 
-        ServerData data = Minecraft.getInstance().getCurrentServer();
-        if (data == null) {
-            data = SINGLE_PLAYER;
-        }
-
-        JsonObject boxNames = serverBoxes.get(data.ip) instanceof JsonObject object ? object : null;
+        JsonObject boxNames = serverBoxes.get(MoreCobblemonTweaks.getCurrentServerId()) instanceof JsonObject object ? object : null;
         if (boxNames == null) {
             BOX_NAME_CACHE.put(box, CommonComponents.EMPTY);
             return null;
@@ -115,13 +110,8 @@ public class ModConfig {
     }
 
     public static void setBoxName(int box, String name) {
-        ServerData data = Minecraft.getInstance().getCurrentServer();
-        if (data == null) {
-            data = SINGLE_PLAYER;
-        }
-
         JsonObject serverBoxes = INTERNAL_CONFIG.get("pc_box_names") instanceof JsonObject object ? object : new JsonObject();
-        JsonObject boxNames = serverBoxes.get(data.ip) instanceof JsonObject object ? object : new JsonObject();
+        JsonObject boxNames = serverBoxes.get(MoreCobblemonTweaks.getCurrentServerId()) instanceof JsonObject object ? object : new JsonObject();
         if (name == null || name.isBlank()) {
             boxNames.remove(String.valueOf(box));
             BOX_NAME_CACHE.put(box, CommonComponents.EMPTY);
@@ -129,7 +119,7 @@ public class ModConfig {
             boxNames.addProperty(String.valueOf(box), name);
             BOX_NAME_CACHE.put(box, Component.literal(name).withStyle(ChatFormatting.BOLD));
         }
-        serverBoxes.add(data.ip, boxNames);
+        serverBoxes.add(MoreCobblemonTweaks.getCurrentServerId(), boxNames);
         INTERNAL_CONFIG.add("pc_box_names", serverBoxes);
         saveConfig(false);
     }
@@ -146,12 +136,7 @@ public class ModConfig {
             return Textures.WALLPAPER_DEFAULT_TEXTURE;
         }
 
-        ServerData data = Minecraft.getInstance().getCurrentServer();
-        if (data == null) {
-            data = SINGLE_PLAYER;
-        }
-
-        JsonObject wallpapers = pcWallpapers.get(data.ip) instanceof JsonObject object ? object : null;
+        JsonObject wallpapers = pcWallpapers.get(MoreCobblemonTweaks.getCurrentServerId()) instanceof JsonObject object ? object : null;
         if (wallpapers == null) {
             WALLPAPER_CACHE.put(box, Textures.WALLPAPER_DEFAULT_TEXTURE);
             return Textures.WALLPAPER_DEFAULT_TEXTURE;
@@ -165,15 +150,10 @@ public class ModConfig {
     }
 
     public static void setBoxTexture(int box, ResourceLocation texture) {
-        ServerData data = Minecraft.getInstance().getCurrentServer();
-        if (data == null) {
-            data = SINGLE_PLAYER;
-        }
-
         JsonObject pcWallpapers = INTERNAL_CONFIG.get("pc_wallpapers") instanceof JsonObject object ? object : new JsonObject();
-        JsonObject wallpapers = pcWallpapers.get(data.ip) instanceof JsonObject object ? object : new JsonObject();
+        JsonObject wallpapers = pcWallpapers.get(MoreCobblemonTweaks.getCurrentServerId()) instanceof JsonObject object ? object : new JsonObject();
         wallpapers.addProperty(String.valueOf(box), texture.toString());
-        pcWallpapers.add(data.ip, wallpapers);
+        pcWallpapers.add(MoreCobblemonTweaks.getCurrentServerId(), wallpapers);
         INTERNAL_CONFIG.add("pc_wallpapers", pcWallpapers);
         WALLPAPER_CACHE.put(box, texture);
         saveConfig(false);
@@ -212,5 +192,9 @@ public class ModConfig {
             }
         }
         return configFile;
+    }
+
+    public static boolean getDefault(String key) {
+        return DEFAULT_CONFIG.get(key) instanceof JsonPrimitive primitive && primitive.isBoolean() && primitive.getAsBoolean();
     }
 }

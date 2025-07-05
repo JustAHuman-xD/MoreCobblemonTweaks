@@ -24,7 +24,10 @@ public abstract class CustomTextField extends EditBox {
                 Textures.TEXT_FIELD_WIDTH,
                 Textures.BUTTON_HEIGHT
         );
+        context.pose().pushPose();
+        context.pose().translate(0, 0, 100);
         super.renderWidget(context, mouseX, mouseY, delta);
+        context.pose().popPose();
     }
 
     @Override

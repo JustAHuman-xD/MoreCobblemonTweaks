@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,22 +21,30 @@ public abstract class StorageSlotMixin {
     @Shadow @Final private StorageWidget parent;
     @Shadow public abstract Pokemon getPokemon();
 
-    @Inject(at = @At("HEAD"), method = "renderSlot")
+    @Inject(at = @At("HEAD"), method = "renderSlot", cancellable = true)
     public void renderSlotHead(GuiGraphics context, int posX, int posY, float partialTicks, CallbackInfo ci) {
-        Pokemon pokemon = this.getPokemon();
-        if (pokemon == null) {
-            return;
-        }
-
-        if (Utils.search != null && ModConfig.isEnabled("pc_search") && !Utils.search.passes(pokemon)) {
-            RenderSystem.setShaderColor(0.3f, 0.3f, 0.3f, 0.65f);
+        if (moreCobblemonTweaks$failSearch()) {
+            if (ModConfig.isEnabled("pc_search_hide")) {
+                ci.cancel();
+            } else {
+                RenderSystem.setShaderColor(0.3f, 0.3f, 0.3f, 0.65f);
+            }
         }
     }
 
     @Inject(at = @At("HEAD"), method = "isHovered", cancellable = true)
     public void isHovered(int mouseX, int mouseY, CallbackInfoReturnable<Boolean> cir) {
-        if (!this.parent.visible) {
+        if (!this.parent.visible || moreCobblemonTweaks$failSearch()) {
             cir.setReturnValue(false);
         }
+    }
+
+    @Unique
+    private boolean moreCobblemonTweaks$failSearch() {
+        if (Utils.search == null || !ModConfig.isEnabled("pc_search")) {
+            return false;
+        }
+        Pokemon pokemon = this.getPokemon();
+        return pokemon != null && !Utils.search.passes(pokemon);
     }
 }

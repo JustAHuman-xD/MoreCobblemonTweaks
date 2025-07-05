@@ -47,7 +47,7 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
     }
 
     @Override
-    public List<Component> getHatchProgress() {
+    public List<Component> getHatchProgress(List<Component> lore) {
         int ticks = Utils.get(customData, "timer", -1);
         if (ticks != -1) {
             int minutes = (int) Math.floor(ticks / 1200d);

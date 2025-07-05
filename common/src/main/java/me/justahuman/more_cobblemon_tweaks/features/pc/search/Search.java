@@ -1,13 +1,7 @@
 package me.justahuman.more_cobblemon_tweaks.features.pc.search;
 
-import com.cobblemon.mod.common.api.pokemon.Natures;
-import com.cobblemon.mod.common.api.types.ElementalType;
-import com.cobblemon.mod.common.api.types.ElementalTypes;
-import com.cobblemon.mod.common.pokemon.Gender;
-import com.cobblemon.mod.common.pokemon.Nature;
+import com.cobblemon.mod.common.api.pokemon.PokemonProperties;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -15,6 +9,8 @@ import java.util.Set;
 import java.util.UUID;
 
 public class Search {
+    private static final PokemonProperties NONE = new PokemonProperties();
+
     private final Set<SearchPredicate> options;
     private final Set<UUID> passedMons = new HashSet<>();
     private final Set<UUID> failedMons = new HashSet<>();
@@ -57,68 +53,46 @@ public class Search {
                 option = option.substring(1);
             }
 
-            String query = option;
-            ElementalTypes types = ElementalTypes.INSTANCE;
-            Natures natures = Natures.INSTANCE;
-            SearchPredicate searchOption = switch (query) {
-                case "shiny" -> Pokemon::getShiny;
-                case "male" -> pokemon -> pokemon.getGender() != Gender.FEMALE;
-                case "female" -> pokemon -> pokemon.getGender() != Gender.MALE;
-                case "genderless" -> pokemon -> pokemon.getGender() == Gender.GENDERLESS;
-                case "holding" -> pokemon -> !pokemon.heldItem().isEmpty();
-                case "tradeable" -> Pokemon::getTradeable;
-                case "fainted" -> Pokemon::isFainted;
-                case "legendary" -> Pokemon::isLegendary;
-                case "mythical" -> Pokemon::isMythical;
-                case "ultrabeast", "ultra_beast" -> Pokemon::isUltraBeast;
-                default -> {
-                    if (ResourceLocation.read(query).isSuccess()) {
-                        Nature nature = natures.getNature(query);
-                        if (nature != null) {
-                            yield pokemon -> pokemon.getNature() == nature || pokemon.getMintedNature() == nature;
-                        }
-
-                        ElementalType type = types.get(query);
-                        if (type != null) {
-                            yield pokemon -> {
-                                for (ElementalType pokemonType : pokemon.getTypes()) {
-                                    if (pokemonType == type) {
-                                        return true;
-                                    }
-                                }
-                                return false;
-                            };
-                        }
+            SearchPredicate searchOption = fixed(option);
+            if (searchOption == null) {
+                if (option.contains("=") && !option.endsWith("=")) {
+                    String before = option.substring(0, option.indexOf('='));
+                    String after = option.substring(option.indexOf('=') + 1);
+                    searchOption = fixed(before);
+                    if (after.equals("false") || after.equals("no")) {
+                        inverted = !inverted;
                     }
+                }
 
-                    if (query.startsWith("ability=")) {
-                        String ability = query.substring(8);
-                        yield pokemon -> Component.translatable(pokemon.getAbility().getDisplayName()).getString().toLowerCase(Locale.ROOT).startsWith(ability);
-                    } else if (query.startsWith("form=")) {
-                        String form = query.substring(5);
-                        yield pokemon -> pokemon.getForm().getName().toLowerCase(Locale.ROOT).startsWith(form);
-                    } else if (query.startsWith("knows=")) {
-                        String move = query.substring(6);
-                        yield pokemon -> pokemon.getMoveSet().getMoves().stream().anyMatch(pokemonMove
-                                -> pokemonMove.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(move));
-                    } else if (query.startsWith("learns=")) {
-                        String move = query.substring(7);
-                        yield pokemon -> pokemon.getAllAccessibleMoves().stream().anyMatch(pokemonMove
-                                -> pokemonMove.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(move));
+                if (searchOption == null) {
+                    PokemonProperties filter = PokemonProperties.Companion.parse(option);
+                    if (!filter.matches(NONE)) {
+                        searchOption = filter::matches;
                     } else {
-                        yield pokemon -> pokemon.getDisplayName().getString().toLowerCase(Locale.ROOT).startsWith(query);
+                        var nameFilter = option.toLowerCase(Locale.ROOT);
+                        searchOption = pokemon -> pokemon.getSpecies().resourceIdentifier.getPath().contains(nameFilter)
+                                || pokemon.getDisplayName().getString().toLowerCase(Locale.ROOT).contains(nameFilter);
                     }
                 }
-            };
+            }
 
-            if (searchOption != null) {
-                if (inverted) {
-                    searchOptions.add(pokemon -> !searchOption.passes(pokemon));
-                } else {
-                    searchOptions.add(searchOption);
-                }
+            if (inverted) {
+                searchOptions.add(searchOption.invert());
+            } else {
+                searchOptions.add(searchOption);
             }
         }
         return new Search(searchOptions);
+    }
+
+    private static SearchPredicate fixed(String option) {
+        return switch(option) {
+            case "holding", "helditem", "held_item" -> pokemon -> !pokemon.heldItem().isEmpty();
+            case "fainted" -> Pokemon::isFainted;
+            case "legendary" -> Pokemon::isLegendary;
+            case "mythical" -> Pokemon::isMythical;
+            case "ultrabeast", "ultra_beast" -> Pokemon::isUltraBeast;
+            default -> null;
+        };
     }
 }

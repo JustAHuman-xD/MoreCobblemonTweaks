@@ -1,12 +1,11 @@
 package me.justahuman.more_cobblemon_tweaks.mixins;
 
-import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
+import me.justahuman.more_cobblemon_tweaks.Hooks;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import me.justahuman.more_cobblemon_tweaks.features.egg.BetterBreedingIntegration;
 import me.justahuman.more_cobblemon_tweaks.features.egg.CobbreedingIntegration;
 import me.justahuman.more_cobblemon_tweaks.features.egg.EnhancedEggLore;
-import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -35,7 +34,7 @@ public abstract class ItemStackMixin {
 
         if (ModConfig.isEnabled("enhanced_egg_lore")) {
             EnhancedEggLore wrapper = null;
-            if (Utils.modEnabled("cobbreeding")) {
+            if (Hooks.cobbreedingCompat()) {
                 wrapper = CobbreedingIntegration.get(itemStack);
             }
             if (wrapper == null) {

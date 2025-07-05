@@ -5,12 +5,15 @@ import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.level.storage.LevelResource;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -23,10 +26,11 @@ public final class MoreCobblemonTweaks {
     public static final Logger LOGGER = LogUtils.getLogger();
     private static File configFile;
 
-    public static void initClient(File configFile, Function<String, Boolean> modEnabledFunction) {
+    public static void initClient(File configFile, Function<String, Boolean> modEnabledFunction, Function<String, String> modVersionFunction) {
         LOGGER.info("Starting MoreCobblemonTweaks");
         MoreCobblemonTweaks.configFile = configFile;
         Utils.setModEnabledFunction(modEnabledFunction);
+        Utils.setModVersionFunction(modVersionFunction);
     }
 
     public static void onReload(ResourceManager manager) {
@@ -55,6 +59,21 @@ public final class MoreCobblemonTweaks {
                 }
             }
         }
+    }
+
+    public static String getCurrentServerId() {
+        IntegratedServer integratedServer = Minecraft.getInstance().getSingleplayerServer();
+        if (integratedServer != null) {
+            String rootId = integratedServer.getWorldPath(LevelResource.ROOT).getParent().getFileName().toString().replaceAll("_", "^us^");
+            if (rootId.startsWith("Multiplayer_")) {
+                rootId = "^e^" + rootId;
+            }
+            rootId = rootId.replace("[", "%lb%").replace("]", "%rb%");
+            return rootId;
+        }
+
+        ServerData data = Minecraft.getInstance().getCurrentServer();
+        return data != null ? data.ip : "unknown";
     }
 
     public static ResourceLocation id(String path) {

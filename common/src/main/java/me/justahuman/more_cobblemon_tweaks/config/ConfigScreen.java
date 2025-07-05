@@ -26,24 +26,18 @@ public class ConfigScreen {
         /* Pc Config Options */
 
         pcCategory.addEntry(basicToggle(entryBuilder, "pc_search"));
+        pcCategory.addEntry(basicToggle(entryBuilder, "pc_search_hide", "pc_search"));
         pcCategory.addEntry(basicToggle(entryBuilder, "open_box_history"));
         pcCategory.addEntry(basicToggle(entryBuilder, "pc_iv_display"));
+        pcCategory.addEntry(basicToggle(entryBuilder, "pc_colored_ivs", "pc_iv_display"));
         pcCategory.addEntry(basicToggle(entryBuilder, "custom_pc_box_names"));
         pcCategory.addEntry(basicToggle(entryBuilder, "custom_pc_wallpapers"));
 
         /* Lore Config Options */
 
         loreCategory.addEntry(basicToggle(entryBuilder, "enhanced_egg_lore"));
-        loreCategory.addEntry(basicToggle(entryBuilder, "shiny_egg_indicator", entry ->
-                entry.setRequirement(() -> ModConfig.isEnabled("enhanced_egg_lore") && !ModConfig.serverOverride("shiny_egg_indicator"))
-                        .setTooltipSupplier(() -> {
-                            if (ModConfig.serverOverride("shiny_egg_indicator")) {
-                                return Optional.of(new Component[] { Component.translatable("more_cobblemon_tweaks.config.option.overridden_tooltip") });
-                            } else if (!ModConfig.isEnabled("enhanced_egg_lore")) {
-                                return Optional.of(new Component[] { Component.translatable("more_cobblemon_tweaks.config.option.shiny_egg_indicator.requires_egg_lore") });
-                            }
-                            return Optional.of(new Component[] { Component.translatable("more_cobblemon_tweaks.config.option.shiny_egg_indicator.tooltip") });
-                        })));
+        loreCategory.addEntry(basicToggle(entryBuilder, "shiny_egg_indicator", "enhanced_egg_lore"));
+        loreCategory.addEntry(basicToggle(entryBuilder, "perfect_iv_egg_indicator", "enhanced_egg_lore"));
 
         /* Other Tweaks */
 
@@ -57,10 +51,22 @@ public class ConfigScreen {
         return basicToggle(builder, key, entry -> {});
     }
 
+    private static AbstractConfigListEntry<?> basicToggle(ConfigEntryBuilder builder, String key, String requires) {
+        return basicToggle(builder, key, entry -> entry.setRequirement(() -> ModConfig.isEnabled(requires) && !ModConfig.serverOverride(key))
+                .setTooltipSupplier(() -> {
+                    if (ModConfig.serverOverride(key)) {
+                        return Optional.of(new Component[] { Component.translatable("more_cobblemon_tweaks.config.option.overridden_tooltip") });
+                    } else if (!ModConfig.isEnabled(requires)) {
+                        return Optional.of(new Component[] { Component.translatable("more_cobblemon_tweaks.config.option." + key + ".requirements") });
+                    }
+                    return Optional.of(new Component[] { Component.translatable("more_cobblemon_tweaks.config.option." + key + ".tooltip") });
+                }));
+    }
+
     private static AbstractConfigListEntry<?> basicToggle(ConfigEntryBuilder builder, String key, Consumer<BooleanToggleBuilder> unique) {
         BooleanToggleBuilder entry = builder.startBooleanToggle(Component.translatable("more_cobblemon_tweaks.config.option." + key), ModConfig.isEnabled(key))
                 .setRequirement(() -> !ModConfig.serverOverride(key))
-                .setDefaultValue(true)
+                .setDefaultValue(ModConfig.getDefault(key))
                 .setTooltipSupplier(tooltip(key))
                 .setSaveConsumer(value -> ModConfig.setEnabled(key, value));
         unique.accept(entry);

@@ -1,6 +1,5 @@
 package me.justahuman.more_cobblemon_tweaks.utils;
 
-import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
 import me.justahuman.more_cobblemon_tweaks.features.pc.search.Search;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -19,6 +18,7 @@ import java.util.function.Function;
 public class Utils {
     private static final Map<String, Boolean> MOD_ENABLED_CACHE = new HashMap<>();
     private static Function<String, Boolean> modEnabledFunction = id -> false;
+    private static Function<String, String> modVersionFunction = id -> "unknown";
     public static int currentBox = 0;
     public static boolean allBoxes = false;
     public static Search search = null;
@@ -72,7 +72,15 @@ public class Utils {
         return enabled;
     }
 
+    public static String modVersion(String id) {
+        return modVersionFunction.apply(id);
+    }
+
     public static void setModEnabledFunction(Function<String, Boolean> function) {
         modEnabledFunction = function;
+    }
+
+    public static void setModVersionFunction(Function<String, String> function) {
+        modVersionFunction = function;
     }
 }

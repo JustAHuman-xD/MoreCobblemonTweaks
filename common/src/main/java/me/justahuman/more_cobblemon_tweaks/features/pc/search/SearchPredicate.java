@@ -5,4 +5,8 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 @FunctionalInterface
 public interface SearchPredicate {
     boolean passes(Pokemon pokemon);
+
+    default SearchPredicate invert() {
+        return pokemon -> !passes(pokemon);
+    }
 }

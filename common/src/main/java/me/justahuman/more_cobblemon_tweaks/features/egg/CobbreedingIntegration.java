@@ -10,7 +10,7 @@ import com.cobblemon.mod.common.pokemon.IVs;
 import com.cobblemon.mod.common.pokemon.Nature;
 import com.cobblemon.mod.common.util.MiscUtilsKt;
 import ludichat.cobbreeding.PokemonEgg;
-import net.minecraft.client.gui.screens.Screen;
+import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -21,9 +21,25 @@ public class CobbreedingIntegration extends EnhancedEggLore {
     private final PokemonProperties properties;
     private final IVs ivs;
 
+    public CobbreedingIntegration(String eggInfo) {
+        this(PokemonProperties.Companion.parse(eggInfo));
+    }
+
     public CobbreedingIntegration(PokemonProperties properties) {
         this.properties = properties;
         this.ivs = properties.getIvs();
+    }
+
+    @Override
+    public Component getName(List<Component> lore) {
+        if (lore.size() > 1) {
+            String name = lore.remove(1).getString();
+            if (name.equals("Bad egg")) {
+                return Component.literal("Bad Egg");
+            }
+            return Component.literal(name + " Egg");
+        }
+        return super.getName(lore);
     }
 
     @Override
@@ -38,8 +54,19 @@ public class CobbreedingIntegration extends EnhancedEggLore {
     }
 
     @Override
-    public List<Component> getHatchProgress() {
-        // Cobb Breeding does this themselves
+    public List<Component> getHatchProgress(List<Component> lore) {
+        if (lore.size() > 1) {
+            String hatchProgress = lore.get(1).getString();
+            String[] parts = hatchProgress.split(":");
+            if (parts.length == 2) {
+                try {
+                    int minutes = Integer.parseInt(parts[0].trim());
+                    int seconds = Integer.parseInt(parts[1].trim());
+                    lore.remove(1);
+                    return List.of(LoreEnhancements.translate("egg.cobbreeding.hatch_progress", minutes, seconds));
+                } catch (Exception ignored) {}
+            }
+        }
         return null;
     }
 
@@ -69,7 +96,15 @@ public class CobbreedingIntegration extends EnhancedEggLore {
 
     @Override
     public boolean hasIVs() {
-        return ivs != null;
+        if (ivs == null) {
+            return false;
+        }
+        return getHpIV() != null
+                || getAtkIV() != null
+                || getDefIV() != null
+                || getSpAtkIV() != null
+                || getSpDefIV() != null
+                || getSpeedIV() != null;
     }
 
     @Override
@@ -103,9 +138,17 @@ public class CobbreedingIntegration extends EnhancedEggLore {
     }
 
     public static CobbreedingIntegration get(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof PokemonEgg && itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
-            return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
+        if (itemStack.getItem() instanceof PokemonEgg) {
+            if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && isString(itemStack.get(PokemonEgg.Companion.getEGG_INFO()))) {
+                return new CobbreedingIntegration((String) (Object) itemStack.get(PokemonEgg.Companion.getEGG_INFO()));
+            } else if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
+                return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
+            }
         }
         return null;
+    }
+
+    private static boolean isString(Object value) {
+        return value instanceof String;
     }
 }

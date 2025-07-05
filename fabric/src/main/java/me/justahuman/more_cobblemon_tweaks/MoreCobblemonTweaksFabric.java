@@ -17,8 +17,13 @@ import net.minecraft.server.packs.resources.ResourceManager;
 public final class MoreCobblemonTweaksFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        MoreCobblemonTweaks.initClient(FabricLoader.getInstance().getConfigDir().resolve(MoreCobblemonTweaks.MOD_ID + ".json").toFile(),
-                id -> FabricLoader.getInstance().isModLoaded(id));
+        MoreCobblemonTweaks.initClient(
+                FabricLoader.getInstance().getConfigDir().resolve(MoreCobblemonTweaks.MOD_ID + ".json").toFile(),
+                id -> FabricLoader.getInstance().isModLoaded(id),
+                id -> FabricLoader.getInstance().getModContainer(id)
+                        .map(container -> container.getMetadata().getVersion().getFriendlyString())
+                        .orElse("unknown")
+        );
 
         KeyBindingHelper.registerKeyBinding(Keybinds.OPEN_CONFIG);
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

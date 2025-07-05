@@ -17,7 +17,11 @@ public class LoreEnhancements {
         Component name = enhancedEggLore.getName(lore);
         final boolean shiny = enhancedEggLore.isShiny();
         if (ModConfig.isEnabled("shiny_egg_indicator") && shiny) {
-            name = name.copy().append(Component.literal(" ★").withStyle(YELLOW, BOLD));
+            name = name.copy().append(Component.literal(" ★").withStyle(YELLOW));
+        }
+
+        if (ModConfig.isEnabled("perfect_iv_egg_indicator") && enhancedEggLore.hasPerfectIVs()) {
+            name = name.copy().append(Component.literal(" 🛆").withStyle(YELLOW));
         }
 
         final String gender = enhancedEggLore.getGender();
@@ -28,7 +32,7 @@ public class LoreEnhancements {
         }
         lore.set(0, name);
 
-        final List<Component> hatchProgress = enhancedEggLore.getHatchProgress();
+        final List<Component> hatchProgress = enhancedEggLore.getHatchProgress(lore);
         boolean spacer = false;
 
         if (hatchProgress != null && !hatchProgress.isEmpty()) {
@@ -78,19 +82,19 @@ public class LoreEnhancements {
             }
 
             if (hp != null && hp != -1) {
-                newLore.add(translate("egg.iv.hp").withStyle(RED)
+                newLore.add(translate("egg.iv.hp").withStyle(GREEN)
                         .append(Component.literal(String.valueOf(hp)).withStyle(WHITE)));
             }
             if (attack != null && attack != -1) {
-                newLore.add(translate("egg.iv.attack").withStyle(BLUE)
+                newLore.add(translate("egg.iv.attack").withStyle(RED)
                         .append(Component.literal(String.valueOf(attack)).withStyle(WHITE)));
             }
             if (defense != null && defense != -1) {
-                newLore.add(translate("egg.iv.defense").withStyle(GRAY)
+                newLore.add(translate("egg.iv.defense").withStyle(GOLD)
                         .append(Component.literal(String.valueOf(defense)).withStyle(WHITE)));
             }
             if (spAttack != null && spAttack != -1) {
-                newLore.add(translate("egg.iv.sp_attack").withStyle(AQUA)
+                newLore.add(translate("egg.iv.sp_attack").withStyle(LIGHT_PURPLE)
                         .append(Component.literal(String.valueOf(spAttack)).withStyle(WHITE)));
             }
             if (spDefense != null && spDefense != -1) {
@@ -98,7 +102,7 @@ public class LoreEnhancements {
                         .append(Component.literal(String.valueOf(spDefense)).withStyle(WHITE)));
             }
             if (speed != null && speed != -1) {
-                newLore.add(translate("egg.iv.speed").withStyle(GREEN)
+                newLore.add(translate("egg.iv.speed").withStyle(AQUA)
                         .append(Component.literal(String.valueOf(speed)).withStyle(WHITE)));
             }
         }
