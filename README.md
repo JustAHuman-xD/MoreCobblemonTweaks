@@ -1,48 +1,45 @@
 # MoreCobblemonTweaks
 A qol cobblemon client mod introducing pc box names, wallpapers, and more!<br>
-Formerly called `DystorianTweaks` but rebranded as the scope of the mod expanded
 
 # Config
-- All of the features listed in the section below can be indivudally tweaked in the mod's config. You can change them in the config file itself located in `configs/more_cobblemon_tweaks.json` or if mod menu & cloth config are installed, by using the in game editor (recommended) 
+- All of the features listed in the section below can be individually tweaked in the mod's config. You can change them in the config file itself located in `configs/more_cobblemon_tweaks.json` or if mod menu & cloth config are installed, by using the in game editor (recommended).
+
+# Supported Versions
+Cobblemon: 1.6.1+<br>
+Cobbreeding: 1.8.8+<br>
+BetterBreeding: Most<br>
 
 # Features
 - Enhanced Item Lore
-  - Enhanced Egg Lore (Supports: HulisCobblebreeding, Cobbbreeding, and BetterBreeding) **WAITING ON UPDATE FOR 1.6**
-    - Eggs will now show the gender, shiny status, hatch status, ivs and more in the lore of the item!
+  - Enhanced Egg Lore (Supports: Cobbbreeding, and BetterBreeding)
+    - Eggs will now show any stored data in the tooltip!
+    - What data is showed is determined by what egg mod you are using & your servers config.
+    - Below is a screenshot of an egg from HulisCobblebreeding (previously supported), which gives an example of what you can expect to see.
+    - Optionally (enabled by default) a shiny egg will have a gold star next to its name
+    - Optionally (enabled by default) a perfect iv egg will have a gold triangle next to its name
     - ![Screenshot of egg tooltip](https://cdn.modrinth.com/data/cached_images/4a6c64576bd6d13c8cd078b92b8286eec11e02b3.png)
   - Enhanced Berry, Consumables, & Held Item Lore were removed as all are builtin to base cobblemon from 1.6+
 - PC Enhancements
   - Iv Display
-    - ![Screenshot of open pc with iv display on the left](https://cdn.modrinth.com/data/cached_images/d996f9e83662834be11e9c04fabd410958e12ce1.png)
+    - You can optionally disable the colors of the ivs in the config, making them all white to match the rest of the ui.
+    - ![Screenshot of open pc with iv display on the left](https://cdn.modrinth.com/data/cached_images/9de30a7cd91f79b69b9c60baddb3a1bd84a97aca.png)
   - Open Box History
     - When opening the PC it will open to the box you last had open
   - PC Search
     - Adds a search button on the top left that opens a search field allowing you to search & filter through your pokemon!
-    - <details>
-      <summary>Search Terms (Click to Expand)</summary>
-        - shiny<br>
-        - male<br>
-        - female<br>
-        - genderless<br>
-        - holding (if the pokemon is holding any item)<br>
-        - tradeable<br>
-        - fainted<br>
-        - legendary<br>
-        - mythical<br>
-        - ultrabeast, ultra_beast<br>
-        - each of the pokemon types<br>
-        - every pokemon nature<br>
-        - ability=(put ability here)<br>
-        - form=(put form here)<br>
-        - knows=(put move here, matches to moves currently known by the pokemon)<br>
-        - learns=(put move here, matches to a move the pokemon can learn)<br>
-        - if none of the following are matched, it defaults to checking the pokemon's name
-      </details>
-    - ![Screenshot of the search open](https://cdn.modrinth.com/data/5KWlJ2HC/images/3526bc5bb106ce98a008998c68bc143baaadc2f9.png)
+    - Search term suggestions will be shown as you type to assist.
+    - If you are familiar with the format of `/givepokemon player properties` most search terms will match it.
+    - Pokemon that do not match the search term will be grayed out, or optionally (disabled by default in config) hidden entirely.
+    - ![Screenshot of the search open](https://cdn.modrinth.com/data/cached_images/5092977e0db8a327336ebd24cb2e4b5d35351213.png)
   - Custom Box Names
     - Adds a new button on the top right of the PC that will open the box rename!
-    - ![Screenshot of pc gui with box rename open](https://cdn.modrinth.com/data/5KWlJ2HC/images/f27e434a57e0a344badab67cdca956c09e34eee1.png)
+    - ![Screenshot of pc gui with box rename open](https://cdn.modrinth.com/data/cached_images/1b7012ab3cbecf1a8cf7ebf4540ddead4dae01bc.png)
   - Custom Box Wallpapers
     - Adds a new button on the top right of the PC that will open the wallpaper selection, then just click on your choice!
     - ![Screenshot of pc gui selecting a wallpaper](https://cdn.modrinth.com/data/5KWlJ2HC/images/7e7740d794f7dc8d32320c847e412fe33c840428.png)
+  - Multiselect & Release
+    - Adds a new button on the bottom right of the ui that will enable/disable multiselect mode.
+    - While in the mode you can click individual slots to (de)select them, or shift+click to (de)select a range of slots.
+    - While you have slots selected you can use the release button as normal to release all selected pokemon at once.
+    - ![Screenshot of multiselect mode with multiple selected slots](https://cdn.modrinth.com/data/cached_images/23e45b27114f433e047029def4881a3868767813.png)
 - More coming soon! (Please feel free to make suggestions via Issues!)
