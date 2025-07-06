@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
+import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -92,6 +93,7 @@ public class ModConfig {
         if (!lastServerId.equals(ModConfig.lastServerId)) {
             BOX_NAME_CACHE.clear();
             WALLPAPER_CACHE.clear();
+            Utils.currentBox = 0;
         }
 
         Component cache = BOX_NAME_CACHE.get(box);
@@ -139,6 +141,7 @@ public class ModConfig {
         if (!lastServerId.equals(ModConfig.lastServerId)) {
             BOX_NAME_CACHE.clear();
             WALLPAPER_CACHE.clear();
+            Utils.currentBox = 0;
         }
 
         ResourceLocation cache = WALLPAPER_CACHE.get(box);
