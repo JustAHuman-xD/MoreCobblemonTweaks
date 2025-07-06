@@ -1,7 +1,10 @@
 package me.justahuman.more_cobblemon_tweaks.features.pc.search;
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties;
+import com.cobblemon.mod.common.api.pokemon.egg.EggGroup;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import me.justahuman.more_cobblemon_tweaks.features.pc.search.predicates.EggGroupPredicate;
+import me.justahuman.more_cobblemon_tweaks.features.pc.search.predicates.NameOrSpeciesPredicate;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -53,14 +56,20 @@ public class Search {
                 option = option.substring(1);
             }
 
-            SearchPredicate searchOption = fixed(option);
+            SearchPredicate searchOption = SearchPredicate.FIXED.get(option);
             if (searchOption == null) {
-                if (option.contains("=") && !option.endsWith("=")) {
-                    String before = option.substring(0, option.indexOf('='));
-                    String after = option.substring(option.indexOf('=') + 1);
-                    searchOption = fixed(before);
-                    if (after.equals("false") || after.equals("no")) {
-                        inverted = !inverted;
+                String[] parts = option.split("=", 2);
+                if (parts.length == 2) {
+                    if (EggGroupPredicate.NAMES.contains(parts[0].toLowerCase(Locale.ROOT) + "=")) {
+                        try {
+                            EggGroup group = EggGroup.valueOf(parts[1].toUpperCase(Locale.ROOT));
+                            searchOption = new EggGroupPredicate(group);
+                        } catch (IllegalArgumentException ignored) {}
+                    } else {
+                        searchOption = SearchPredicate.FIXED.get(parts[0]);
+                        if (parts[1].equals("false") || parts[1].equals("no")) {
+                            inverted = !inverted;
+                        }
                     }
                 }
 
@@ -69,9 +78,7 @@ public class Search {
                     if (!filter.matches(NONE)) {
                         searchOption = filter::matches;
                     } else {
-                        var nameFilter = option.toLowerCase(Locale.ROOT);
-                        searchOption = pokemon -> pokemon.getSpecies().resourceIdentifier.getPath().contains(nameFilter)
-                                || pokemon.getDisplayName().getString().toLowerCase(Locale.ROOT).contains(nameFilter);
+                        searchOption = new NameOrSpeciesPredicate(option);
                     }
                 }
             }
@@ -83,16 +90,5 @@ public class Search {
             }
         }
         return new Search(searchOptions);
-    }
-
-    private static SearchPredicate fixed(String option) {
-        return switch(option) {
-            case "holding", "helditem", "held_item" -> pokemon -> !pokemon.heldItem().isEmpty();
-            case "fainted" -> Pokemon::isFainted;
-            case "legendary" -> Pokemon::isLegendary;
-            case "mythical" -> Pokemon::isMythical;
-            case "ultrabeast", "ultra_beast" -> Pokemon::isUltraBeast;
-            default -> null;
-        };
     }
 }

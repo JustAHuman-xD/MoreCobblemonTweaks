@@ -8,28 +8,22 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.justahuman.more_cobblemon_tweaks.features.PcEnhancements;
+import me.justahuman.more_cobblemon_tweaks.mixins.EditBoxAccessor;
 import me.justahuman.more_cobblemon_tweaks.utils.CustomTextField;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static net.minecraft.ChatFormatting.GRAY;
 
 public class SearchWidget extends CustomTextField {
     private static final CommandContext<?> DUMMY_CONTEXT = new CommandContext<>(null, null, null, null, null, null, null, null, null, false);
-    private static final List<String> DEFAULT_SUGGESTIONS = List.of("holding", "helditem", "held_item", "fainted", "legendary", "mythical", "ultrabeast", "ultra_beast");
-    private static final List<String> IGNORED_SUGGESTIONS = new ArrayList<>();
-    static {
-        for (Species species : PokemonSpecies.INSTANCE.getSpecies()) {
-            ResourceLocation speciesId = species.getResourceIdentifier();
-            String name = speciesId.getNamespace().equals("cobblemon") ? speciesId.getPath() : speciesId.toString();
-            IGNORED_SUGGESTIONS.add(name);
-        }
-    }
+    private static final List<String> IGNORED_SUGGESTIONS = PokemonSpecies.INSTANCE.getSpecies().stream()
+            .map(Species::getResourceIdentifier).map(id -> id.getNamespace().equals("cobblemon") ? id.getPath() : id.toString()).toList();
 
+    private String search = "";
     private String suggestion = "";
 
     public SearchWidget(int x, int y) {
@@ -38,49 +32,67 @@ public class SearchWidget extends CustomTextField {
         setBordered(false);
         setHint(PcEnhancements.translate("pc_search.blank").withStyle(GRAY));
         setResponder(string -> {
-            Utils.search = Search.of(string);
-            if (!string.isBlank()) {
-                int start = string.lastIndexOf(' ') + 1;
-                if (string.charAt(start) == '!') {
-                    start += 1;
-                }
-
-                SuggestionsBuilder builder = new SuggestionsBuilder(string, start);
-                DEFAULT_SUGGESTIONS.forEach(builder::suggest);
-                SuggestionsBuilder ignoredBuilder = new SuggestionsBuilder(string, start);
-                IGNORED_SUGGESTIONS.forEach(ignoredBuilder::suggest);
-
-                Suggestions suggestions = PokemonPropertiesArgumentType.Companion.properties().listSuggestions(DUMMY_CONTEXT, builder).join();
-                suggestions.getList().removeAll(ignoredBuilder.build().getList());
-
-                if (!suggestions.isEmpty()) {
-                    for (Suggestion suggestion : suggestions.getList()) {
-                        String applied = suggestion.apply(string);
-                        if (applied.startsWith(string)) {
-                            if (!applied.contains("=") && !DEFAULT_SUGGESTIONS.contains(suggestion.getText())) {
-                                applied += "=";
-                            }
-                            this.suggestion = applied;
-                            return;
-                        }
-                    }
-                }
+            this.search = string.trim().toLowerCase();;
+            this.suggestion = "";
+            Utils.search = null;
+            if (search.isBlank()) {
+                return;
             }
-            suggestion = "";
+
+            Utils.search = Search.of(this.search);
+            int start = search.lastIndexOf(' ') + 1;
+            if (search.length() > start && search.charAt(start) == '!') {
+                start += 1;
+            }
+
+            SuggestionsBuilder builder = new SuggestionsBuilder(search, start);
+            SuggestionsBuilder additionalBuilder = new SuggestionsBuilder(search, start);
+            SuggestionsBuilder ignoredBuilder = new SuggestionsBuilder(search, start);
+            for (SearchPredicate predicate : SearchPredicate.ALL) {
+                predicate.suggest(additionalBuilder);
+            }
+            for (String ignored : IGNORED_SUGGESTIONS) {
+                ignoredBuilder.suggest(ignored);
+            }
+
+            CompletableFuture.supplyAsync(additionalBuilder::build).thenAcceptAsync(suggestions -> {
+                if (!trySetSuggestion(suggestions)) {
+                    CompletableFuture.supplyAsync(() -> PokemonPropertiesArgumentType.Companion.properties().listSuggestions(DUMMY_CONTEXT, builder).join())
+                            .thenComposeAsync(propertiesSuggestions -> CompletableFuture.supplyAsync(ignoredBuilder::build)
+                                    .thenAcceptAsync(ignored -> {
+                                        propertiesSuggestions.getList().removeAll(ignored.getList());
+                                        trySetSuggestion(propertiesSuggestions);
+                                    }));
+                }
+            });
         });
+    }
+
+    public boolean trySetSuggestion(Suggestions suggestions) {
+        for (Suggestion suggestion : suggestions.getList()) {
+            String text = suggestion.getText().trim();
+            String applied = suggestion.apply(search).trim();
+            if (applied.length() > search.length() && applied.startsWith(search)) {
+                if (!text.contains("=") && !SearchPredicate.FIXED.containsKey(text)) {
+                    applied += "=";
+                }
+                this.suggestion = applied;
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        String original = this.getValue();
         int cursorPosition = this.getCursorPosition();
-        if (isFocused() && !suggestion.isBlank() && cursorPosition == original.length()) {
+        if (isFocused() && !suggestion.isBlank() && cursorPosition == search.length()) {
             // If there's a suggestion, render it as gray text
-            setValue(suggestion);
+            ((EditBoxAccessor) this).setValue(suggestion);
             setTextColor(11184810);
             setFocused(false);
             super.renderWidget(context, mouseX, mouseY, delta);
-            setValue(original);
+            ((EditBoxAccessor) this).setValue(search);
             setTextColor(0xFFFFFF);
             setCursorPosition(cursorPosition);
             setFocused(true);
