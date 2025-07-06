@@ -26,6 +26,7 @@ public class ModConfig {
     private static final JsonObject DEFAULT_CONFIG = new JsonObject();
     private static final Map<Integer, Component> BOX_NAME_CACHE = new HashMap<>();
     private static final Map<Integer, ResourceLocation> WALLPAPER_CACHE = new HashMap<>();
+    private static String lastServerId = "";
     static {
         DEFAULT_CONFIG.addProperty("enhanced_egg_lore", true);
         DEFAULT_CONFIG.addProperty("shiny_egg_indicator", true);
@@ -86,6 +87,13 @@ public class ModConfig {
     }
 
     public static Component getBoxName(int box) {
+        String lastServerId = ModConfig.lastServerId;
+        ModConfig.lastServerId = MoreCobblemonTweaks.getCurrentServerId();
+        if (!lastServerId.equals(ModConfig.lastServerId)) {
+            BOX_NAME_CACHE.clear();
+            WALLPAPER_CACHE.clear();
+        }
+
         Component cache = BOX_NAME_CACHE.get(box);
         if (cache != null) {
             return cache;
@@ -97,7 +105,7 @@ public class ModConfig {
             return null;
         }
 
-        JsonObject boxNames = serverBoxes.get(MoreCobblemonTweaks.getCurrentServerId()) instanceof JsonObject object ? object : null;
+        JsonObject boxNames = serverBoxes.get(ModConfig.lastServerId) instanceof JsonObject object ? object : null;
         if (boxNames == null) {
             BOX_NAME_CACHE.put(box, CommonComponents.EMPTY);
             return null;
@@ -126,6 +134,13 @@ public class ModConfig {
     }
 
     public static ResourceLocation getBoxTexture(int box) {
+        String lastServerId = ModConfig.lastServerId;
+        ModConfig.lastServerId = MoreCobblemonTweaks.getCurrentServerId();
+        if (!lastServerId.equals(ModConfig.lastServerId)) {
+            BOX_NAME_CACHE.clear();
+            WALLPAPER_CACHE.clear();
+        }
+
         ResourceLocation cache = WALLPAPER_CACHE.get(box);
         if (cache != null) {
             return cache;
@@ -137,7 +152,7 @@ public class ModConfig {
             return Textures.WALLPAPER_DEFAULT_TEXTURE;
         }
 
-        JsonObject wallpapers = pcWallpapers.get(MoreCobblemonTweaks.getCurrentServerId()) instanceof JsonObject object ? object : null;
+        JsonObject wallpapers = pcWallpapers.get(ModConfig.lastServerId) instanceof JsonObject object ? object : null;
         if (wallpapers == null) {
             WALLPAPER_CACHE.put(box, Textures.WALLPAPER_DEFAULT_TEXTURE);
             return Textures.WALLPAPER_DEFAULT_TEXTURE;
@@ -153,7 +168,11 @@ public class ModConfig {
     public static void setBoxTexture(int box, ResourceLocation texture) {
         JsonObject pcWallpapers = INTERNAL_CONFIG.get("pc_wallpapers") instanceof JsonObject object ? object : new JsonObject();
         JsonObject wallpapers = pcWallpapers.get(MoreCobblemonTweaks.getCurrentServerId()) instanceof JsonObject object ? object : new JsonObject();
-        wallpapers.addProperty(String.valueOf(box), texture.toString());
+        if (Textures.WALLPAPER_DEFAULT_TEXTURE.equals(texture)) {
+            wallpapers.remove(String.valueOf(box));
+        } else {
+            wallpapers.addProperty(String.valueOf(box), texture.toString());
+        }
         pcWallpapers.add(MoreCobblemonTweaks.getCurrentServerId(), wallpapers);
         INTERNAL_CONFIG.add("pc_wallpapers", pcWallpapers);
         WALLPAPER_CACHE.put(box, texture);
