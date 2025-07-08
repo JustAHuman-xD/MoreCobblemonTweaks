@@ -6,24 +6,18 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.justahuman.more_cobblemon_tweaks.features.pc.search.SearchPredicate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class EggGroupPredicate implements SearchPredicate {
-    public static final List<String> NAMES = List.of("egg=", "egg_group=");
-    private static final Map<String, List<String>> COMPLETIONS;
+    public static final String KEY = "egg_group=";
+    private static final List<String> COMPLETION;
     static {
-        Map<String, List<String>> completions = new HashMap<>();
-        for (String name : NAMES) {
-            List<String> completion = new ArrayList<>();
-            for (EggGroup group : EggGroup.values()) {
-                completion.add(name + group.name().toLowerCase(Locale.ROOT));
-            }
-            completions.put(name, List.copyOf(completion));
+        List<String> completion = new ArrayList<>();
+        for (EggGroup group : EggGroup.values()) {
+            completion.add(KEY + group.name().toLowerCase(Locale.ROOT));
         }
-        COMPLETIONS = Map.copyOf(completions);
+        COMPLETION = List.copyOf(completion);
     }
 
     private final EggGroup eggGroup;
@@ -40,16 +34,14 @@ public class EggGroupPredicate implements SearchPredicate {
     @Override
     public void suggest(SuggestionsBuilder builder) {
         String remaining = builder.getRemainingLowerCase();
-        for (String name : NAMES) {
-            if (remaining.equals(name) || remaining.startsWith(name)) {
-                for (String completion : COMPLETIONS.get(name)) {
-                    if (completion.startsWith(remaining)) {
-                        builder.suggest(completion);
-                    }
+        if (remaining.equals(KEY) || remaining.startsWith(KEY)) {
+            for (String completion : COMPLETION) {
+                if (completion.startsWith(remaining)) {
+                    builder.suggest(completion);
                 }
-            } else if (name.startsWith(remaining)) {
-                builder.suggest(name);
             }
+        } else if (KEY.startsWith(remaining)) {
+            builder.suggest(KEY);
         }
     }
 

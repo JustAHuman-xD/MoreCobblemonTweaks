@@ -1,6 +1,6 @@
 package me.justahuman.more_cobblemon_tweaks.utils;
 
-import me.justahuman.more_cobblemon_tweaks.features.pc.search.Search;
+import com.cobblemon.mod.common.client.storage.ClientPC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.nbt.ByteTag;
@@ -19,9 +19,13 @@ public class Utils {
     private static final Map<String, Boolean> MOD_ENABLED_CACHE = new HashMap<>();
     private static Function<String, Boolean> modEnabledFunction = id -> false;
     private static Function<String, String> modVersionFunction = id -> "unknown";
+
+    public static ClientPC summaryPC = null;
+    public static boolean summaryFromPC = false;
+
     public static int currentBox = 0;
+
     public static boolean allBoxes = false;
-    public static Search search = null;
 
     public static void playSound(SoundEvent sound) {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));

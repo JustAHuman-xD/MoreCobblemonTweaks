@@ -30,4 +30,5 @@ public class Textures {
     public static final int BUTTON_HEIGHT = 18;
     public static final int WALLPAPER_WIDTH = 208;
     public static final int WALLPAPER_HEIGHT = 189;
+    public static final int STORAGE_WIDGET_SCREEN_WIDTH = 174;
 }

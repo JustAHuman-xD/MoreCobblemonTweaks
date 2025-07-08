@@ -4,11 +4,13 @@
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
+    "ButtonAccessor",
     "EditBoxAccessor",
     "ItemStackMixin",
     "PcGuiMixin",
     "StorageSlotMixin",
-    "StorageWidgetMixin"
+    "StorageWidgetMixin",
+    "SummaryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

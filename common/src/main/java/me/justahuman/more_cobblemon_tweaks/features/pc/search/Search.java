@@ -14,6 +14,8 @@ import java.util.UUID;
 public class Search {
     private static final PokemonProperties NONE = new PokemonProperties();
 
+    public static Search instance = null;
+
     private final Set<SearchPredicate> options;
     private final Set<UUID> passedMons = new HashSet<>();
     private final Set<UUID> failedMons = new HashSet<>();
@@ -60,7 +62,7 @@ public class Search {
             if (searchOption == null) {
                 String[] parts = option.split("=", 2);
                 if (parts.length == 2) {
-                    if (EggGroupPredicate.NAMES.contains(parts[0].toLowerCase(Locale.ROOT) + "=")) {
+                    if (EggGroupPredicate.KEY.equalsIgnoreCase(parts[0] + "=")) {
                         try {
                             EggGroup group = EggGroup.valueOf(parts[1].toUpperCase(Locale.ROOT));
                             searchOption = new EggGroupPredicate(group);

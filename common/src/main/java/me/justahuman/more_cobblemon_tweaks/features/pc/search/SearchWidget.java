@@ -10,7 +10,6 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.justahuman.more_cobblemon_tweaks.features.PcEnhancements;
 import me.justahuman.more_cobblemon_tweaks.mixins.EditBoxAccessor;
 import me.justahuman.more_cobblemon_tweaks.utils.CustomTextField;
-import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.List;
@@ -34,12 +33,12 @@ public class SearchWidget extends CustomTextField {
         setResponder(string -> {
             this.search = string.trim().toLowerCase();;
             this.suggestion = "";
-            Utils.search = null;
+            Search.instance = null;
             if (search.isBlank()) {
                 return;
             }
 
-            Utils.search = Search.of(this.search);
+            Search.instance = Search.of(this.search);
             int start = search.lastIndexOf(' ') + 1;
             if (search.length() > start && search.charAt(start) == '!') {
                 start += 1;

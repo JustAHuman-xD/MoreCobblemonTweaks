@@ -3,7 +3,6 @@ package me.justahuman.more_cobblemon_tweaks.features.pc.search;
 import me.justahuman.more_cobblemon_tweaks.features.PcEnhancements;
 import me.justahuman.more_cobblemon_tweaks.utils.CustomButton;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
-import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.gui.components.Renderable;
 
 import java.util.Set;
@@ -19,11 +18,11 @@ public class SearchButton extends CustomButton {
         handleSibling(SearchWidget.class, widget -> {
             if (widget.isVisible()) {
                 widget.setVisible(false);
-                Utils.search = null;
+                Search.instance = null;
                 return;
             }
             widget.setVisible(true);
-            Utils.search = Search.of(widget.getValue());
+            Search.instance = Search.of(widget.getValue());
         });
     }
 }

@@ -64,13 +64,13 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
         }
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(CobblemonSounds.PC_RELEASE, 1.0F));
         widget.setDisplayConfirmRelease(false);
-        selector.moreCobblemonTweaks$clearSelection();
+        selector.moreCobblemonTweaks$clearMultiSelection();
     }
 
     @Inject(at = @At("TAIL"), method = "setBox")
     public void setBox(int value, CallbackInfo ci) {
         Utils.currentBox = box;
-        moreCobblemonTweaks$clearSelection();
+        moreCobblemonTweaks$clearMultiSelection();
     }
 
     @Inject(at = @At("HEAD"), method = "onStorageSlotClicked", cancellable = true)
@@ -152,7 +152,19 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
     }
 
     @Override
-    public void moreCobblemonTweaks$clearSelection() {
+    public List<Pokemon> moreCobblemonTweaks$getSelectedPokemon() {
+        List<Pokemon> selectedPokemon = new ArrayList<>();
+        for (PCPosition position : moreCobblemonTweaks$selectedPositions) {
+            Pokemon pokemon = this.pcGui.getPc().get(position);
+            if (pokemon != null) {
+                selectedPokemon.add(pokemon);
+            }
+        }
+        return selectedPokemon;
+    }
+
+    @Override
+    public void moreCobblemonTweaks$clearMultiSelection() {
         moreCobblemonTweaks$selectedPositions.clear();
         resetSelected();
     }

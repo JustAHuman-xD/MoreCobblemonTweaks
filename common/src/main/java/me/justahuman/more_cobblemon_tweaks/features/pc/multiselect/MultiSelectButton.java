@@ -35,7 +35,7 @@ public class MultiSelectButton extends CustomButton {
     public void onClick(double mouseX, double mouseY) {
         toggled = !toggled;
         if (!toggled) {
-            handleSibling(MultiSelector.class, MultiSelector::moreCobblemonTweaks$clearSelection);
+            handleSibling(MultiSelector.class, MultiSelector::moreCobblemonTweaks$clearMultiSelection);
         }
     }
 

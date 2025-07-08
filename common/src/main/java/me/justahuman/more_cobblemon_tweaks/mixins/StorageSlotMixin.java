@@ -8,8 +8,8 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.justahuman.more_cobblemon_tweaks.api.MultiSelector;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
+import me.justahuman.more_cobblemon_tweaks.features.pc.search.Search;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
-import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -57,10 +57,10 @@ public abstract class StorageSlotMixin {
 
     @Unique
     private boolean moreCobblemonTweaks$failSearch() {
-        if (Utils.search == null || !ModConfig.isEnabled("pc_search")) {
+        if (Search.instance == null || !ModConfig.isEnabled("pc_search")) {
             return false;
         }
         Pokemon pokemon = this.getPokemon();
-        return pokemon != null && !Utils.search.passes(pokemon);
+        return pokemon != null && !Search.instance.passes(pokemon);
     }
 }
