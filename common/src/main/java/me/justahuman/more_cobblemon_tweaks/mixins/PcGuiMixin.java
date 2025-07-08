@@ -95,7 +95,7 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
         boolean wallpapers = ModConfig.isEnabled("custom_pc_wallpapers");
         if (wallpapers) {
             WallpaperButton button = this.addRenderableWidget(new WallpaperButton(x + 243, y - 13, siblings));
-            siblings.add(this.addRenderableWidget(moreCobblemonTweaks$wallpaperWidget = new WallpaperWidget(button, x + 85, y + 27)));
+            siblings.add(this.addRenderableWidget(moreCobblemonTweaks$wallpaperWidget = new WallpaperWidget(pc, button, x + 85, y + 27)));
             siblings.add(button);
         }
 

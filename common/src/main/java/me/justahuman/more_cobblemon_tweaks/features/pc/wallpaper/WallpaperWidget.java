@@ -1,7 +1,7 @@
 package me.justahuman.more_cobblemon_tweaks.features.pc.wallpaper;
 
-import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.CobblemonSounds;
+import com.cobblemon.mod.common.client.storage.ClientPC;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
@@ -10,18 +10,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class WallpaperWidget extends ObjectSelectionList<WallpaperWidget.Entry> {
     protected static final int ENTRY_WIDTH = 156;
     protected static final int ENTRY_HEIGHT = 142;
+
+    protected final ClientPC pc;
     protected final WallpaperButton button;
 
-    public WallpaperWidget(WallpaperButton button, int x, int y) {
+    public WallpaperWidget(ClientPC pc, WallpaperButton button, int x, int y) {
         super(Minecraft.getInstance(), 174, 155, y, ENTRY_HEIGHT);
         this.button = button;
         this.centerListVertically = false;
@@ -104,12 +107,11 @@ public class WallpaperWidget extends ObjectSelectionList<WallpaperWidget.Entry> 
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            boolean all = Utils.allBoxes || Screen.hasControlDown();
             ModConfig.setBoxTexture(Utils.currentBox, this.wallpaper);
-            LocalPlayer player = WallpaperWidget.this.minecraft.player;
-            if (Utils.allBoxes && player != null) {
+            if (all) {
                 try {
-                    int boxes = Cobblemon.INSTANCE.getStorage().getPC(player.getUUID(), player.registryAccess()).getBoxes().size();
-                    for (int i = 0; i < boxes; i++) {
+                    for (int i = 0; i < pc.getBoxes().size(); i++) {
                         ModConfig.setBoxTexture(i, wallpaper);
                     }
                 } catch (Exception ignored) {}
@@ -119,7 +121,7 @@ public class WallpaperWidget extends ObjectSelectionList<WallpaperWidget.Entry> 
         }
 
         @Override
-        public Component getNarration() {
+        public @NotNull Component getNarration() {
             return Component.empty();
         }
     }
