@@ -88,11 +88,11 @@ public class SearchWidget extends CustomTextField {
         int cursorPosition = this.getCursorPosition();
         if (isFocused() && !suggestion.isBlank() && cursorPosition == search.length()) {
             // If there's a suggestion, render it as gray text
-            ((EditBoxAccessor) this).setValue(suggestion);
+            ((EditBoxAccessor) this).setDirectValue(suggestion);
             setTextColor(11184810);
             setFocused(false);
             super.renderWidget(context, mouseX, mouseY, delta);
-            ((EditBoxAccessor) this).setValue(search);
+            ((EditBoxAccessor) this).setDirectValue(search);
             setTextColor(0xFFFFFF);
             setCursorPosition(cursorPosition);
             setFocused(true);
@@ -100,5 +100,9 @@ public class SearchWidget extends CustomTextField {
 
         // Render normally
         super.renderWidget(context, mouseX, mouseY, delta);
+    }
+
+    public void fillSuggestion() {
+        setValue(suggestion);
     }
 }

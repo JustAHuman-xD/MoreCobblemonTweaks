@@ -6,5 +6,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(EditBox.class)
 public interface EditBoxAccessor {
-    @Accessor void setValue(String value);
+    @Accessor(value = "value") void setDirectValue(String value);
 }

@@ -23,6 +23,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -110,6 +112,15 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
         boolean renameSelected = moreCobblemonTweaks$renameWidget != null && moreCobblemonTweaks$renameWidget.isFocused();
         boolean searchSelected = moreCobblemonTweaks$searchWidget != null && moreCobblemonTweaks$searchWidget.isFocused();
         return MiscUtilsKt.isInventoryKeyPressed($this$isInventoryKeyPressed, client, keyCode, scanCode) && !renameSelected && !searchSelected;
+    }
+
+    @Inject(method = "keyPressed", at = @At(value = "HEAD"), cancellable = true)
+    public void tabComplete(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        boolean searchSelected = moreCobblemonTweaks$searchWidget != null && moreCobblemonTweaks$searchWidget.isFocused();
+        if (searchSelected && keyCode == GLFW.GLFW_KEY_TAB) {
+            moreCobblemonTweaks$searchWidget.fillSuggestion();
+            cir.setReturnValue(true);
+        }
     }
 
     @Override

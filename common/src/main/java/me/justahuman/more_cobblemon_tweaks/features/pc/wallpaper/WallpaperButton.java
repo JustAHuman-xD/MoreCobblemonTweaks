@@ -2,7 +2,6 @@ package me.justahuman.more_cobblemon_tweaks.features.pc.wallpaper;
 
 import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import me.justahuman.more_cobblemon_tweaks.features.PcEnhancements;
-import me.justahuman.more_cobblemon_tweaks.mixins.StorageWidgetAccessor;
 import me.justahuman.more_cobblemon_tweaks.utils.CustomButton;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
@@ -24,8 +23,10 @@ public class WallpaperButton extends CustomButton {
             handleSibling(StorageWidget.class, storageWidget -> {
                 storageWidget.visible = widget.visible;
                 storageWidget.active = widget.visible;
+                storageWidget.setSelectedPosition(null);
+                storageWidget.setGrabbedSlot(null);
+                storageWidget.getPcGui().setPreviewPokemon(null);
             });
-            handleSibling(StorageWidgetAccessor.class, StorageWidgetAccessor::resetSelectedInvoker);
             widget.setVisible(!widget.visible);
         });
     }

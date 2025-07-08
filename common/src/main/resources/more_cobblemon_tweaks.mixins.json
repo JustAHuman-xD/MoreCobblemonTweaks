@@ -8,7 +8,6 @@
     "ItemStackMixin",
     "PcGuiMixin",
     "StorageSlotMixin",
-    "StorageWidgetAccessor",
     "StorageWidgetMixin"
   ],
   "injectors": {

@@ -150,7 +150,8 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
     @Override
     public void moreCobblemonTweaks$clearSelection() {
         moreCobblemonTweaks$selectedPositions.clear();
+        resetSelected();
     }
 
-    @Shadow protected abstract void playSound(SoundEvent soundEvent);
+    @Shadow protected abstract void resetSelected();
 }
