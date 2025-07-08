@@ -36,6 +36,8 @@ import java.util.List;
 
 @Mixin(value = StorageWidget.class, remap = false)
 public abstract class StorageWidgetMixin extends SoundlessWidget implements MultiSelector {
+    @Shadow protected abstract void playSound(SoundEvent soundEvent);
+
     @Final @Shadow private PCGUI pcGui;
     @Shadow private int box;
 
@@ -103,6 +105,8 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
             moreCobblemonTweaks$toggleSelected(clickedPosition);
             moreCobblemonTweaks$lastPosition = clickedPosition;
         }
+
+        playSound(enabling ? CobblemonSounds.PC_GRAB : CobblemonSounds.PC_DROP);
     }
 
     @Unique
