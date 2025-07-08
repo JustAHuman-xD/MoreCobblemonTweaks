@@ -64,6 +64,9 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
         }
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(CobblemonSounds.PC_RELEASE, 1.0F));
         widget.setDisplayConfirmRelease(false);
+        widget.setSelectedPosition(null);
+        widget.setGrabbedSlot(null);
+        widget.getPcGui().setPreviewPokemon(null);
         selector.moreCobblemonTweaks$clearMultiSelection();
     }
 
@@ -166,8 +169,5 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
     @Override
     public void moreCobblemonTweaks$clearMultiSelection() {
         moreCobblemonTweaks$selectedPositions.clear();
-        resetSelected();
     }
-
-    @Shadow protected abstract void resetSelected();
 }

@@ -26,6 +26,7 @@ public class WallpaperWidget extends ObjectSelectionList<WallpaperWidget.Entry> 
 
     public WallpaperWidget(ClientPC pc, WallpaperButton button, int x, int y) {
         super(Minecraft.getInstance(), 174, 155, y, ENTRY_HEIGHT);
+        this.pc = pc;
         this.button = button;
         this.centerListVertically = false;
         this.visible = false;
