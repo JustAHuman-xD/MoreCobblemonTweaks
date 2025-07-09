@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.CobblemonSounds;
 import com.cobblemon.mod.common.api.storage.pc.PCPosition;
 import com.cobblemon.mod.common.client.gui.pc.BoxStorageSlot;
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
+import com.cobblemon.mod.common.client.gui.pc.ReleaseConfirmButton;
 import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
 import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget;
 import com.cobblemon.mod.common.net.messages.server.storage.pc.ReleasePCPokemonPacket;
@@ -13,10 +14,8 @@ import me.justahuman.more_cobblemon_tweaks.api.MultiSelector;
 import me.justahuman.more_cobblemon_tweaks.api.MultiSelectorState;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -36,9 +35,8 @@ import java.util.List;
 
 @Mixin(value = StorageWidget.class, remap = false)
 public abstract class StorageWidgetMixin extends SoundlessWidget implements MultiSelector {
-    @Shadow protected abstract void playSound(SoundEvent soundEvent);
-
     @Final @Shadow private PCGUI pcGui;
+    @Final @Shadow private ReleaseConfirmButton releaseYesButton;
     @Shadow private int box;
 
     @Unique private PCPosition moreCobblemonTweaks$lastPosition = null;
@@ -48,26 +46,26 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
         super(pX, pY, pWidth, pHeight, component);
     }
 
-    @Inject(method = "_init_$lambda$1", at = @At(value = "HEAD"), cancellable = true)
-    private static void onConfirmRelease(StorageWidget widget, Button it, CallbackInfo ci) {
-        MultiSelector selector = (MultiSelector) (Object) widget;
-        if (selector == null || !selector.moreCobblemonTweaks$isMultiSelecting()) {
-            return;
-        }
-
-        ci.cancel();
-        for (PCPosition position : selector.moreCobblemonTweaks$getSelectedPositions()) {
-            Pokemon pokemon = widget.getPcGui().getPc().get(position);
-            if (pokemon != null) {
-                CobblemonNetwork.INSTANCE.sendToServer(new ReleasePCPokemonPacket(pokemon.getUuid(), position));
+    @Inject(method = "<init>", at = @At(value = "TAIL"))
+    private void releaseMultiselect(CallbackInfo ci) {
+        Button.OnPress original = ((ButtonAccessor) (Object) this.releaseYesButton).getOnPress();
+        ((ButtonAccessor) (Object) this.releaseYesButton).setOnPress(button -> {
+            if (!moreCobblemonTweaks$isMultiSelecting()) {
+                original.onPress(button);
+                return;
             }
-        }
-        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(CobblemonSounds.PC_RELEASE, 1.0F));
-        widget.setDisplayConfirmRelease(false);
-        widget.setSelectedPosition(null);
-        widget.setGrabbedSlot(null);
-        widget.getPcGui().setPreviewPokemon(null);
-        selector.moreCobblemonTweaks$clearMultiSelection();
+
+            for (PCPosition position : moreCobblemonTweaks$getSelectedPositions()) {
+                Pokemon pokemon = pcGui.getPc().get(position);
+                if (pokemon != null) {
+                    CobblemonNetwork.INSTANCE.sendToServer(new ReleasePCPokemonPacket(pokemon.getUuid(), position));
+                }
+            }
+            playSound(CobblemonSounds.PC_RELEASE);
+            resetSelected();
+            setDisplayConfirmRelease(false);
+            moreCobblemonTweaks$clearMultiSelection();
+        });
     }
 
     @Inject(at = @At("TAIL"), method = "setBox")
@@ -170,4 +168,8 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
     public void moreCobblemonTweaks$clearMultiSelection() {
         moreCobblemonTweaks$selectedPositions.clear();
     }
+
+    @Shadow public abstract void setDisplayConfirmRelease(boolean b);
+    @Shadow protected abstract void playSound(SoundEvent soundEvent);
+    @Shadow protected abstract void resetSelected();
 }

@@ -7,5 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Button.class)
 public interface ButtonAccessor {
+    @Accessor @Final Button.OnPress getOnPress();
     @Accessor @Final void setOnPress(Button.OnPress onPress);
 }

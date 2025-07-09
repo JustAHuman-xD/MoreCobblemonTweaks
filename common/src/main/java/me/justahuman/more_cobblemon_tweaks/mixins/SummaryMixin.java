@@ -12,7 +12,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,14 +28,16 @@ public abstract class SummaryMixin extends Screen {
     private void ensureBaseExit(CallbackInfo ci) {
         for (GuiEventListener child : this.children()) {
             if (child instanceof ExitButton exitButton) {
-                ((ButtonAccessor) (Object) exitButton).setOnPress(button -> init$lambda$9((Summary) (Object) this, button));
+                Button.OnPress original = ((ButtonAccessor) (Object) exitButton).getOnPress();
+                ((ButtonAccessor) (Object) exitButton).setOnPress(button -> {
+                    CallbackInfo callbackInfo = new CallbackInfo("onPress", true);
+                    moreCobblemonTweaks$handleFromPC(callbackInfo);
+                    if (!callbackInfo.isCancelled()) {
+                        original.onPress(button);
+                    }
+                });
             }
         }
-    }
-
-    @Inject(method = "init$lambda$9", at = @At(value = "HEAD"), cancellable = true)
-    private static void onExit(Summary this$0, Button it, CallbackInfo ci) {
-        moreCobblemonTweaks$handleFromPC(ci);
     }
 
     @Inject(method = "onClose", at = @At("HEAD"), cancellable = true)
@@ -53,10 +54,5 @@ public abstract class SummaryMixin extends Screen {
             Minecraft.getInstance().setScreen(pcGui);
             ci.cancel();
         }
-    }
-
-    @Shadow(remap = false)
-    private static void init$lambda$9(Summary this$0, Button it) {
-        throw new IllegalStateException("Mixin did not apply correctly, this method should not be called directly.");
     }
 }
