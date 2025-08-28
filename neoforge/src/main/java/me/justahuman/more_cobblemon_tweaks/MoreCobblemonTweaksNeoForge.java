@@ -5,6 +5,7 @@ import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.Keybinds;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
@@ -15,7 +16,7 @@ import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 
-@Mod(MoreCobblemonTweaks.MOD_ID)
+@Mod(value = MoreCobblemonTweaks.MOD_ID, dist = Dist.CLIENT)
 public final class MoreCobblemonTweaksNeoForge {
     public MoreCobblemonTweaksNeoForge() {
         MoreCobblemonTweaks.initClient(
