@@ -139,10 +139,20 @@ public class CobbreedingIntegration extends EnhancedEggLore {
 
     public static CobbreedingIntegration get(ItemStack itemStack) {
         if (itemStack.getItem() instanceof PokemonEgg) {
-            if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && isString(itemStack.get(PokemonEgg.Companion.getEGG_INFO()))) {
-                return new CobbreedingIntegration((String) (Object) itemStack.get(PokemonEgg.Companion.getEGG_INFO()));
-            } else if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
-                return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
+            try {
+                if (itemStack.has(PokemonEgg.Companion.getVERSION())) {
+                    // 2.0.x
+                    if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
+                        return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
+                    }
+                }
+            } catch (NoSuchMethodError e) {
+                // 1.8.8+ legacy
+                if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && isString(itemStack.get(PokemonEgg.Companion.getEGG_INFO()))) {
+                    return new CobbreedingIntegration((String) (Object) itemStack.get(PokemonEgg.Companion.getEGG_INFO()));
+                } else if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
+                    return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
+                }
             }
         }
         return null;
