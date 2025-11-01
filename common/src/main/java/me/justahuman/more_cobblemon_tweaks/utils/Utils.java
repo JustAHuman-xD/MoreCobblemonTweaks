@@ -1,5 +1,6 @@
 package me.justahuman.more_cobblemon_tweaks.utils;
 
+import com.cobblemon.mod.common.client.gui.pc.PCGUIConfiguration;
 import com.cobblemon.mod.common.client.storage.ClientPC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -21,6 +22,7 @@ public class Utils {
     private static Function<String, String> modVersionFunction = id -> "unknown";
 
     public static ClientPC summaryPC = null;
+    public static PCGUIConfiguration summaryConfig = null;
     public static boolean summaryFromPC = false;
 
     public static int currentBox = 0;

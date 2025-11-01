@@ -9,7 +9,9 @@ import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.IVs;
 import com.cobblemon.mod.common.pokemon.Nature;
 import com.cobblemon.mod.common.util.MiscUtilsKt;
+import ludichat.cobbreeding.EggUtilities;
 import ludichat.cobbreeding.PokemonEgg;
+import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +34,7 @@ public class CobbreedingIntegration extends EnhancedEggLore {
 
     @Override
     public Component getName(List<Component> lore) {
-        if (lore.size() > 1) {
+        if (lore.size() > 2) {
             String name = lore.remove(1).getString();
             if (name.equals("Bad egg")) {
                 return Component.literal("Bad Egg");
@@ -144,12 +146,14 @@ public class CobbreedingIntegration extends EnhancedEggLore {
                     // 2.0.x
                     if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
                         return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
+                    } else if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && ModConfig.isEnabled("bypass_egg_encryption")) {
+                        return new CobbreedingIntegration(EggUtilities.decrypt(itemStack.get(PokemonEgg.Companion.getEGG_INFO())));
                     }
                 }
             } catch (NoSuchMethodError e) {
                 // 1.8.8+ legacy
                 if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && isString(itemStack.get(PokemonEgg.Companion.getEGG_INFO()))) {
-                    return new CobbreedingIntegration((String) (Object) itemStack.get(PokemonEgg.Companion.getEGG_INFO()));
+                    return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getEGG_INFO()));
                 } else if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
                     return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
                 }

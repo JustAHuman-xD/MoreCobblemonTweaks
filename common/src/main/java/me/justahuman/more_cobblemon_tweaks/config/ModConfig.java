@@ -30,6 +30,7 @@ public class ModConfig {
     private static String lastServerId = "";
     static {
         DEFAULT_CONFIG.addProperty("enhanced_egg_lore", true);
+        DEFAULT_CONFIG.addProperty("bypass_egg_encryption", false);
         DEFAULT_CONFIG.addProperty("shiny_egg_indicator", true);
         DEFAULT_CONFIG.addProperty("perfect_iv_egg_indicator", true);
         DEFAULT_CONFIG.addProperty("pc_multi_select", true);

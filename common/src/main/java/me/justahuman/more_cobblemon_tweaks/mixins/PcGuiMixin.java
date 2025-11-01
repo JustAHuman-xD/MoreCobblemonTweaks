@@ -140,6 +140,7 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
         } else if (!renameSelected && !searchSelected && CobblemonKeyBinds.INSTANCE.getSUMMARY().matches(keyCode, scanCode)) {
             Utils.currentBox = this.storageWidget.getBox();
             Utils.summaryPC = this.pc;
+            Utils.summaryConfig = this.configuration;
             Utils.summaryFromPC = true;
             List<Pokemon> summaryPokemon = new ArrayList<>();
             if (moreCobblemonTweaks$isMultiSelecting()) {
@@ -151,8 +152,11 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
                 summaryPokemon.add(previewPokemon);
             }
             summaryPokemon.removeIf(Objects::isNull);
-            Summary.Companion.open(summaryPokemon, false, 0);
-            cir.setReturnValue(true);
+
+            if (!summaryPokemon.isEmpty()) {
+                Summary.Companion.open(summaryPokemon, false, 0);
+                cir.setReturnValue(true);
+            }
         }
     }
 

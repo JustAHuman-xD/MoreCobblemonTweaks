@@ -36,6 +36,7 @@ public class ConfigScreen {
         /* Lore Config Options */
 
         loreCategory.addEntry(basicToggle(entryBuilder, "enhanced_egg_lore"));
+        loreCategory.addEntry(basicToggle(entryBuilder, "bypass_egg_encryption", "enhanced_egg_lore"));
         loreCategory.addEntry(basicToggle(entryBuilder, "shiny_egg_indicator", "enhanced_egg_lore"));
         loreCategory.addEntry(basicToggle(entryBuilder, "perfect_iv_egg_indicator", "enhanced_egg_lore"));
 

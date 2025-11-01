@@ -23,6 +23,8 @@
 
   "more_cobblemon_tweaks.config.option.enhanced_egg_lore": "Enhanced Egg Lore",
   "more_cobblemon_tweaks.config.option.enhanced_egg_lore.tooltip": "Adds lore describing various information about the pokemon contained in an egg.",
+  "more_cobblemon_tweaks.config.option.bypass_egg_encryption": "Bypass Egg Encryption",
+  "more_cobblemon_tweaks.config.option.bypass_egg_encryption.tooltip": "If Enhanced Egg Lore is enabled, and an egg's encrypted, should MoreCobblemonTweaks try to bypass the encryption?",
   "more_cobblemon_tweaks.config.option.shiny_egg_indicator": "Shiny Egg Indicator",
   "more_cobblemon_tweaks.config.option.shiny_egg_indicator.tooltip": "If Enhanced Egg Lore is enabled, should it display if an egg is shiny with a gold star?",
   "more_cobblemon_tweaks.config.option.shiny_egg_indicator.requirements": "Shiny Egg Indicator requires Enhanced Egg Lore to be enabled!",
