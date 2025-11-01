@@ -20,7 +20,7 @@ public class Hooks {
             int major = Integer.parseInt(parts[0]);
             int minor = Integer.parseInt(parts[1]);
             int patch = Integer.parseInt(parts[2]);
-            return major == 1 && (minor > 8 || (minor == 8 && patch >= 8));
+            return (major == 1 && (minor > 8 || (minor == 8 && patch >= 8))) || (major == 2 && minor == 0);
         } catch (NumberFormatException e) {
             return false;
         }
