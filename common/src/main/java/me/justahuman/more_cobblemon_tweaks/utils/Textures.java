@@ -19,7 +19,7 @@ public class Textures {
     public static final ResourceLocation SELECTED_SLOT_OVERLAY = MoreCobblemonTweaks.id("textures/gui/pc/pc_slot_selected_overlay.png");
     public static final ResourceLocation WALLPAPER_DEFAULT_TEXTURE = MoreCobblemonTweaks.id("textures/gui/pc/wallpapers/default_wallpaper.png");
     public static final int IV_WIDGET_WIDTH = 52;
-    public static final int IV_WIDGET_HEIGHT = 98;
+    public static final int IV_WIDGET_HEIGHT = 113;
     public static final int RENAME_BUTTON_WIDTH = 21;
     public static final int WALLPAPER_BUTTON_WIDTH = 19;
     public static final int CONTROL_BUTTON_WIDTH = 19;

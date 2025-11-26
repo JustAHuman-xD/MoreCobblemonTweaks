@@ -52,28 +52,38 @@ public class IvWidget implements Renderable {
             IVs iVs = pokemon.getIvs();
             boolean colored = ModConfig.isEnabled("pc_colored_ivs");
             drawText(context, PcEnhancements.translate("iv_display.hp").withStyle(colored ? GREEN : WHITE), x, y, mouseX, mouseY);
-            String hp = iVs.get(Stats.HP).toString();
+            int hpStat = iVs.get(Stats.HP);
+            String hp = Integer.toString(hpStat);
             drawText(context, Component.literal(hp).withStyle(WHITE), x + (hp.length() == 1 ? 30 : 27), y, mouseX, mouseY);
             y += 15;
             drawText(context, PcEnhancements.translate("iv_display.attack").withStyle(colored ? RED : WHITE), x, y, mouseX, mouseY);
-            String attack = iVs.get(Stats.ATTACK).toString();
+            int attackStat = iVs.get(Stats.ATTACK);
+            String attack = Integer.toString(attackStat);
             drawText(context, Component.literal(attack).withStyle(WHITE), x + (attack.length() == 1 ? 30 : 27), y, mouseX, mouseY);
             y += 15;
             drawText(context, PcEnhancements.translate("iv_display.defense").withStyle(colored ? GOLD : WHITE), x, y, mouseX, mouseY);
-            String defense = iVs.get(Stats.DEFENCE).toString();
+            int defenseStat = iVs.get(Stats.DEFENCE);
+            String defense = Integer.toString(defenseStat);
             drawText(context, Component.literal(defense).withStyle(WHITE), x + (defense.length() == 1 ? 30 : 27), y, mouseX, mouseY);
             y += 15;
             drawText(context, PcEnhancements.translate("iv_display.sp_attack").withStyle(colored ? LIGHT_PURPLE : WHITE), x, y, mouseX, mouseY);
-            String spAttack = iVs.get(Stats.SPECIAL_ATTACK).toString();
+            int spAttackStat = iVs.get(Stats.SPECIAL_ATTACK);
+            String spAttack = Integer.toString(spAttackStat);
             drawText(context, Component.literal(spAttack).withStyle(WHITE), x + (spAttack.length() == 1 ? 30 : 27), y, mouseX, mouseY);
             y += 15;
             drawText(context, PcEnhancements.translate("iv_display.sp_defense").withStyle(colored ? YELLOW : WHITE), x, y, mouseX, mouseY);
-            String spDef = iVs.get(Stats.SPECIAL_DEFENCE).toString();
+            int spDefenseStat = iVs.get(Stats.SPECIAL_DEFENCE);
+            String spDef = Integer.toString(spDefenseStat);
             drawText(context, Component.literal(spDef).withStyle(WHITE), x + (spDef.length() == 1 ? 30 : 27), y, mouseX, mouseY);
             y += 15;
             drawText(context, PcEnhancements.translate("iv_display.speed").withStyle(colored ? AQUA : WHITE), x, y, mouseX, mouseY);
-            String speed = iVs.get(Stats.SPEED).toString();
+            int speedStat = iVs.get(Stats.SPEED);
+            String speed = Integer.toString(speedStat);
             drawText(context, Component.literal(speed).withStyle(WHITE), x + (speed.length() == 1 ? 30 : 27), y, mouseX, mouseY);
+            y += 15;
+            drawText(context, PcEnhancements.translate("iv_display.percentage").withStyle(colored ? DARK_PURPLE : WHITE), x, y, mouseX, mouseY);
+            String percentage = Integer.toString((hpStat + attackStat + defenseStat + spAttackStat + spDefenseStat + speedStat) * 100 / 186);
+            drawText(context, Component.literal(percentage).withStyle(WHITE), x + (percentage.length() == 4 ? 30 : 27), y, mouseX, mouseY);
         }
     }
 

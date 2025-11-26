@@ -38,7 +38,8 @@
   "more_cobblemon_tweaks.pc_enhancements.iv_display.defense": "Def:",
   "more_cobblemon_tweaks.pc_enhancements.iv_display.sp_attack": "Sp.Atk:",
   "more_cobblemon_tweaks.pc_enhancements.iv_display.sp_defense": "Sp.Def:",
-  "more_cobblemon_tweaks.pc_enhancements.iv_display.speed": "Speed",
+  "more_cobblemon_tweaks.pc_enhancements.iv_display.speed": "Speed:",
+  "more_cobblemon_tweaks.pc_enhancements.iv_display.percentage": "IV %:",
 
   "more_cobblemon_tweaks.pc_enhancements.custom_pc_box_names.tooltip": "Click to rename the current box!",
 
