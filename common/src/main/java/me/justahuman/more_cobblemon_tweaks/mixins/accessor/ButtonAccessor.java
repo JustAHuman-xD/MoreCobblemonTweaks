@@ -1,4 +1,4 @@
-package me.justahuman.more_cobblemon_tweaks.mixins;
+package me.justahuman.more_cobblemon_tweaks.mixins.accessor;
 
 import net.minecraft.client.gui.components.Button;
 import org.spongepowered.asm.mixin.Final;

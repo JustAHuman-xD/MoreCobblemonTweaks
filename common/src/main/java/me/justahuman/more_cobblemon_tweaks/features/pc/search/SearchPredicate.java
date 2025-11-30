@@ -1,9 +1,11 @@
 package me.justahuman.more_cobblemon_tweaks.features.pc.search;
 
+import com.cobblemon.mod.common.api.storage.pc.search.PokemonFilter;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.justahuman.more_cobblemon_tweaks.features.pc.search.predicates.EggGroupPredicate;
 import me.justahuman.more_cobblemon_tweaks.features.pc.search.predicates.SimplePredicate;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,8 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-@FunctionalInterface
-public interface SearchPredicate {
+public interface SearchPredicate extends PokemonFilter {
     Set<SearchPredicate> ALL = new HashSet<>();
     Map<String, SearchPredicate> FIXED = new HashMap<>();
 
@@ -46,10 +47,9 @@ public interface SearchPredicate {
 
     default void suggest(SuggestionsBuilder builder) {}
 
-    boolean passes(Pokemon pokemon);
-
-    default SearchPredicate invert() {
-        return pokemon -> !passes(pokemon);
+    @Override
+    default @NotNull SearchPredicate inverted() {
+        return pokemon -> !test(pokemon);
     }
 
     static void register(SearchPredicate predicate) {

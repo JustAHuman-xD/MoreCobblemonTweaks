@@ -4,11 +4,6 @@
 
   "more_cobblemon_tweaks.config.option.overridden_tooltip": "Overridden by Server",
 
-  "more_cobblemon_tweaks.config.option.pc_search": "Box Search",
-  "more_cobblemon_tweaks.config.option.pc_search.tooltip": "Adds a button to open/close a search bar.",
-  "more_cobblemon_tweaks.config.option.pc_search_hide": "Hide Unmatched Search",
-  "more_cobblemon_tweaks.config.option.pc_search_hide.tooltip": "If enabled, pokemon that do not match the search will be hidden instead of greyed out.",
-  "more_cobblemon_tweaks.config.option.pc_search_hide.requirements": "Hide Unmatched Search requires Box Search to be enabled!",
   "more_cobblemon_tweaks.config.option.open_box_history": "Open Box History",
   "more_cobblemon_tweaks.config.option.open_box_history.tooltip": "Should the PC remember and open to the last box you had open?",
   "more_cobblemon_tweaks.config.option.pc_iv_display": "IV Display",
@@ -16,10 +11,8 @@
   "more_cobblemon_tweaks.config.option.pc_colored_ivs": "Colored IVs",
   "more_cobblemon_tweaks.config.option.pc_colored_ivs.tooltip": "If enabled, the IVs in the iv display will be colored matching their respective power items.",
   "more_cobblemon_tweaks.config.option.pc_colored_ivs.requirements": "Colored IVs requires IV Display to be enabled!",
-  "more_cobblemon_tweaks.config.option.custom_pc_box_names": "Custom Box names",
-  "more_cobblemon_tweaks.config.option.custom_pc_box_names.tooltip": "Allows the player to change PC box names.",
-  "more_cobblemon_tweaks.config.option.custom_pc_wallpapers": "Box Wallpapers",
-  "more_cobblemon_tweaks.config.option.custom_pc_wallpapers.tooltip": "Allows the player to change PC box wallpapers.",
+  "more_cobblemon_tweaks.config.option.pc_multi_select": "Multi-Select",
+  "more_cobblemon_tweaks.config.option.pc_multi_select.tooltip": "If enabled, adds a button to the PC to allow selecting multiple pokemon at once for moving or releasing.",
 
   "more_cobblemon_tweaks.config.option.enhanced_egg_lore": "Enhanced Egg Lore",
   "more_cobblemon_tweaks.config.option.enhanced_egg_lore.tooltip": "Adds lore describing various information about the pokemon contained in an egg.",
@@ -31,21 +24,15 @@
   "more_cobblemon_tweaks.config.option.perfect_iv_egg_indicator": "Perfect IV Egg Indicator",
   "more_cobblemon_tweaks.config.option.perfect_iv_egg_indicator.tooltip": "If Enhanced Egg Lore is enabled, should it display if an egg has perfect IVs with a gold triangle?",
   "more_cobblemon_tweaks.config.option.perfect_iv_egg_indicator.requirements": "Perfect IV Egg Indicator requires Enhanced Egg Lore to be enabled!",
-  "more_cobblemon_tweaks.config.option.waiting_for_updates": "Waiting on cobblemon egg side-mods to update to 1.6!",
+  "more_cobblemon_tweaks.config.option.waiting_for_updates": "Waiting on cobblemon egg side-mods to update to 1.7.1!",
 
   "more_cobblemon_tweaks.pc_enhancements.iv_display.hp": "HP:",
   "more_cobblemon_tweaks.pc_enhancements.iv_display.attack": "Atk:",
-  "more_cobblemon_tweaks.pc_enhancements.iv_display.defense": "Def:",
-  "more_cobblemon_tweaks.pc_enhancements.iv_display.sp_attack": "Sp.Atk:",
-  "more_cobblemon_tweaks.pc_enhancements.iv_display.sp_defense": "Sp.Def:",
+  "more_cobblemon_tweaks.pc_enhancements.iv_display.defence": "Def:",
+  "more_cobblemon_tweaks.pc_enhancements.iv_display.special_attack": "Sp.Atk:",
+  "more_cobblemon_tweaks.pc_enhancements.iv_display.special_defence": "Sp.Def:",
   "more_cobblemon_tweaks.pc_enhancements.iv_display.speed": "Speed",
-
-  "more_cobblemon_tweaks.pc_enhancements.custom_pc_box_names.tooltip": "Click to rename the current box!",
-
-  "more_cobblemon_tweaks.pc_enhancements.pc_search.tooltip": "Click to open/close the search.",
-  "more_cobblemon_tweaks.pc_enhancements.pc_search.blank": "No Search Provided",
-
-  "more_cobblemon_tweaks.pc_enhancements.custom_pc_wallpapers.tooltip": "Click to change the wallpaper of the current box! (Hold Control to change all boxes)",
+  "more_cobblemon_tweaks.pc_enhancements.iv_display.average": "Avg:",
 
   "more_cobblemon_tweaks.lore_enhancements.egg.hulis.hatch_progress.cycles": "Egg Cycles Remaining: ",
   "more_cobblemon_tweaks.lore_enhancements.egg.hulis.hatch_progress.steps": "Steps Left: ",

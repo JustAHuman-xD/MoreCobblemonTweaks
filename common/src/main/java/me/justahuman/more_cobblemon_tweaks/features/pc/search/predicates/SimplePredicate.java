@@ -28,7 +28,7 @@ public class SimplePredicate implements SearchPredicate {
     }
 
     @Override
-    public boolean passes(Pokemon pokemon) {
+    public boolean test(Pokemon pokemon) {
         return predicate.test(pokemon);
     }
 }

@@ -34,7 +34,7 @@ public class EggGroupPredicate implements SearchPredicate {
     @Override
     public void suggest(SuggestionsBuilder builder) {
         String remaining = builder.getRemainingLowerCase();
-        if (remaining.equals(KEY) || remaining.startsWith(KEY)) {
+        if (remaining.startsWith(KEY)) {
             for (String completion : COMPLETION) {
                 if (completion.startsWith(remaining)) {
                     builder.suggest(completion);
@@ -46,7 +46,7 @@ public class EggGroupPredicate implements SearchPredicate {
     }
 
     @Override
-    public boolean passes(Pokemon pokemon) {
+    public boolean test(Pokemon pokemon) {
         return eggGroup != null && pokemon.getSpecies().getEggGroups().contains(eggGroup);
     }
 }

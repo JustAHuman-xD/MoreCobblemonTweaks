@@ -10,10 +10,13 @@ import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ShortTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public class Utils {
@@ -21,13 +24,12 @@ public class Utils {
     private static Function<String, Boolean> modEnabledFunction = id -> false;
     private static Function<String, String> modVersionFunction = id -> "unknown";
 
+    public static CompletableFuture<Void> moveAllPokemonFuture = null;
+
     public static ClientPC summaryPC = null;
     public static PCGUIConfiguration summaryConfig = null;
+    public static Set<ResourceLocation> unseenWallpapers = null;
     public static boolean summaryFromPC = false;
-
-    public static int currentBox = 0;
-
-    public static boolean allBoxes = false;
 
     public static void playSound(SoundEvent sound) {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));

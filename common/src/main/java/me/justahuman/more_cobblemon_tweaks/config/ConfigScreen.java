@@ -25,13 +25,9 @@ public class ConfigScreen {
 
         /* Pc Config Options */
 
-        pcCategory.addEntry(basicToggle(entryBuilder, "pc_search"));
-        pcCategory.addEntry(basicToggle(entryBuilder, "pc_search_hide", "pc_search"));
-        pcCategory.addEntry(basicToggle(entryBuilder, "open_box_history"));
         pcCategory.addEntry(basicToggle(entryBuilder, "pc_iv_display"));
         pcCategory.addEntry(basicToggle(entryBuilder, "pc_colored_ivs", "pc_iv_display"));
-        pcCategory.addEntry(basicToggle(entryBuilder, "custom_pc_box_names"));
-        pcCategory.addEntry(basicToggle(entryBuilder, "custom_pc_wallpapers"));
+        pcCategory.addEntry(basicToggle(entryBuilder, "pc_multi_select"));
 
         /* Lore Config Options */
 

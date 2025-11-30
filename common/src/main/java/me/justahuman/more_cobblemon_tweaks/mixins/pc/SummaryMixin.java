@@ -1,9 +1,10 @@
-package me.justahuman.more_cobblemon_tweaks.mixins;
+package me.justahuman.more_cobblemon_tweaks.mixins.pc;
 
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.gui.ExitButton;
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
 import com.cobblemon.mod.common.client.gui.summary.Summary;
+import me.justahuman.more_cobblemon_tweaks.mixins.accessor.ButtonAccessor;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -47,8 +48,10 @@ public abstract class SummaryMixin extends Screen {
     @Unique
     private static void moreCobblemonTweaks$handleFromPC(CallbackInfo ci) {
         if (Utils.summaryFromPC) {
-            PCGUI pcGui = new PCGUI(Utils.summaryPC, CobblemonClient.INSTANCE.getStorage().getMyParty(), Utils.summaryConfig, Utils.currentBox);
+            PCGUI pcGui = new PCGUI(Utils.summaryPC, CobblemonClient.INSTANCE.getStorage().getParty(), Utils.summaryConfig, CobblemonClient.INSTANCE.getLastPcBoxViewed(), Utils.unseenWallpapers);
             Utils.summaryPC = null;
+            Utils.summaryConfig = null;
+            Utils.unseenWallpapers = null;
             Utils.summaryFromPC = false;
             Minecraft.getInstance().setScreen(pcGui);
             ci.cancel();

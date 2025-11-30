@@ -13,8 +13,8 @@ public class NameOrSpeciesPredicate implements SearchPredicate {
     }
 
     @Override
-    public boolean passes(Pokemon pokemon) {
+    public boolean test(Pokemon pokemon) {
         return pokemon.getSpecies().resourceIdentifier.getPath().contains(filter)
-                || pokemon.getDisplayName().getString().toLowerCase(Locale.ROOT).contains(filter);
+                || pokemon.getDisplayName(false).getString().toLowerCase(Locale.ROOT).contains(filter);
     }
 }

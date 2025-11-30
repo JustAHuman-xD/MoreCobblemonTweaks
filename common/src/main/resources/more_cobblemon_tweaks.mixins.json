@@ -4,13 +4,17 @@
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
-    "ButtonAccessor",
-    "EditBoxAccessor",
-    "ItemStackMixin",
-    "PcGuiMixin",
-    "StorageSlotMixin",
-    "StorageWidgetMixin",
-    "SummaryMixin"
+    "accessor.ButtonAccessor",
+    "accessor.EditBoxAccessor",
+    "pc.moveall.MoveClientPCPokemonHandlerMixin",
+    "pc.moveall.SwapClientPokemonHandlerMixin",
+    "pc.FilterWidgetMixin",
+    "pc.PcGuiMixin",
+    "pc.SearchMixin",
+    "pc.StorageSlotMixin",
+    "pc.StorageWidgetMixin",
+    "pc.SummaryMixin",
+    "ItemStackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

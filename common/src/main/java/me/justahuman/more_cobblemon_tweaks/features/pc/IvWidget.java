@@ -9,10 +9,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.PcEnhancements;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+
+import java.awt.*;
+import java.util.Objects;
 
 import static net.minecraft.ChatFormatting.*;
 
@@ -44,40 +48,33 @@ public class IvWidget implements Renderable {
                 Textures.IV_WIDGET_WIDTH,
                 Textures.IV_WIDGET_HEIGHT
         );
+        x += 9.5;
+        y += 9.5;
 
         Pokemon pokemon = gui.getPreviewPokemon$common();
         if (pokemon != null) {
-            x += 9.5;
-            y += 9.5;
-            IVs iVs = pokemon.getIvs();
-            boolean colored = ModConfig.isEnabled("pc_colored_ivs");
-            drawText(context, PcEnhancements.translate("iv_display.hp").withStyle(colored ? GREEN : WHITE), x, y, mouseX, mouseY);
-            String hp = iVs.get(Stats.HP).toString();
-            drawText(context, Component.literal(hp).withStyle(WHITE), x + (hp.length() == 1 ? 30 : 27), y, mouseX, mouseY);
-            y += 15;
-            drawText(context, PcEnhancements.translate("iv_display.attack").withStyle(colored ? RED : WHITE), x, y, mouseX, mouseY);
-            String attack = iVs.get(Stats.ATTACK).toString();
-            drawText(context, Component.literal(attack).withStyle(WHITE), x + (attack.length() == 1 ? 30 : 27), y, mouseX, mouseY);
-            y += 15;
-            drawText(context, PcEnhancements.translate("iv_display.defense").withStyle(colored ? GOLD : WHITE), x, y, mouseX, mouseY);
-            String defense = iVs.get(Stats.DEFENCE).toString();
-            drawText(context, Component.literal(defense).withStyle(WHITE), x + (defense.length() == 1 ? 30 : 27), y, mouseX, mouseY);
-            y += 15;
-            drawText(context, PcEnhancements.translate("iv_display.sp_attack").withStyle(colored ? LIGHT_PURPLE : WHITE), x, y, mouseX, mouseY);
-            String spAttack = iVs.get(Stats.SPECIAL_ATTACK).toString();
-            drawText(context, Component.literal(spAttack).withStyle(WHITE), x + (spAttack.length() == 1 ? 30 : 27), y, mouseX, mouseY);
-            y += 15;
-            drawText(context, PcEnhancements.translate("iv_display.sp_defense").withStyle(colored ? YELLOW : WHITE), x, y, mouseX, mouseY);
-            String spDef = iVs.get(Stats.SPECIAL_DEFENCE).toString();
-            drawText(context, Component.literal(spDef).withStyle(WHITE), x + (spDef.length() == 1 ? 30 : 27), y, mouseX, mouseY);
-            y += 15;
-            drawText(context, PcEnhancements.translate("iv_display.speed").withStyle(colored ? AQUA : WHITE), x, y, mouseX, mouseY);
-            String speed = iVs.get(Stats.SPEED).toString();
-            drawText(context, Component.literal(speed).withStyle(WHITE), x + (speed.length() == 1 ? 30 : 27), y, mouseX, mouseY);
+            IVs ivs = pokemon.getIvs();
+            y = drawStat(context, ivs, Stats.HP, GREEN, x, y, mouseX, mouseY);
+            y = drawStat(context, ivs, Stats.ATTACK, RED, x, y, mouseX, mouseY);
+            y = drawStat(context, ivs, Stats.DEFENCE, GOLD, x, y, mouseX, mouseY);
+            y = drawStat(context, ivs, Stats.SPECIAL_ATTACK, LIGHT_PURPLE, x, y, mouseX, mouseY);
+            y = drawStat(context, ivs, Stats.SPECIAL_DEFENCE, YELLOW, x, y, mouseX, mouseY);
+            y = drawStat(context, ivs, Stats.SPEED, AQUA, x, y, mouseX, mouseY);
+
+            int average = (int) Stats.Companion.getPERMANENT().stream().mapToInt(ivs::getOrDefault).average().getAsDouble();
+            drawStat(context, "average", average, WHITE, x, y, mouseX, mouseY);
         }
     }
 
-    public void drawText(GuiGraphics context, MutableComponent text, double x, double y, int mouseX, int mouseY) {
-        RenderHelperKt.drawScaledText(context, null, text, x, y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);
+    public double drawStat(GuiGraphics context, IVs ivs, Stats stat, ChatFormatting color, double x, double y, int mouseX, int mouseY) {
+        return drawStat(context, stat.name().toLowerCase(), Objects.requireNonNullElse(ivs.get(stat), 0), color, x, y, mouseX, mouseY);
+    }
+
+    public double drawStat(GuiGraphics context, String stat, int statValue, ChatFormatting color, double x, double y, int mouseX, int mouseY) {
+        boolean colored = ModConfig.isEnabled("pc_colored_ivs");
+        RenderHelperKt.drawScaledText(context, null, PcEnhancements.translate("iv_display." + stat).withStyle(colored ? color : WHITE), x, y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);
+        String value = Screen.hasShiftDown() ? Math.round(statValue / 31.0 * 100) + "%" : Integer.toString(statValue);
+        RenderHelperKt.drawScaledText(context, null, Component.literal(value).withStyle(WHITE), x + (30 - (value.length() - 1) * 3), y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);
+        return y + 15;
     }
 }

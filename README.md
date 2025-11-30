@@ -1,5 +1,7 @@
 # MoreCobblemonTweaks
-A qol cobblemon client mod introducing pc box names, wallpapers, and more!<br>
+A qol cobblemon client mod introducing a variety of small but nice features.
+MoreCobblemonTweaks was the predecessor of the official PC search, box names, and box wallpapers system that was implemented in Cobblemon 1.7 by yours truly!
+They have since been removed from this mod, but there are still plenty of other features.
 
 # Config
 - All of the features listed in the section below can be individually tweaked in the mod's config. You can change them in the config file itself located in `configs/more_cobblemon_tweaks.json` or if mod menu & cloth config are installed, by using the in game editor (recommended).
@@ -20,23 +22,8 @@ BetterBreeding: Most<br>
     - ![Screenshot of egg tooltip](https://cdn.modrinth.com/data/cached_images/4a6c64576bd6d13c8cd078b92b8286eec11e02b3.png)
   - Enhanced Berry, Consumables, & Held Item Lore were removed as all are builtin to base cobblemon from 1.6+
 - PC Enhancements
-  - Iv Display
-    - You can optionally disable the colors of the ivs in the config, making them all white to match the rest of the ui.
-    - ![Screenshot of open pc with iv display on the left](https://cdn.modrinth.com/data/cached_images/9de30a7cd91f79b69b9c60baddb3a1bd84a97aca.png)
   - Open Box History
     - When opening the PC it will open to the box you last had open
-  - PC Search
-    - Adds a search button on the top left that opens a search field allowing you to search & filter through your pokemon!
-    - Search term suggestions will be shown as you type to assist.
-    - If you are familiar with the format of `/givepokemon player properties` most search terms will match it.
-    - Pokemon that do not match the search term will be grayed out, or optionally (disabled by default in config) hidden entirely.
-    - ![Screenshot of the search open](https://cdn.modrinth.com/data/cached_images/5092977e0db8a327336ebd24cb2e4b5d35351213.png)
-  - Custom Box Names
-    - Adds a new button on the top right of the PC that will open the box rename!
-    - ![Screenshot of pc gui with box rename open](https://cdn.modrinth.com/data/cached_images/1b7012ab3cbecf1a8cf7ebf4540ddead4dae01bc.png)
-  - Custom Box Wallpapers
-    - Adds a new button on the top right of the PC that will open the wallpaper selection, then just click on your choice!
-    - ![Screenshot of pc gui selecting a wallpaper](https://cdn.modrinth.com/data/5KWlJ2HC/images/7e7740d794f7dc8d32320c847e412fe33c840428.png)
   - Multiselect & Release
     - Adds a new button on the bottom right of the ui that will enable/disable multiselect mode.
     - While in the mode you can click individual slots to (de)select them, or shift+click to (de)select a range of slots.
