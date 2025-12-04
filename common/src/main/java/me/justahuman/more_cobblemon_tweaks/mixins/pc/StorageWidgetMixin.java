@@ -95,7 +95,7 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
         context.pose().popPose();
     }
 
-    @Inject(at = @At("HEAD"), method = "onStorageSlotClicked", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "onStorageSlotClicked(Lnet/minecraft/client/gui/components/Button;)V", cancellable = true)
     public void onSlotClicked(Button button, CallbackInfo ci) {
         if (!button.isHovered()) {
             ci.cancel();

@@ -27,6 +27,6 @@ BetterBreeding: Most<br>
   - Multiselect & Release
     - Adds a new button on the bottom right of the ui that will enable/disable multiselect mode.
     - While in the mode you can click individual slots to (de)select them, or shift+click to (de)select a range of slots.
-    - While you have slots selected you can use the release button as normal to release all selected pokemon at once.
+    - While you have slots selected you can use the release button as normal to release all selected pokemon at once. Or you can move them around to other boxes as a group.
     - ![Screenshot of multiselect mode with multiple selected slots](https://cdn.modrinth.com/data/cached_images/23e45b27114f433e047029def4881a3868767813.png)
 - More coming soon! (Please feel free to make suggestions via Issues!)

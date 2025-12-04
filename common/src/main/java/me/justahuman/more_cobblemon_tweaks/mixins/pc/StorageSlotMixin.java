@@ -32,7 +32,7 @@ import static com.cobblemon.mod.common.client.gui.pc.StorageSlot.SIZE;
 public abstract class StorageSlotMixin {
     @Shadow @Final private StorageWidget parent;
 
-    @Inject(at = @At("HEAD"), method = "renderSlot", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", cancellable = true)
     public void renderSlotHead(GuiGraphics context, int posX, int posY, float partialTicks, CallbackInfo ci) {
         MultiSelector selector = (MultiSelector) (Object) this.parent;
         if (((Object) this) instanceof BoxStorageSlot slot && selector.moreCobblemonTweaks$isSelected(slot.getPosition())) {
