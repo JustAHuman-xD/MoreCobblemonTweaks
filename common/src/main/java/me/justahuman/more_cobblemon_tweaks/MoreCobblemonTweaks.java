@@ -2,18 +2,14 @@ package me.justahuman.more_cobblemon_tweaks;
 
 import com.mojang.logging.LogUtils;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
-import me.justahuman.more_cobblemon_tweaks.utils.Textures;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.level.storage.LevelResource;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -31,16 +27,18 @@ public final class MoreCobblemonTweaks {
         MoreCobblemonTweaks.configFile = configFile;
         Utils.setModEnabledFunction(modEnabledFunction);
         Utils.setModVersionFunction(modVersionFunction);
+
+        if (Hooks.cobbreedingPresent()) {
+            if (Hooks.cobbreedingCompat()) {
+                LOGGER.info(">> Cobbreeding support enabled");
+            } else {
+                LOGGER.warn(">> Cobbreeding version is not compatible! Cobbreeding support disabled.");
+            }
+        }
     }
 
     public static void onReload(ResourceManager manager) {
         ModConfig.loadFromFile();
-        Textures.POSSIBLE_WALLPAPER_TEXTURES.clear();
-        for (ResourceLocation wallpaper : manager.listResourceStacks("textures/gui/pc/wallpapers", identifier -> true).keySet()) {
-            String path = wallpaper.getPath();
-            String shortName = path.substring(path.lastIndexOf('/') + 1, path.indexOf('.'));
-            Textures.POSSIBLE_WALLPAPER_TEXTURES.put(shortName, wallpaper);
-        }
 
         PackRepository resourcePackManager = Minecraft.getInstance().getResourcePackRepository();
         List<String> serverPackIds = resourcePackManager.getSelectedPacks().stream().filter(pack -> pack.getPackSource() == PackSource.SERVER).map(Pack::getId).toList();
@@ -59,21 +57,6 @@ public final class MoreCobblemonTweaks {
                 }
             }
         }
-    }
-
-    public static String getCurrentServerId() {
-        IntegratedServer integratedServer = Minecraft.getInstance().getSingleplayerServer();
-        if (integratedServer != null) {
-            String rootId = integratedServer.getWorldPath(LevelResource.ROOT).getParent().getFileName().toString().replaceAll("_", "^us^");
-            if (rootId.startsWith("Multiplayer_")) {
-                rootId = "^e^" + rootId;
-            }
-            rootId = rootId.replace("[", "%lb%").replace("]", "%rb%");
-            return rootId;
-        }
-
-        ServerData data = Minecraft.getInstance().getCurrentServer();
-        return data != null ? data.ip : "unknown";
     }
 
     public static ResourceLocation id(String path) {

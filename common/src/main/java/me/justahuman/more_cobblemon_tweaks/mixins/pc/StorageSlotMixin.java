@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState;
 import com.cobblemon.mod.common.entity.PoseType;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.util.math.QuaternionUtilsKt;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.justahuman.more_cobblemon_tweaks.api.MultiSelector;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
@@ -22,6 +23,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Arrays;
 
 import static com.cobblemon.mod.common.client.gui.pc.StorageSlot.SIZE;
 
@@ -59,7 +62,8 @@ public abstract class StorageSlotMixin {
             matrices.translate(posX + (SIZE / 2.0), posY + 1.0, 0.0);
             matrices.scale(2.5F, 2.5F, 1F);
 
-
+            float[] original = Arrays.copyOf(RenderSystem.getShaderColor(), 4);
+            RenderSystem.setShaderColor(0.3f, 0.3f, 0.3f, 0.65f);
             PokemonGuiUtilsKt.drawProfilePokemon(
                     pokemon.asRenderablePokemon(),
                     matrices,
@@ -77,6 +81,7 @@ public abstract class StorageSlotMixin {
                     0f,
                     0f
             );
+            RenderSystem.setShaderColor(original[0], original[1], original[2], original[3]);
             matrices.popPose();
 
             context.disableScissor();

@@ -9,7 +9,6 @@ import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.IVs;
 import com.cobblemon.mod.common.pokemon.Nature;
 import com.cobblemon.mod.common.util.MiscUtilsKt;
-import ludichat.cobbreeding.EggUtilities;
 import ludichat.cobbreeding.PokemonEgg;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
@@ -52,7 +51,7 @@ public class CobbreedingIntegration extends EnhancedEggLore {
     @Override
     public String getGender() {
         Gender gender = properties.getGender();
-        return gender == null ? "NONE" : gender.name();
+        return gender == null ? null : gender.name();
     }
 
     @Override
@@ -79,21 +78,27 @@ public class CobbreedingIntegration extends EnhancedEggLore {
             return null;
         }
         ResourceLocation id = natureId.contains(":") ? ResourceLocation.tryParse(natureId) : MiscUtilsKt.cobblemonResource(natureId);
-        Nature nature = id == null ? null : Natures.INSTANCE.getNature(id);
+        Nature nature = id == null ? null : Natures.getNature(id);
         return nature == null ? null : Component.translatable(nature.getDisplayName()).getString();
     }
 
     @Override
     public String getAbility() {
         String abilityId = properties.getAbility();
-        AbilityTemplate ability = abilityId == null ? null : Abilities.INSTANCE.get(abilityId);
+        AbilityTemplate ability = abilityId == null ? null : Abilities.get(abilityId);
         return ability == null ? null : Component.translatable(ability.getDisplayName()).getString();
     }
 
     @Override
     public String getForm() {
-        // Cobb Breeding does this themselves
+        // Cobbreeding does this themselves
         return null;
+    }
+
+    @Override
+    public String getPokeBall() {
+        String pokeBallId = properties.getPokeball();
+        return pokeBallId == null ? null : pokeBallFromId(pokeBallId);
     }
 
     @Override
@@ -139,15 +144,15 @@ public class CobbreedingIntegration extends EnhancedEggLore {
         return ivs.get(Stats.SPEED);
     }
 
-    public static CobbreedingIntegration get(ItemStack itemStack) {
+    public static EnhancedEggLore get(ItemStack itemStack) {
         if (itemStack.getItem() instanceof PokemonEgg) {
             try {
                 if (itemStack.has(PokemonEgg.Companion.getVERSION())) {
                     // 2.0.x
                     if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
                         return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
-                    } else if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && ModConfig.isEnabled("bypass_egg_encryption")) {
-                        return new CobbreedingIntegration(EggUtilities.decrypt(itemStack.get(PokemonEgg.Companion.getEGG_INFO())));
+                    } else if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && ModConfig.isEnabled("egg_encryption_warning")) {
+                        return new EncryptedEggLore();
                     }
                 }
             } catch (NoSuchMethodError e) {

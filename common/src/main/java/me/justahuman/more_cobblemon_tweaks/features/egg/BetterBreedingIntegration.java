@@ -28,8 +28,8 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
     public Component getName(List<Component> lore) {
         String speciesName = Utils.get(customData, "species", "");
         Species species = speciesName.isBlank()
-                ? PokemonSpecies.INSTANCE.getByPokedexNumber(Utils.get(customData, "species", -1), "cobblemon")
-                : PokemonSpecies.INSTANCE.getByName(speciesName);
+                ? PokemonSpecies.getByPokedexNumber(Utils.get(customData, "species", -1), "cobblemon")
+                : PokemonSpecies.getByName(speciesName);
         if (species != null) {
             return species.getTranslatedName();
         }
@@ -43,7 +43,7 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
 
     @Override
     public String getGender() {
-        return Utils.get(customData, "gender", "NONE");
+        return Utils.get(customData, "gender", null);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
         if (identifier == null) {
             return null;
         }
-        Nature nature = Natures.INSTANCE.getNature(identifier);
+        Nature nature = Natures.getNature(identifier);
         if (nature != null) {
             return Component.translatable(nature.getDisplayName()).getString();
         }
@@ -73,7 +73,7 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
     @Override
     public String getAbility() {
         String id = Utils.get(customData, "ability", null);
-        AbilityTemplate ability = id == null ? null : Abilities.INSTANCE.get(id);
+        AbilityTemplate ability = id == null ? null : Abilities.get(id);
         if (ability != null) {
             return Component.translatable(ability.getDisplayName()).getString();
         }
@@ -83,6 +83,12 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
     @Override
     public String getForm() {
         return Utils.get(customData, "form", null);
+    }
+
+    @Override
+    public String getPokeBall() {
+        String pokeBallId = Utils.get(customData, "pokeball", null);
+        return pokeBallId == null ? null : pokeBallFromId(pokeBallId);
     }
 
     @Override
@@ -121,12 +127,14 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
     }
 
     @SuppressWarnings("deprecation")
-    public static BetterBreedingIntegration get(ItemStack itemStack) {
+    public static EnhancedEggLore get(ItemStack itemStack) {
         CustomData customData = itemStack.get(DataComponents.CUSTOM_DATA);
         if (customData != null) {
             CompoundTag tag = customData.getUnsafe();
             if (tag.contains("species", Tag.TAG_STRING) && tag.contains("timer", Tag.TAG_INT)) {
                 return new BetterBreedingIntegration(tag);
+            } else if (tag.contains("baby_data", Tag.TAG_STRING)) {
+                return new EncryptedEggLore();
             }
         }
         return null;

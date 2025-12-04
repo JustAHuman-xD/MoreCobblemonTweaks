@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -87,9 +87,12 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
 
     @Inject(at = @At("TAIL"), method = "renderWidget")
     public void renderGrabbedMultiSelection(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        context.pose().pushPose();
+        context.pose().translate(0.0F, 0.0F, 400.0F);
         for (MultiGrabbedStorageSlot slot : moreCobblemonTweaks$grabbedSlots.values()) {
             slot.render(context, mouseX,  mouseY, delta);
         }
+        context.pose().popPose();
     }
 
     @Inject(at = @At("HEAD"), method = "onStorageSlotClicked", cancellable = true)
@@ -104,7 +107,7 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
         ci.cancel();
         if (!(button instanceof BoxStorageSlot slot)) {
             return;
-        } else if (slot.getPokemon() == null || Screen.hasShiftDown() || slot.getPosition().getBox() != moreCobblemonTweaks$selectedBox && moreCobblemonTweaks$selectedBox != -1) {
+        } else if (slot.getPokemon() == null || Screen.hasControlDown() || slot.getPosition().getBox() != moreCobblemonTweaks$selectedBox && moreCobblemonTweaks$selectedBox != -1) {
             boolean emptyOnly = slot.getPokemon() == null;
 
             ClientPC pc = this.pcGui.getPc();
@@ -112,7 +115,7 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
             int box = clickedPos.getBox();
             SlotPosition clicked = SlotPosition.of(clickedPos);
 
-            Map<Pokemon, PCPosition> moves = new HashMap<>();
+            Map<Pokemon, PCPosition> moves = new LinkedHashMap<>();
             for (Pokemon pokemon : moreCobblemonTweaks$selection) {
                 PCPosition position = pc.getPosition(pokemon);
                 if (position == null) {
@@ -152,6 +155,8 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
                         return CompletableFuture.completedFuture(null);
                     }
 
+                    moreCobblemonTweaks$select(source, false);
+
                     Pokemon targetPokemon = pc.get(target);
                     NetworkPacket<?> packet = targetPokemon != null
                             ? new SwapPCPokemonPacket(pokemon.getUuid(), source, targetPokemon.getUuid(), target)
@@ -166,12 +171,6 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
 
             chain.whenComplete(($, t) -> {
                 if (t == null) {
-                    for (Pokemon pokemon : moves.keySet()) {
-                        PCPosition position = pc.getPosition(pokemon);
-                        if (position != null) {
-                            moreCobblemonTweaks$select(position, false);
-                        }
-                    }
                     playSound(CobblemonSounds.PC_DROP);
                 } else {
                     MoreCobblemonTweaks.LOGGER.error("An error occurred while moving multiple Pokémon in the PC.", t);
@@ -239,11 +238,13 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
                 moreCobblemonTweaks$selectedBox = -1;
                 moreCobblemonTweaks$selectionOrigin = null;
             } else {
-                moreCobblemonTweaks$selectionOrigin = moreCobblemonTweaks$grabbedSlots.values().iterator().next().localSlot;
                 for (int i = 0; i < moreCobblemonTweaks$selection.size(); i++) {
-                    Pokemon selected = moreCobblemonTweaks$selection.get(i);
-                    MultiGrabbedStorageSlot grabbed = moreCobblemonTweaks$grabbedSlots.get(selected.getUuid());
-                    grabbed.localSlot = SlotPosition.of(i);
+                    Pokemon p = moreCobblemonTweaks$selection.get(i);
+                    MultiGrabbedStorageSlot slot = moreCobblemonTweaks$grabbedSlots.get(p.getUuid());
+                    slot.localSlot = SlotPosition.of(i);
+                    if (i == 0) {
+                        moreCobblemonTweaks$selectionOrigin = slot.localSlot;
+                    }
                 }
             }
         }

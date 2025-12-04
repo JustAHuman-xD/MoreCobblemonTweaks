@@ -19,9 +19,11 @@ public class ModConfig {
     private static final JsonObject DEFAULT_CONFIG = new JsonObject();
     static {
         DEFAULT_CONFIG.addProperty("enhanced_egg_lore", true);
-        DEFAULT_CONFIG.addProperty("bypass_egg_encryption", false);
+        DEFAULT_CONFIG.addProperty("egg_encryption_warning", true);
         DEFAULT_CONFIG.addProperty("shiny_egg_indicator", true);
         DEFAULT_CONFIG.addProperty("perfect_iv_egg_indicator", true);
+        DEFAULT_CONFIG.addProperty("minimum_iv_egg_indicator", true);
+        DEFAULT_CONFIG.addProperty("text_egg_indicators", false);
         DEFAULT_CONFIG.addProperty("pc_multi_select", true);
         DEFAULT_CONFIG.addProperty("pc_iv_display", true);
         DEFAULT_CONFIG.addProperty("pc_colored_ivs", true);
