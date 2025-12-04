@@ -18,15 +18,18 @@ BetterBreeding: Most<br>
     - What data is showed is determined by what egg mod you are using & your servers config.
     - Below is a screenshot of an egg from HulisCobblebreeding (previously supported), which gives an example of what you can expect to see.
     - Optionally (enabled by default) a shiny egg will have a gold star next to its name
-    - Optionally (enabled by default) a perfect iv egg will have a gold triangle next to its name
+    - Optionally (enabled by default) a perfect iv egg will have a aqua triangle next to its name
+    - Optionally (enabled by default) a 0 iv egg will have a red hazard triangle next to its name
+    - All of the above symbols can be replaced with text lines in the lore by a config option as well
     - ![Screenshot of egg tooltip](https://cdn.modrinth.com/data/cached_images/4a6c64576bd6d13c8cd078b92b8286eec11e02b3.png)
   - Enhanced Berry, Consumables, & Held Item Lore were removed as all are builtin to base cobblemon from 1.6+
 - PC Enhancements
-  - Open Box History
-    - When opening the PC it will open to the box you last had open
+  - Search/Filter Autocomplete
+    - When typing in the filter bar at the bottom of the screen you will now get autocomplete suggestions for search/filter terms!
   - Multiselect & Release
     - Adds a new button on the bottom right of the ui that will enable/disable multiselect mode.
     - While in the mode you can click individual slots to (de)select them, or shift+click to (de)select a range of slots.
     - While you have slots selected you can use the release button as normal to release all selected pokemon at once. Or you can move them around to other boxes as a group.
-    - ![Screenshot of multiselect mode with multiple selected slots](https://cdn.modrinth.com/data/cached_images/23e45b27114f433e047029def4881a3868767813.png)
+    - In the image below you can see an example of selecting three pokemon at once.
+    - ![Screenshot of multiselect mode with multiple selected slots](https://cdn.modrinth.com/data/cached_images/5a8ceee960e5a493103ffa51799ce9285f6405b1.png)
 - More coming soon! (Please feel free to make suggestions via Issues!)
