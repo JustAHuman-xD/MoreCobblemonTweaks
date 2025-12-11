@@ -2,6 +2,7 @@ package me.justahuman.more_cobblemon_tweaks.features;
 
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.egg.EnhancedEggLore;
+import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -126,7 +127,7 @@ public class LoreEnhancements {
                 sum = (sum == null ? speed : sum + speed);
             }
             if (sum != null) {
-                int average = (int) (sum / 6.0);
+                double average = sum / 6.0;
                 newLore.add(iv("average", WHITE, average));
             }
             if (perfect && textIndicators) {
@@ -137,9 +138,9 @@ public class LoreEnhancements {
         }
     }
 
-    public static MutableComponent iv(String stat, ChatFormatting color, int iv) {
+    public static MutableComponent iv(String stat, ChatFormatting color, double iv) {
         return translate("egg.iv." + stat).withStyle(color)
-                .append(Component.literal(Screen.hasShiftDown() ? Math.round(iv / 31.0 * 100) + "%" : Integer.toString(iv)).withStyle(WHITE));
+                .append(Component.literal(Screen.hasShiftDown() ? Utils.ivPercent(iv) : Integer.toString((int) iv)).withStyle(WHITE));
     }
 
     public static MutableComponent translate(String key, Object... args) {

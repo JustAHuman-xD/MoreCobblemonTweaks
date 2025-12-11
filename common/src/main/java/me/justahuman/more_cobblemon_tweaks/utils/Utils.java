@@ -2,6 +2,7 @@ package me.justahuman.more_cobblemon_tweaks.utils;
 
 import com.cobblemon.mod.common.client.gui.pc.PCGUIConfiguration;
 import com.cobblemon.mod.common.client.storage.ClientPC;
+import me.justahuman.more_cobblemon_tweaks.Hooks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.nbt.ByteTag;
@@ -13,6 +14,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +23,8 @@ import java.util.function.Function;
 
 public class Utils {
     private static final Map<String, Boolean> MOD_ENABLED_CACHE = new HashMap<>();
+    private static final Map<String, String> MOD_VERSION_CACHE = new HashMap<>();
+    private static final DecimalFormat IV_FORMAT = new DecimalFormat("#.##");
     private static Function<String, Boolean> modEnabledFunction = id -> false;
     private static Function<String, String> modVersionFunction = id -> "unknown";
 
@@ -33,6 +37,14 @@ public class Utils {
 
     public static void playSound(SoundEvent sound) {
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
+    }
+
+    public static boolean isSinglePlayer() {
+        return Minecraft.getInstance().getSingleplayerServer() != null;
+    }
+
+    public static String ivPercent(double iv) {
+        return IV_FORMAT.format(iv / 31.0 * 100.0) + "%";
     }
 
     public static String get(CompoundTag nbt, String key, String def) {
@@ -70,6 +82,11 @@ public class Utils {
         return def;
     }
 
+    public static void forgetMod(String id) {
+        MOD_ENABLED_CACHE.remove(id);
+        MOD_VERSION_CACHE.remove(id);
+    }
+
     public static boolean modEnabled(String id) {
         Boolean cached = MOD_ENABLED_CACHE.get(id);
         if (cached != null) {
@@ -81,14 +98,24 @@ public class Utils {
     }
 
     public static String modVersion(String id) {
-        return modVersionFunction.apply(id);
+        String cached = MOD_VERSION_CACHE.get(id);
+        if (cached != null) {
+            return cached;
+        }
+        String version = modVersionFunction.apply(id);
+        MOD_VERSION_CACHE.put(id, version);
+        return version;
     }
 
     public static void setModEnabledFunction(Function<String, Boolean> function) {
         modEnabledFunction = function;
+        Hooks.cobbreedingCompat = null;
+        MOD_ENABLED_CACHE.clear();
     }
 
     public static void setModVersionFunction(Function<String, String> function) {
         modVersionFunction = function;
+        Hooks.cobbreedingCompat = null;
+        MOD_VERSION_CACHE.clear();
     }
 }

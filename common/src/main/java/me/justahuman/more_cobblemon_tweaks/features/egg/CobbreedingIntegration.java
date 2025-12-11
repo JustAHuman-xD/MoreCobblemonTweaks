@@ -12,6 +12,8 @@ import com.cobblemon.mod.common.util.MiscUtilsKt;
 import ludichat.cobbreeding.PokemonEgg;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
+import me.justahuman.more_cobblemon_tweaks.utils.Utils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -152,7 +154,8 @@ public class CobbreedingIntegration extends EnhancedEggLore {
                     if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
                         return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
                     } else if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && ModConfig.isEnabled("egg_encryption_warning")) {
-                        return new EncryptedEggLore();
+                        return new EncryptedEggLore(List.of(LoreEnhancements.translate("egg.cobbreeding_encryption_warning"
+                                + (Utils.isSinglePlayer() ? "_singleplayer" : "")).withStyle(ChatFormatting.RED)));
                     }
                 }
             } catch (NoSuchMethodError e) {

@@ -13,6 +13,7 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import kotlin.jvm.functions.Function0;
+import me.justahuman.more_cobblemon_tweaks.api.FilterSuggestable;
 import me.justahuman.more_cobblemon_tweaks.features.pc.search.SearchPredicate;
 import me.justahuman.more_cobblemon_tweaks.mixins.accessor.EditBoxAccessor;
 import net.minecraft.ChatFormatting;
@@ -33,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 @Mixin(FilterWidget.class)
-public abstract class FilterWidgetMixin extends EditBox {
+public abstract class FilterWidgetMixin extends EditBox implements FilterSuggestable {
     @Unique private static final CommandContext<?> DUMMY_CONTEXT = new CommandContext<>(null, null, null, null, null, null, null, null, null, false);
     @Unique private static final List<String> IGNORED_SUGGESTIONS = PokemonSpecies.getSpecies().stream()
             .map(Species::getResourceIdentifier).map(id -> id.getNamespace().equals("cobblemon") ? id.getPath() : id.toString()).toList();
@@ -83,6 +84,11 @@ public abstract class FilterWidgetMixin extends EditBox {
                 }
             });
         });
+    }
+
+    @Override
+    public void moreCobblemonTweaks$fillSuggestion() {
+        setValue(moreCobblemonTweaks$suggestion);
     }
 
     @Unique

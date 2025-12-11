@@ -21,7 +21,6 @@ public class ConfigScreen {
         final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
         final ConfigCategory pcCategory = builder.getOrCreateCategory(Component.literal("Pc Enhancements"));
         final ConfigCategory loreCategory = builder.getOrCreateCategory(Component.literal("Lore Enhancements"));
-        //final ConfigCategory otherCategory = builder.getOrCreateCategory(Component.literal("Other Tweaks"));
 
         /* Pc Config Options */
 
@@ -37,10 +36,6 @@ public class ConfigScreen {
         loreCategory.addEntry(basicToggle(entryBuilder, "perfect_iv_egg_indicator", "enhanced_egg_lore"));
         loreCategory.addEntry(basicToggle(entryBuilder, "minimum_iv_egg_indicator", "enhanced_egg_lore"));
         loreCategory.addEntry(basicToggle(entryBuilder, "text_egg_indicators", "enhanced_egg_lore"));
-
-        /* Other Tweaks */
-
-        // todo
 
         builder.setSavingRunnable(ModConfig::saveConfig);
         return builder.build();

@@ -27,7 +27,6 @@ public class ModConfig {
         DEFAULT_CONFIG.addProperty("pc_multi_select", true);
         DEFAULT_CONFIG.addProperty("pc_iv_display", true);
         DEFAULT_CONFIG.addProperty("pc_colored_ivs", true);
-        DEFAULT_CONFIG.addProperty("open_box_history", true);
     }
 
     public static void loadFromFile() {

@@ -4,8 +4,6 @@
 
   "more_cobblemon_tweaks.config.option.overridden_tooltip": "Overridden by Server",
 
-  "more_cobblemon_tweaks.config.option.open_box_history": "Open Box History",
-  "more_cobblemon_tweaks.config.option.open_box_history.tooltip": "Should the PC remember and open to the last box you had open?",
   "more_cobblemon_tweaks.config.option.pc_iv_display": "IV Display",
   "more_cobblemon_tweaks.config.option.pc_iv_display.tooltip": "Adds a small widget to the pc menu showing the iv's of the previewed pokemon.",
   "more_cobblemon_tweaks.config.option.pc_colored_ivs": "Colored IVs",
@@ -45,6 +43,8 @@
   "more_cobblemon_tweaks.lore_enhancements.egg.better_breeding.hatch_progress": "Time Remaining: %sm %ss",
   "more_cobblemon_tweaks.lore_enhancements.egg.cobbreeding.hatch_progress": "Time Remaining: %sm %ss",
   "more_cobblemon_tweaks.lore_enhancements.egg.encryption_warning": "⚠ Unable to read egg data due to encryption!",
+  "more_cobblemon_tweaks.lore_enhancements.egg.cobbreeding_encryption_warning": "⚠ Disable egg encryption in the server host's cobbreeding config and right-click to decrypt!",
+  "more_cobblemon_tweaks.lore_enhancements.egg.cobbreeding_encryption_warning_singleplayer": "⚠ Disable egg encryption in your cobbreeding config and right-click to decrypt!",
   "more_cobblemon_tweaks.lore_enhancements.egg.shiny.symbol": " ★",
   "more_cobblemon_tweaks.lore_enhancements.egg.shiny.text": "Shiny",
   "more_cobblemon_tweaks.lore_enhancements.egg.perfect.symbol": " \uD83D\uDEC6",

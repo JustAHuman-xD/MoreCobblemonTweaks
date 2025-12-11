@@ -9,7 +9,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.PcEnhancements;
 import me.justahuman.more_cobblemon_tweaks.utils.Textures;
+import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
@@ -61,7 +63,7 @@ public class IvWidget implements Renderable {
             y = drawStat(context, ivs, Stats.SPECIAL_DEFENCE, YELLOW, x, y, mouseX, mouseY);
             y = drawStat(context, ivs, Stats.SPEED, AQUA, x, y, mouseX, mouseY);
 
-            int average = (int) Stats.Companion.getPERMANENT().stream().mapToInt(ivs::getOrDefault).average().getAsDouble();
+            double average = Stats.Companion.getPERMANENT().stream().mapToInt(ivs::getOrDefault).average().getAsDouble();
             drawStat(context, "average", average, WHITE, x, y, mouseX, mouseY);
         }
     }
@@ -70,11 +72,13 @@ public class IvWidget implements Renderable {
         return drawStat(context, stat.name().toLowerCase(), Objects.requireNonNullElse(ivs.get(stat), 0), color, x, y, mouseX, mouseY);
     }
 
-    public double drawStat(GuiGraphics context, String stat, int statValue, ChatFormatting color, double x, double y, int mouseX, int mouseY) {
+    public double drawStat(GuiGraphics context, String stat, double statValue, ChatFormatting color, double x, double y, int mouseX, int mouseY) {
         boolean colored = ModConfig.isEnabled("pc_colored_ivs");
         RenderHelperKt.drawScaledText(context, null, PcEnhancements.translate("iv_display." + stat).withStyle(colored ? color : WHITE), x, y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);
-        String value = Screen.hasShiftDown() ? Math.round(statValue / 31.0 * 100) + "%" : Integer.toString(statValue);
-        RenderHelperKt.drawScaledText(context, null, Component.literal(value).withStyle(WHITE), x + (30 - (value.length() - 1) * 3), y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);
+        String value = Screen.hasShiftDown() ? Utils.ivPercent(statValue) : Integer.toString((int) statValue);
+        int width = Minecraft.getInstance().font.width(value);
+        double valueX = x + 45 - (width * PCGUI.SCALE);
+        RenderHelperKt.drawScaledText(context, null, Component.literal(value).withStyle(WHITE), valueX, y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);
         return y + 15;
     }
 }

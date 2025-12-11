@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.fabric.impl.client.event.lifecycle.ClientLifecycleEventsImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -25,12 +26,14 @@ public final class MoreCobblemonTweaksFabric implements ClientModInitializer {
                         .orElse("unknown")
         );
 
-        KeyBindingHelper.registerKeyBinding(Keybinds.OPEN_CONFIG);
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (Keybinds.OPEN_CONFIG.consumeClick() && FabricLoader.getInstance().isModLoaded("cloth-config2")) {
-                client.setScreen(ConfigScreen.buildScreen(client.screen));
-            }
-        });
+        if (Hooks.clothConfig()) {
+            KeyBindingHelper.registerKeyBinding(Keybinds.OPEN_CONFIG);
+            ClientTickEvents.END_CLIENT_TICK.register(client -> {
+                if (Keybinds.OPEN_CONFIG.consumeClick()) {
+                    client.setScreen(ConfigScreen.buildScreen(client.screen));
+                }
+            });
+        }
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ModConfig.clearServerConfig());
 

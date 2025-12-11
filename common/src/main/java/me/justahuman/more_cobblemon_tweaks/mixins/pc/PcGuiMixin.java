@@ -77,7 +77,7 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
         boolean renameSelected = boxNameWidget != null && boxNameWidget.isFocused();
         boolean searchSelected = filterWidget != null && filterWidget.isFocused();
         if (searchSelected && keyCode == GLFW.GLFW_KEY_TAB) {
-            ((FilterSuggestable) (Object) filterWidget).fillSuggestion();
+            ((FilterSuggestable) (Object) filterWidget).moreCobblemonTweaks$fillSuggestion();
             cir.setReturnValue(true);
         } else if (!renameSelected && !searchSelected && CobblemonKeyBinds.INSTANCE.getSUMMARY().matches(keyCode, scanCode)) {
             Utils.summaryPC = this.pc;

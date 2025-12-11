@@ -8,7 +8,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 
-@EventBusSubscriber(modid = MoreCobblemonTweaks.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = MoreCobblemonTweaks.MOD_ID, value = Dist.CLIENT)
 public class ClientModEvents {
     @SubscribeEvent
     public static void registerReloadListener(RegisterClientReloadListenersEvent event) {
@@ -17,6 +17,8 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(Keybinds.OPEN_CONFIG);
+        if (Hooks.clothConfig()) {
+            event.register(Keybinds.OPEN_CONFIG);
+        }
     }
 }

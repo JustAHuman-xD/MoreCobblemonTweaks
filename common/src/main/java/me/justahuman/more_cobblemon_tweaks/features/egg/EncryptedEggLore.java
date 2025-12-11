@@ -4,9 +4,20 @@ import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EncryptedEggLore extends EnhancedEggLore {
+    private final List<Component> additionalLore;
+
+    public EncryptedEggLore() {
+        this(List.of());
+    }
+
+    public EncryptedEggLore(List<Component> additionalLore) {
+        this.additionalLore = additionalLore;
+    }
+
     @Override
     public boolean isShiny() {
         return false;
@@ -19,7 +30,9 @@ public class EncryptedEggLore extends EnhancedEggLore {
 
     @Override
     public List<Component> getHatchProgress(List<Component> lore) {
-        return List.of(LoreEnhancements.translate("egg.encryption_warning").withStyle(ChatFormatting.RED));
+        List<Component> warningLore = new ArrayList<>(additionalLore);
+        warningLore.addFirst(LoreEnhancements.translate("egg.encryption_warning").withStyle(ChatFormatting.RED));
+        return warningLore;
     }
 
     @Override

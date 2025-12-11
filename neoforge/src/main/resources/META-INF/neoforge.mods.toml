@@ -9,7 +9,7 @@ version = "${version}"
 displayName = "MoreCobblemonTweaks"
 authors = "JustAHuman"
 description = '''
-A qol cobblemon client mod introducing pc box names, wallpapers, and more!
+A qol cobblemon client mod introducing multiselect, egg lore, and more!
 '''
 logoFile = "assets/more_cobblemon_tweaks/icon.png"
 displayURL = "https://github.com/JustAHuman-xD/MoreCobblemonTweaks"
@@ -38,14 +38,14 @@ side = "CLIENT"
 [[dependencies.more_cobblemon_tweaks]]
 modId = "cobblemon"
 type = "required"
-versionRange = "[1.6.0+1.21.1,)"
+versionRange = "[1.7.0+1.21.1,)"
 ordering = "AFTER"
 side = "CLIENT"
 
 [[dependencies.more_cobblemon_tweaks]]
-modId = "cloth-config2"
+modId = "cloth_config"
 type = "optional"
-versionRange = "[16.0.141,)"
+versionRange = "[15.0.140,)"
 ordering = "AFTER"
 side = "CLIENT"
 
