@@ -29,8 +29,8 @@ public final class MoreCobblemonTweaks {
         Utils.setModVersionFunction(modVersionFunction);
 
         if (Hooks.cobbreedingPresent()) {
-            if (Hooks.cobbreedingCompat()) {
-                LOGGER.info(">> Cobbreeding support enabled");
+            if (Hooks.cobbreedingCompat().enabled()) {
+                LOGGER.info(">> Cobbreeding support enabled!{}", Hooks.cobbreedingCompat() == Hooks.SupportStatus.UNTESTED ? " (**UNTESTED** Cobbreeding version)" : "");
             } else {
                 LOGGER.warn(">> Cobbreeding version is not compatible! Cobbreeding support disabled.");
             }

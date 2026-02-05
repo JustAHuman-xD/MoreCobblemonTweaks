@@ -31,6 +31,11 @@ public class IvWidget implements Renderable {
 
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        Pokemon pokemon = gui.getPreviewPokemon$common();
+        if (pokemon == null) {
+            return;
+        }
+
         double x = (gui.width - PCGUI.BASE_WIDTH) / 2d;
         double y = (gui.height - PCGUI.BASE_HEIGHT) / 2d;
 
@@ -53,19 +58,16 @@ public class IvWidget implements Renderable {
         x += 9.5;
         y += 9.5;
 
-        Pokemon pokemon = gui.getPreviewPokemon$common();
-        if (pokemon != null) {
-            IVs ivs = pokemon.getIvs();
-            y = drawStat(context, ivs, Stats.HP, GREEN, x, y, mouseX, mouseY);
-            y = drawStat(context, ivs, Stats.ATTACK, RED, x, y, mouseX, mouseY);
-            y = drawStat(context, ivs, Stats.DEFENCE, GOLD, x, y, mouseX, mouseY);
-            y = drawStat(context, ivs, Stats.SPECIAL_ATTACK, LIGHT_PURPLE, x, y, mouseX, mouseY);
-            y = drawStat(context, ivs, Stats.SPECIAL_DEFENCE, YELLOW, x, y, mouseX, mouseY);
-            y = drawStat(context, ivs, Stats.SPEED, AQUA, x, y, mouseX, mouseY);
+        IVs ivs = pokemon.getIvs();
+        y = drawStat(context, ivs, Stats.HP, GREEN, x, y, mouseX, mouseY);
+        y = drawStat(context, ivs, Stats.ATTACK, RED, x, y, mouseX, mouseY);
+        y = drawStat(context, ivs, Stats.DEFENCE, GOLD, x, y, mouseX, mouseY);
+        y = drawStat(context, ivs, Stats.SPECIAL_ATTACK, LIGHT_PURPLE, x, y, mouseX, mouseY);
+        y = drawStat(context, ivs, Stats.SPECIAL_DEFENCE, YELLOW, x, y, mouseX, mouseY);
+        y = drawStat(context, ivs, Stats.SPEED, AQUA, x, y, mouseX, mouseY);
 
-            double average = Stats.Companion.getPERMANENT().stream().mapToInt(ivs::getOrDefault).average().getAsDouble();
-            drawStat(context, "average", average, WHITE, x, y, mouseX, mouseY);
-        }
+        double average = Stats.Companion.getPERMANENT().stream().mapToInt(ivs::getOrDefault).average().getAsDouble();
+        drawStat(context, "average", average, WHITE, x, y, mouseX, mouseY);
     }
 
     public double drawStat(GuiGraphics context, IVs ivs, Stats stat, ChatFormatting color, double x, double y, int mouseX, int mouseY) {

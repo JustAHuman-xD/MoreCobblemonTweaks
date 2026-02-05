@@ -58,8 +58,8 @@ public class CobbreedingIntegration extends EnhancedEggLore {
 
     @Override
     public List<Component> getHatchProgress(List<Component> lore) {
-        if (lore.size() > 1) {
-            String hatchProgress = lore.get(1).getString();
+        for (Component line : lore) {
+            String hatchProgress = line.getString();
             String[] parts = hatchProgress.split(":");
             if (parts.length == 2) {
                 try {
@@ -93,8 +93,7 @@ public class CobbreedingIntegration extends EnhancedEggLore {
 
     @Override
     public String getForm() {
-        // Cobbreeding does this themselves
-        return null;
+        return properties.getForm();
     }
 
     @Override
@@ -144,6 +143,13 @@ public class CobbreedingIntegration extends EnhancedEggLore {
     @Override
     public Integer getSpeedIV() {
         return ivs.get(Stats.SPEED);
+    }
+
+    @Override
+    public void finalize(List<Component> lore, List<Component> newLore) {
+        Component name = lore.getFirst();
+        lore.clear();
+        lore.add(name);
     }
 
     public static EnhancedEggLore get(ItemStack itemStack) {

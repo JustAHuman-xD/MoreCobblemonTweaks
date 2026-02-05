@@ -9,13 +9,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.concurrent.CompletableFuture;
+
 @Mixin(SwapClientPokemonHandler.class)
 public class SwapClientPokemonHandlerMixin {
     @Inject(at = @At("TAIL"), method = "handle(Lcom/cobblemon/mod/common/net/messages/client/storage/SwapClientPokemonPacket;Lnet/minecraft/client/Minecraft;)V")
     public void postHandle(SwapClientPokemonPacket packet, Minecraft client, CallbackInfo ci) {
-        if (Utils.moveAllPokemonFuture != null) {
-            Utils.moveAllPokemonFuture.complete(null);
+        CompletableFuture<Void> moveAllPokemonFuture = Utils.moveAllPokemonFuture;
+        if (moveAllPokemonFuture != null) {
             Utils.moveAllPokemonFuture = null;
+            CompletableFuture.runAsync(Utils.moveAllCountUpdater);
+            moveAllPokemonFuture.complete(null);
         }
     }
 }

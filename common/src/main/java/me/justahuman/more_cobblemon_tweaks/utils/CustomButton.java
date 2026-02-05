@@ -17,7 +17,7 @@ public abstract class CustomButton extends AbstractWidget {
     protected final Set<Renderable> siblings;
     protected final ResourceLocation texture;
 
-    public CustomButton(int x, int y, int width, int height, ResourceLocation texture, Set<Renderable> siblings) {
+    protected CustomButton(int x, int y, int width, int height, ResourceLocation texture, Set<Renderable> siblings) {
         super(x, y, width, height, Component.empty());
         this.texture = texture;
         this.siblings = siblings;

@@ -136,6 +136,8 @@ public class LoreEnhancements {
                 newLore.add(translate("egg.minimum.text").withStyle(WHITE));
             }
         }
+
+        enhancedEggLore.finalize(lore, newLore);
     }
 
     public static MutableComponent iv(String stat, ChatFormatting color, double iv) {

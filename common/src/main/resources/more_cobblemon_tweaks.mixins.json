@@ -6,14 +6,19 @@
   "client": [
     "accessor.ButtonAccessor",
     "accessor.EditBoxAccessor",
+    "accessor.PcGuiAccessor",
     "pc.moveall.MoveClientPCPokemonHandlerMixin",
     "pc.moveall.SwapClientPokemonHandlerMixin",
+    "pc.BoxNameWidgetMixin",
     "pc.FilterWidgetMixin",
+    "pc.IconButtonMixin",
     "pc.PcGuiMixin",
+    "pc.ReleaseButtonMixin",
     "pc.SearchMixin",
     "pc.StorageSlotMixin",
     "pc.StorageWidgetMixin",
     "pc.SummaryMixin",
+    "pc.WallpaperEntryMixin",
     "ItemStackMixin"
   ],
   "injectors": {

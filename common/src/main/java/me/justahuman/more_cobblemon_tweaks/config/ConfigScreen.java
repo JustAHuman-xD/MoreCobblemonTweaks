@@ -27,6 +27,7 @@ public class ConfigScreen {
         pcCategory.addEntry(basicToggle(entryBuilder, "pc_iv_display"));
         pcCategory.addEntry(basicToggle(entryBuilder, "pc_colored_ivs", "pc_iv_display"));
         pcCategory.addEntry(basicToggle(entryBuilder, "pc_multi_select"));
+        pcCategory.addEntry(basicToggle(entryBuilder, "pc_box_view"));
 
         /* Lore Config Options */
 

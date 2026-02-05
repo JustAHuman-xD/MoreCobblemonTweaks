@@ -7,7 +7,7 @@ public class Hooks {
     public static final String CLOTH_CONFIG_FABRIC = "cloth-config";
     public static final String CLOTH_CONFIG_NEOFORGE = "cloth_config";
 
-    public static Boolean cobbreedingCompat = null;
+    public static SupportStatus cobbreedingCompat = null;
 
     public static boolean clothConfig() {
         return Utils.modEnabled(CLOTH_CONFIG_FABRIC) || Utils.modEnabled(CLOTH_CONFIG_NEOFORGE);
@@ -17,21 +17,20 @@ public class Hooks {
         return Utils.modEnabled(COBBREEDING);
     }
 
-    public static boolean cobbreedingCompat() {
+    public static SupportStatus cobbreedingCompat() {
         if (cobbreedingCompat != null) {
             return cobbreedingCompat;
         }
 
+        cobbreedingCompat = SupportStatus.UNSUPPORTED;
         if (!cobbreedingPresent()) {
-            cobbreedingCompat = false;
-            return false;
+            return cobbreedingCompat;
         }
 
         String version = Utils.modVersion(COBBREEDING);
         String[] parts = version.split("\\.");
         if (parts.length < 3) {
-            cobbreedingCompat = false;
-            return false;
+            return cobbreedingCompat;
         }
 
         try {
@@ -39,16 +38,25 @@ public class Hooks {
             int minor = Integer.parseInt(parts[1]);
             int patch = Integer.parseInt(parts[2]);
             if (major == 1) {
-                cobbreedingCompat = minor > 8 || (minor == 8 && patch >= 8);
+                if (minor > 8 || (minor == 8 && patch >= 8)) {
+                    cobbreedingCompat = SupportStatus.SUPPORTED;
+                }
             } else if (major == 2) {
-                cobbreedingCompat = minor <= 1;
-            } else {
-                cobbreedingCompat = false;
+                cobbreedingCompat = minor > 2 ? SupportStatus.UNTESTED : SupportStatus.SUPPORTED;
             }
             return cobbreedingCompat;
         } catch (NumberFormatException e) {
-            cobbreedingCompat = false;
-            return false;
+            return cobbreedingCompat;
+        }
+    }
+
+    public enum SupportStatus {
+        SUPPORTED,
+        UNSUPPORTED,
+        UNTESTED;
+
+        public boolean enabled() {
+            return this == SUPPORTED || this == UNTESTED;
         }
     }
 }

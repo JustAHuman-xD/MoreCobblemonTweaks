@@ -40,4 +40,5 @@ public abstract class EnhancedEggLore {
     public abstract Integer getSpAtkIV();
     public abstract Integer getSpDefIV();
     public abstract Integer getSpeedIV();
+    public void finalize(List<Component> lore, List<Component> newLore) {}
 }

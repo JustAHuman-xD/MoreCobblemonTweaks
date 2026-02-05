@@ -34,7 +34,7 @@ public abstract class ItemStackMixin {
 
         if (ModConfig.isEnabled("enhanced_egg_lore")) {
             EnhancedEggLore wrapper = null;
-            if (Hooks.cobbreedingCompat()) {
+            if (Hooks.cobbreedingCompat().enabled()) {
                 wrapper = CobbreedingIntegration.get(itemStack);
             }
             if (wrapper == null) {

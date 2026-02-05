@@ -11,6 +11,8 @@
   "more_cobblemon_tweaks.config.option.pc_colored_ivs.requirements": "Colored IVs requires IV Display to be enabled!",
   "more_cobblemon_tweaks.config.option.pc_multi_select": "Multi-Select",
   "more_cobblemon_tweaks.config.option.pc_multi_select.tooltip": "If enabled, adds a button to the PC to allow selecting multiple pokemon at once for moving or releasing.",
+  "more_cobblemon_tweaks.config.option.pc_box_view": "PC Box View",
+  "more_cobblemon_tweaks.config.option.pc_box_view.tooltip": "If enabled, adds a button to the PC to allow opening a pc box view.",
 
   "more_cobblemon_tweaks.config.option.enhanced_egg_lore": "Enhanced Egg Lore",
   "more_cobblemon_tweaks.config.option.enhanced_egg_lore.tooltip": "Adds lore describing various information about the pokemon contained in an egg.",
@@ -37,6 +39,14 @@
   "more_cobblemon_tweaks.pc_enhancements.iv_display.special_defence": "Sp.Def:",
   "more_cobblemon_tweaks.pc_enhancements.iv_display.speed": "Speed",
   "more_cobblemon_tweaks.pc_enhancements.iv_display.average": "Avg:",
+
+  "more_cobblemon_tweaks.pc_enhancements.box_list.button.disabled": "Box List",
+  "more_cobblemon_tweaks.pc_enhancements.box_list.button.enabled": "Box View",
+  "more_cobblemon_tweaks.pc_enhancements.box_list.title": "Box List %1$s-%2$s",
+
+  "more_cobblemon_tweaks.pc_enhancements.multi_move.title": "Moving %1$s/%2$s Pokémon...",
+  "more_cobblemon_tweaks.pc_enhancements.multi_move.timeout": "Timed out %1$s time(s), Retrying...",
+  "more_cobblemon_tweaks.pc_enhancements.multi_move.last_attempt": "Timed out %1$s times, Last attempt",
 
   "more_cobblemon_tweaks.lore_enhancements.egg.hulis.hatch_progress.cycles": "Egg Cycles Remaining: ",
   "more_cobblemon_tweaks.lore_enhancements.egg.hulis.hatch_progress.steps": "Steps Left: ",

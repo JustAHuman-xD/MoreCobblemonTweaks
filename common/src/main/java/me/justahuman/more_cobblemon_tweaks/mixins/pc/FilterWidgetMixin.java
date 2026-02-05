@@ -39,8 +39,12 @@ public abstract class FilterWidgetMixin extends EditBox implements FilterSuggest
     @Unique private static final List<String> IGNORED_SUGGESTIONS = PokemonSpecies.getSpecies().stream()
             .map(Species::getResourceIdentifier).map(id -> id.getNamespace().equals("cobblemon") ? id.getPath() : id.toString()).toList();
 
+    @Unique private static final int MAX_VISIBLE_CHARACTERS = 19;
+
     @Unique private String moreCobblemonTweaks$search = "";
     @Unique private String moreCobblemonTweaks$suggestion = "";
+
+    @Unique private String moreCobblemonTweaks$value = "";
 
     private FilterWidgetMixin(Font font, int i, int j, Component component) {
         super(font, i, j, component);
@@ -108,10 +112,33 @@ public abstract class FilterWidgetMixin extends EditBox implements FilterSuggest
         return false;
     }
 
+    @Inject(method = "renderWidget", at = @At(value = "INVOKE", target = "Lcom/cobblemon/mod/common/api/gui/GuiUtilsKt;blitk$default(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/resources/ResourceLocation;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;ZFILjava/lang/Object;)V"))
+    private void tempTrimValue(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        moreCobblemonTweaks$value = getValue();
+        String trimmedValue = moreCobblemonTweaks$value;
+        if (trimmedValue.length() > MAX_VISIBLE_CHARACTERS) {
+            int cursorPos = this.getCursorPosition();
+            if (cursorPos <= MAX_VISIBLE_CHARACTERS) {
+                trimmedValue = trimmedValue.substring(0, MAX_VISIBLE_CHARACTERS);
+            } else if (cursorPos >= trimmedValue.length() - MAX_VISIBLE_CHARACTERS) {
+                trimmedValue = trimmedValue.substring(trimmedValue.length() - MAX_VISIBLE_CHARACTERS);
+            } else {
+                trimmedValue = trimmedValue.substring(cursorPos - MAX_VISIBLE_CHARACTERS, cursorPos);
+            }
+        }
+        ((EditBoxAccessor) this).setDirectValue(trimmedValue);
+    }
+
+    @Inject(method = "renderWidget", at = @At(value = "INVOKE", target = "Lcom/cobblemon/mod/common/client/gui/pc/FilterWidget;renderCursor(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/network/chat/MutableComponent;)V"))
+    private void restoreValue(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        ((EditBoxAccessor) this).setDirectValue(moreCobblemonTweaks$value);
+    }
+
     @WrapOperation(at = @At(value = "INVOKE", target = "Lcom/cobblemon/mod/common/client/render/RenderHelperKt;drawScaledText$default(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/network/chat/MutableComponent;Ljava/lang/Number;Ljava/lang/Number;FLjava/lang/Number;IIZZLjava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)V"), method = "renderWidget")
     private void renderSuggestion(GuiGraphics context, ResourceLocation font, MutableComponent text, Number x, Number y, float scale, Number opacity, int maxCharacterWidth, int colour, boolean centered, boolean shadow, Integer pMouseX, Integer pMouseY, int i, Object o, Operation<Void> original) {
         int cursorPos = this.getCursorPosition();
-        if (isFocused() && !moreCobblemonTweaks$suggestion.isBlank() && cursorPos == moreCobblemonTweaks$search.length()) {
+        int suggestionLength = moreCobblemonTweaks$suggestion.length();
+        if (isFocused() && !moreCobblemonTweaks$suggestion.isBlank() && cursorPos == moreCobblemonTweaks$search.length() && suggestionLength <= MAX_VISIBLE_CHARACTERS) {
             RenderHelperKt.drawScaledText(context, font, new Text().parse(moreCobblemonTweaks$suggestion).withStyle(ChatFormatting.BOLD), x, y, 1F, 1F, Integer.MAX_VALUE, 11184810, false, false, null, null);
         }
         original.call(context, font, text, x, y, scale, opacity, maxCharacterWidth, colour, centered, shadow, pMouseX, pMouseY, i, o);

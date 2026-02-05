@@ -1,6 +1,8 @@
 package me.justahuman.more_cobblemon_tweaks.utils;
 
 import com.cobblemon.mod.common.client.gui.pc.PCGUIConfiguration;
+import com.cobblemon.mod.common.client.render.gui.PCBoxWallpaperRepository;
+import com.cobblemon.mod.common.client.storage.ClientBox;
 import com.cobblemon.mod.common.client.storage.ClientPC;
 import me.justahuman.more_cobblemon_tweaks.Hooks;
 import net.minecraft.client.Minecraft;
@@ -17,6 +19,7 @@ import net.minecraft.sounds.SoundEvent;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -29,6 +32,11 @@ public class Utils {
     private static Function<String, String> modVersionFunction = id -> "unknown";
 
     public static CompletableFuture<Void> moveAllPokemonFuture = null;
+    public static boolean moveAllCompleted = true;
+    public static int moveAllCount = 0;
+    public static Runnable moveAllCountUpdater = () -> {};
+    public static int moveAllTotal = 0;
+    public static int moveAllTimeouts = 0;
 
     public static ClientPC summaryPC = null;
     public static PCGUIConfiguration summaryConfig = null;
@@ -117,5 +125,12 @@ public class Utils {
         modVersionFunction = function;
         Hooks.cobbreedingCompat = null;
         MOD_VERSION_CACHE.clear();
+    }
+
+    public static ResourceLocation getUsedWallpaper(ClientBox box) {
+        ResourceLocation boxWallpaper = box.getWallpaper();
+        var wallpaperData = PCBoxWallpaperRepository.allWallpapers.stream().filter(it -> Objects.equals(it.getFirst(), boxWallpaper)).findFirst()
+                .orElse(PCBoxWallpaperRepository.allWallpapers.stream().filter(it -> Objects.equals(it.getSecond(), boxWallpaper)).findFirst().orElse(null));
+        return wallpaperData != null ? boxWallpaper : PCBoxWallpaperRepository.INSTANCE.getDefaultWallpaper();
     }
 }
