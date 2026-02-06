@@ -24,6 +24,7 @@ public class WallpaperEntryMixin {
     @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sounds/SoundManager;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)V"))
     public void setAllVisibleBoxWallpapers(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir, @Local(name = "appliedWallpaper") ResourceLocation appliedWallpaper) {
         if (!(Minecraft.getInstance().screen instanceof PCGUI pcgui)
+                || pcgui.getStorage() == null
                 || !((BoxViewHolder) (Object) pcgui.getStorage()).moreCobblemonTweaks$isBoxListOpen()) {
             return;
         }

@@ -36,7 +36,7 @@ public class IconButtonMixin extends Button implements ConditionalIconButton {
     }
 
     @Override
-    public void setCondition(Supplier<Boolean> condition) {
+    public void moreCobblemonTweaks$setCondition(Supplier<Boolean> condition) {
         this.moreCobblemonTweaks$condition = condition;
     }
 }

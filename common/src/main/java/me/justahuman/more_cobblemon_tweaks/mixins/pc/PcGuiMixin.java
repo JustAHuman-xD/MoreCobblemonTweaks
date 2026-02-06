@@ -97,9 +97,11 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
 
             ConditionalIconButton conditional = (ConditionalIconButton) (Object) iconButton;
             String type = iconButton.getMessage().getString();
-            BoxViewHolder boxViewHolder = (BoxViewHolder) (Object) storageWidget;
             if (type.startsWith("sort_")) {
-                conditional.setCondition(() -> !boxViewHolder.moreCobblemonTweaks$isBoxListOpen());
+                conditional.moreCobblemonTweaks$setCondition(() -> {
+                    BoxViewHolder boxViewHolder = (BoxViewHolder) (Object) storageWidget;
+                    return boxViewHolder == null || !boxViewHolder.moreCobblemonTweaks$isBoxListOpen();
+                });
             }
         }
     }
@@ -160,7 +162,7 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
         }
     }
 
-    @Unique private int moreCobblemonTweaks$mouseX;;
+    @Unique private int moreCobblemonTweaks$mouseX;
     @Unique private int moreCobblemonTweaks$mouseY;
 
     @Inject(method = "render", at = @At(value = "HEAD"))
@@ -177,7 +179,7 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
         }
 
         BoxViewHolder boxViewHolder = (BoxViewHolder) (Object) storageWidget;
-        if (!boxViewHolder.moreCobblemonTweaks$isBoxListOpen()) {
+        if (boxViewHolder == null || !boxViewHolder.moreCobblemonTweaks$isBoxListOpen()) {
             original.call(poseStack, resource, x, y, height, width, uOffset, vOffset, textureWidth, textureHeight, blitOffset, red, green, blue, alpha, blend, scale, i, o);
             return;
         }
