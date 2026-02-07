@@ -35,7 +35,6 @@ import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
 import me.justahuman.more_cobblemon_tweaks.api.BoxViewHolder;
 import me.justahuman.more_cobblemon_tweaks.api.MultiSelector;
 import me.justahuman.more_cobblemon_tweaks.api.MultiSelectorState;
-import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.pc.boxes.BoxListButton;
 import me.justahuman.more_cobblemon_tweaks.features.pc.boxes.BoxListSlot;
 import me.justahuman.more_cobblemon_tweaks.features.pc.multiselect.MultiGrabbedStorageSlot;
@@ -44,7 +43,6 @@ import me.justahuman.more_cobblemon_tweaks.mixins.accessor.ButtonAccessor;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -666,7 +664,7 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
                 moreCobblemonTweaks$boxListSlotIndex++,
                 x,
                 y,
-                this::moreCobblemonTweaks$boxListSlotClicked
+                (slot, button) -> moreCobblemonTweaks$boxListSlotClicked(slot, button)
         );
         addWidget(boxListSlot);
         moreCobblemonTweaks$boxListSlots.add(boxListSlot);
@@ -675,7 +673,7 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
 
     @Inject(method = "resetStorageSlots", at = @At("TAIL"))
     public void resetBoxListSlots(CallbackInfo ci) {
-        this.moreCobblemonTweaks$boxListSlots.forEach(this::removeWidget);
+        this.moreCobblemonTweaks$boxListSlots.forEach(widget -> removeWidget(widget));
         this.moreCobblemonTweaks$boxListSlots.clear();
         moreCobblemonTweaks$boxListSlotIndex = 30 * box;
     }
