@@ -20,15 +20,15 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class CobbreedingIntegration extends EnhancedEggLore {
+public class CobbreedingEggLore extends EnhancedEggLore {
     private final PokemonProperties properties;
     private final IVs ivs;
 
-    public CobbreedingIntegration(String eggInfo) {
+    protected CobbreedingEggLore(String eggInfo) {
         this(PokemonProperties.Companion.parse(eggInfo));
     }
 
-    public CobbreedingIntegration(PokemonProperties properties) {
+    protected CobbreedingEggLore(PokemonProperties properties) {
         this.properties = properties;
         this.ivs = properties.getIvs();
     }
@@ -38,16 +38,20 @@ public class CobbreedingIntegration extends EnhancedEggLore {
         if (lore.size() > 2) {
             String name = lore.remove(1).getString();
             if (name.equals("Bad egg")) {
-                return Component.literal("Bad Egg");
+                return LoreEnhancements.translate("egg.cobbreeding.bad_egg.name");
             }
-            return Component.literal(name + " Egg");
+            return LoreEnhancements.translate("egg.cobbreeding.name", name);
         }
         return super.getName(lore);
     }
 
     @Override
-    public boolean isShiny() {
-        return Boolean.TRUE.equals(properties.getShiny());
+    public ChatFormatting getShinyColor() {
+        if (!Boolean.TRUE.equals(properties.getShiny())) {
+            return null;
+        }
+        boolean radiant = properties.getAspects().contains("radiant-radiant");
+        return radiant ? ChatFormatting.AQUA : ChatFormatting.YELLOW;
     }
 
     @Override
@@ -158,7 +162,7 @@ public class CobbreedingIntegration extends EnhancedEggLore {
                 if (itemStack.has(PokemonEgg.Companion.getVERSION())) {
                     // 2.0.x
                     if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
-                        return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
+                        return new CobbreedingEggLore(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
                     } else if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && ModConfig.isEnabled("egg_encryption_warning")) {
                         return new EncryptedEggLore(List.of(LoreEnhancements.translate("egg.cobbreeding_encryption_warning"
                                 + (Utils.isSinglePlayer() ? "_singleplayer" : "")).withStyle(ChatFormatting.RED)));
@@ -167,9 +171,9 @@ public class CobbreedingIntegration extends EnhancedEggLore {
             } catch (NoSuchMethodError e) {
                 // 1.8.8+ legacy
                 if (itemStack.has(PokemonEgg.Companion.getEGG_INFO()) && isString(itemStack.get(PokemonEgg.Companion.getEGG_INFO()))) {
-                    return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getEGG_INFO()));
+                    return new CobbreedingEggLore(itemStack.get(PokemonEgg.Companion.getEGG_INFO()));
                 } else if (itemStack.has(PokemonEgg.Companion.getPOKEMON_PROPERTIES())) {
-                    return new CobbreedingIntegration(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
+                    return new CobbreedingEggLore(itemStack.get(PokemonEgg.Companion.getPOKEMON_PROPERTIES()));
                 }
             }
         }

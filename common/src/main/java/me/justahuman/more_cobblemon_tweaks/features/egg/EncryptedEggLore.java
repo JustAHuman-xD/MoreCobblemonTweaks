@@ -19,8 +19,8 @@ public class EncryptedEggLore extends EnhancedEggLore {
     }
 
     @Override
-    public boolean isShiny() {
-        return false;
+    public ChatFormatting getShinyColor() {
+        return null;
     }
 
     @Override

@@ -2,6 +2,9 @@ package me.justahuman.more_cobblemon_tweaks;
 
 import com.mojang.logging.LogUtils;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
+import me.justahuman.more_cobblemon_tweaks.features.egg.BetterBreedingEggLore;
+import me.justahuman.more_cobblemon_tweaks.features.egg.CobbreedingEggLore;
+import me.justahuman.more_cobblemon_tweaks.features.egg.EnhancedEggLore;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -28,9 +31,11 @@ public final class MoreCobblemonTweaks {
         Utils.setModEnabledFunction(modEnabledFunction);
         Utils.setModVersionFunction(modVersionFunction);
 
+        EnhancedEggLore.registerFactory(BetterBreedingEggLore::get);
         if (Hooks.cobbreedingPresent()) {
             if (Hooks.cobbreedingCompat().enabled()) {
                 LOGGER.info(">> Cobbreeding support enabled!{}", Hooks.cobbreedingCompat() == Hooks.SupportStatus.UNTESTED ? " (**UNTESTED** Cobbreeding version)" : "");
+                EnhancedEggLore.registerFactory(CobbreedingEggLore::get);
             } else {
                 LOGGER.warn(">> Cobbreeding version is not compatible! Cobbreeding support disabled.");
             }

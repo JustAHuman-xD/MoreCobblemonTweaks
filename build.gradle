@@ -28,6 +28,16 @@ subprojects {
         exclusiveContent {
             forRepository {
                 maven {
+                    url "https://cursemaven.com"
+                }
+            }
+            filter {
+                includeGroup "curse.maven"
+            }
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
                     name = "Modrinth"
                     url = "https://api.modrinth.com/maven"
                 }
@@ -43,6 +53,7 @@ subprojects {
         mappings loom.officialMojangMappings()
         modImplementation("com.cobblemon:mod:${project.cobblemon_version}")
         modImplementation "maven.modrinth:cobbreeding:${project.cobbreeding_version}"
+        modImplementation "curse.maven:all-the-mons-coremod-1361840:${project.allthemons_version}"
         modApi("me.shedaniel.cloth:cloth-config:${project.cloth_config_version}")
     }
 

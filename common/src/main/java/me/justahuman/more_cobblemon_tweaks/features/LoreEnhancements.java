@@ -1,5 +1,6 @@
 package me.justahuman.more_cobblemon_tweaks.features;
 
+import me.justahuman.more_cobblemon_tweaks.MoreCobblemonTweaks;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.egg.EnhancedEggLore;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
@@ -16,15 +17,33 @@ import static net.minecraft.ChatFormatting.*;
 
 public class LoreEnhancements {
     private static final String BASE_KEY = "more_cobblemon_tweaks.lore_enhancements.";
+    private static int errorCount = 0;
 
-    public static void enhanceEggLore(List<Component> lore, List<Component> newLore, EnhancedEggLore enhancedEggLore) {
+    public static void enhanceEggLore(EnhancedEggLore enhancedEggLore, List<Component> lore, List<Component> newLore) {
+        if (errorCount >= 10) {
+            newLore.add(translate("egg.errored.1").withStyle(ChatFormatting.RED));
+            newLore.add(translate("egg.errored.2").withStyle(ChatFormatting.RED));
+            return;
+        }
+
+        try {
+            addEggLore(enhancedEggLore, lore, newLore);
+        } catch (Exception e) {
+            if (errorCount < 10) {
+                MoreCobblemonTweaks.LOGGER.error("Error enhancing egg lore: {}", e.getMessage(), e);
+                errorCount++;
+            }
+        }
+    }
+
+    private static void addEggLore(EnhancedEggLore enhancedEggLore, List<Component> lore, List<Component> newLore) {
         Component name = enhancedEggLore.getName(lore);
-        final boolean shiny = ModConfig.isEnabled("shiny_egg_indicator") && enhancedEggLore.isShiny();
+        final ChatFormatting shinyColor = ModConfig.isEnabled("shiny_egg_indicator") ? enhancedEggLore.getShinyColor() : null;
         final boolean perfect = ModConfig.isEnabled("perfect_iv_egg_indicator") && enhancedEggLore.hasIVs(31);
         final boolean minimum = ModConfig.isEnabled("minimum_iv_egg_indicator") && enhancedEggLore.hasIVs(0);
         final boolean textIndicators = ModConfig.isEnabled("text_egg_indicators");
-        if (shiny && !textIndicators) {
-            name = name.copy().append(translate("egg.shiny.symbol").withStyle(YELLOW));
+        if (shinyColor != null && !textIndicators) {
+            name = name.copy().append(translate("egg.shiny.symbol").withStyle(shinyColor));
         }
         if (perfect && !textIndicators) {
             name = name.copy().append(translate("egg.perfect.symbol").withStyle(AQUA));
@@ -40,8 +59,8 @@ public class LoreEnhancements {
         }
         lore.set(0, name);
 
-        if (shiny && textIndicators) {
-            newLore.add(translate("egg.shiny.text").withStyle(YELLOW));
+        if (shinyColor != null && textIndicators) {
+            newLore.add(translate("egg.shiny.text").withStyle(shinyColor));
             newLore.add(Component.literal(" "));
         }
 
@@ -90,12 +109,12 @@ public class LoreEnhancements {
         }
 
         if (enhancedEggLore.hasIVs()) {
-            Integer hp = enhancedEggLore.getHpIV();
-            Integer attack = enhancedEggLore.getAtkIV();
-            Integer defense = enhancedEggLore.getDefIV();
-            Integer spAttack = enhancedEggLore.getSpAtkIV();
-            Integer spDefense = enhancedEggLore.getSpDefIV();
-            Integer speed = enhancedEggLore.getSpeedIV();
+            Integer hp = enhancedEggLore.hpIV();
+            Integer attack = enhancedEggLore.atkIV();
+            Integer defense = enhancedEggLore.defIV();
+            Integer spAttack = enhancedEggLore.spAtkIV();
+            Integer spDefense = enhancedEggLore.spDefIV();
+            Integer speed = enhancedEggLore.speedIV();
 
             if (spacer) {
                 newLore.add(Component.literal(" "));

@@ -48,13 +48,24 @@
   "more_cobblemon_tweaks.pc_enhancements.multi_move.timeout": "Timed out %1$s time(s), Retrying...",
   "more_cobblemon_tweaks.pc_enhancements.multi_move.last_attempt": "Timed out %1$s times, Last attempt",
 
+  "more_cobblemon_tweaks.lore_enhancements.egg.errored.1": "⚠ MoreCobblemonTweaks errored repeatedly trying to read this egg's data. Make sure MoreCobblemonTweaks is up to date!",
+  "more_cobblemon_tweaks.lore_enhancements.egg.errored.2": "⚠ If it is, please report this on github. You may also want to disable enhanced egg lore until it's fixed.",
+
   "more_cobblemon_tweaks.lore_enhancements.egg.hulis.hatch_progress.cycles": "Egg Cycles Remaining: ",
   "more_cobblemon_tweaks.lore_enhancements.egg.hulis.hatch_progress.steps": "Steps Left: ",
+
   "more_cobblemon_tweaks.lore_enhancements.egg.better_breeding.hatch_progress": "Time Remaining: %sm %ss",
+
+  "more_cobblemon_tweaks.lore_enhancements.egg.allthemons.name": "%s Egg",
+  "more_cobblemon_tweaks.lore_enhancements.egg.allthemons.hatch_progress": "Time Remaining: %sm %ss",
+
+  "more_cobblemon_tweaks.lore_enhancements.egg.cobbreeding.name": "%s Egg",
+  "more_cobblemon_tweaks.lore_enhancements.egg.cobbreeding.bad_egg.name": "Bad Egg",
   "more_cobblemon_tweaks.lore_enhancements.egg.cobbreeding.hatch_progress": "Time Remaining: %sm %ss",
-  "more_cobblemon_tweaks.lore_enhancements.egg.encryption_warning": "⚠ Unable to read egg data due to encryption!",
   "more_cobblemon_tweaks.lore_enhancements.egg.cobbreeding_encryption_warning": "⚠ Disable egg encryption in the server host's cobbreeding config and right-click to decrypt!",
   "more_cobblemon_tweaks.lore_enhancements.egg.cobbreeding_encryption_warning_singleplayer": "⚠ Disable egg encryption in your cobbreeding config and right-click to decrypt!",
+
+  "more_cobblemon_tweaks.lore_enhancements.egg.encryption_warning": "⚠ Unable to read egg data due to encryption!",
   "more_cobblemon_tweaks.lore_enhancements.egg.shiny.symbol": " ★",
   "more_cobblemon_tweaks.lore_enhancements.egg.shiny.text": "Shiny",
   "more_cobblemon_tweaks.lore_enhancements.egg.perfect.symbol": " \uD83D\uDEC6",

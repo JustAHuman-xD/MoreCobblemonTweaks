@@ -117,13 +117,13 @@ public class Utils {
 
     public static void setModEnabledFunction(Function<String, Boolean> function) {
         modEnabledFunction = function;
-        Hooks.cobbreedingCompat = null;
+        Hooks.reset();
         MOD_ENABLED_CACHE.clear();
     }
 
     public static void setModVersionFunction(Function<String, String> function) {
         modVersionFunction = function;
-        Hooks.cobbreedingCompat = null;
+        Hooks.reset();
         MOD_VERSION_CACHE.clear();
     }
 

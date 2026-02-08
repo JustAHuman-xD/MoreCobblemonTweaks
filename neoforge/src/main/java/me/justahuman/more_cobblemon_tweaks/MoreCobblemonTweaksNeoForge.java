@@ -3,6 +3,8 @@ package me.justahuman.more_cobblemon_tweaks;
 import me.justahuman.more_cobblemon_tweaks.config.ConfigScreen;
 import me.justahuman.more_cobblemon_tweaks.config.ModConfig;
 import me.justahuman.more_cobblemon_tweaks.features.Keybinds;
+import me.justahuman.more_cobblemon_tweaks.features.egg.AllTheMonsEggLoreFactory;
+import me.justahuman.more_cobblemon_tweaks.features.egg.EnhancedEggLore;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,6 +30,14 @@ public final class MoreCobblemonTweaksNeoForge {
         if (Hooks.clothConfig()) {
             ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
                     () -> (modContainer, arg) -> ConfigScreen.buildScreen(arg));
+        }
+        if (Hooks.allTheMonsPresent()) {
+            if (Hooks.allTheMonsCompat().enabled()) {
+                MoreCobblemonTweaks.LOGGER.info(">> AllTheMons support enabled!{}", Hooks.allTheMonsCompat() == Hooks.SupportStatus.UNTESTED ? " (**UNTESTED** AllTheMons version)" : "");
+                EnhancedEggLore.registerFactory(AllTheMonsEggLoreFactory::get);
+            } else {
+                MoreCobblemonTweaks.LOGGER.warn(">> AllTheMons version is not compatible! AllTheMons support disabled.");
+            }
         }
     }
 

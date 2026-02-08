@@ -8,6 +8,7 @@ import com.cobblemon.mod.common.pokemon.Nature;
 import com.cobblemon.mod.common.pokemon.Species;
 import me.justahuman.more_cobblemon_tweaks.features.LoreEnhancements;
 import me.justahuman.more_cobblemon_tweaks.utils.Utils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -18,9 +19,9 @@ import net.minecraft.world.item.component.CustomData;
 
 import java.util.List;
 
-public class BetterBreedingIntegration extends EnhancedEggLore {
+public class BetterBreedingEggLore extends EnhancedEggLore {
     private final CompoundTag customData;
-    public BetterBreedingIntegration(CompoundTag customData) {
+    public BetterBreedingEggLore(CompoundTag customData) {
         this.customData = customData;
     }
 
@@ -37,8 +38,8 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
     }
 
     @Override
-    public boolean isShiny() {
-        return Utils.get(customData, "shiny", false);
+    public ChatFormatting getShinyColor() {
+        return Utils.get(customData, "shiny", false) ? ChatFormatting.YELLOW : null;
     }
 
     @Override
@@ -132,7 +133,7 @@ public class BetterBreedingIntegration extends EnhancedEggLore {
         if (customData != null) {
             CompoundTag tag = customData.getUnsafe();
             if (tag.contains("species", Tag.TAG_STRING) && tag.contains("timer", Tag.TAG_INT)) {
-                return new BetterBreedingIntegration(tag);
+                return new BetterBreedingEggLore(tag);
             } else if (tag.contains("baby_data", Tag.TAG_STRING)) {
                 return new EncryptedEggLore();
             }

@@ -4,10 +4,17 @@ import me.justahuman.more_cobblemon_tweaks.utils.Utils;
 
 public class Hooks {
     public static final String COBBREEDING = "cobbreeding";
+    public static final String ALL_THE_MONS = "allthemons";
     public static final String CLOTH_CONFIG_FABRIC = "cloth-config";
     public static final String CLOTH_CONFIG_NEOFORGE = "cloth_config";
 
     public static SupportStatus cobbreedingCompat = null;
+    private static SupportStatus allTheMonsCompat = null;
+
+    public static void reset() {
+        cobbreedingCompat = null;
+        allTheMonsCompat = null;
+    }
 
     public static boolean clothConfig() {
         return Utils.modEnabled(CLOTH_CONFIG_FABRIC) || Utils.modEnabled(CLOTH_CONFIG_NEOFORGE);
@@ -15,6 +22,10 @@ public class Hooks {
 
     public static boolean cobbreedingPresent() {
         return Utils.modEnabled(COBBREEDING);
+    }
+
+    public static boolean allTheMonsPresent() {
+        return Utils.modEnabled(ALL_THE_MONS);
     }
 
     public static SupportStatus cobbreedingCompat() {
@@ -47,6 +58,46 @@ public class Hooks {
             return cobbreedingCompat;
         } catch (NumberFormatException e) {
             return cobbreedingCompat;
+        }
+    }
+
+    public static SupportStatus allTheMonsCompat() {
+        if (allTheMonsCompat != null) {
+            return allTheMonsCompat;
+        }
+
+        allTheMonsCompat = SupportStatus.UNSUPPORTED;
+        if (!Utils.modEnabled(ALL_THE_MONS)) {
+            return allTheMonsCompat;
+        }
+
+        String version = Utils.modVersion(ALL_THE_MONS);
+        String[] parts = version.split("\\.");
+        if (parts.length < 3) {
+            return allTheMonsCompat;
+        }
+
+        try {
+            int major = Integer.parseInt(parts[0]);
+            int minor = Integer.parseInt(parts[1]);
+            int patch = Integer.parseInt(parts[2]);
+            if (major == 0) {
+                allTheMonsCompat = SupportStatus.UNSUPPORTED;
+                if (minor == 0) {
+                    if (patch >= 24 && patch <= 32) {
+                        allTheMonsCompat = SupportStatus.SUPPORTED;
+                    } else if (patch > 32) {
+                        allTheMonsCompat = SupportStatus.UNTESTED;
+                    }
+                } else if (minor > 0) {
+                    allTheMonsCompat = SupportStatus.UNTESTED;
+                }
+            } else if (major > 0) {
+                allTheMonsCompat = SupportStatus.UNTESTED;
+            }
+            return allTheMonsCompat;
+        } catch (NumberFormatException e) {
+            return allTheMonsCompat;
         }
     }
 
