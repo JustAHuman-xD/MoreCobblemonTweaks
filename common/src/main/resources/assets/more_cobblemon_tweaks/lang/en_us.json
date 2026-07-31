@@ -44,6 +44,12 @@
   "more_cobblemon_tweaks.pc_enhancements.box_list.button.enabled": "Box View",
   "more_cobblemon_tweaks.pc_enhancements.box_list.title": "Box List %1$s-%2$s",
 
+  "more_cobblemon_tweaks.pc_enhancements.box_list.sort.name": "Sort All Boxes by Name",
+  "more_cobblemon_tweaks.pc_enhancements.box_list.sort.level": "Sort All Boxes by Level",
+  "more_cobblemon_tweaks.pc_enhancements.box_list.sort.type": "Sort All Boxes by Type",
+  "more_cobblemon_tweaks.pc_enhancements.box_list.sort.pokedex_number": "Sort All Boxes by Pokédex Number",
+  "more_cobblemon_tweaks.pc_enhancements.box_list.sort.gender": "Sort All Boxes by Gender",
+
   "more_cobblemon_tweaks.pc_enhancements.multi_move.title": "Moving %1$s/%2$s Pokémon...",
   "more_cobblemon_tweaks.pc_enhancements.multi_move.timeout": "Timed out %1$s time(s), Retrying...",
   "more_cobblemon_tweaks.pc_enhancements.multi_move.last_attempt": "Timed out %1$s times, Last attempt",

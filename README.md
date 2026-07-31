@@ -39,6 +39,7 @@ BetterBreeding: Most<br>
     - Right-clicking a box will open the box view for that box.
     - Using the wallpaper options in the box list view will change the wallpaper for all boxes on the current page.
     - You can also use the search/filter while in the box list view and will filter the boxes based on if any pokemon in the box match the filter.
+    - While in the box list view, the sort buttons will sort every pokemon across all of your boxes (instead of just the currently opened box).
     - ![Screenshot of box list view](.assets/box_management.png)
     - ![Screenshot of boxes swapping](.assets/box_management_swapping.png)
   - Multiselect Move & Release
