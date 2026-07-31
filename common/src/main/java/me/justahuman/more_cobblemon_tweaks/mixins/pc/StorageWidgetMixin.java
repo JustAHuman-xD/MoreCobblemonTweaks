@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.CobblemonNetwork;
 import com.cobblemon.mod.common.CobblemonSounds;
 import com.cobblemon.mod.common.api.gui.GuiUtilsKt;
 import com.cobblemon.mod.common.api.net.NetworkPacket;
+import com.cobblemon.mod.common.api.pokemon.PokemonSortMode;
 import com.cobblemon.mod.common.api.storage.pc.PCPosition;
 import com.cobblemon.mod.common.client.CobblemonResources;
 import com.cobblemon.mod.common.client.gui.PokemonGuiUtilsKt;
@@ -73,6 +74,8 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+
+import static com.cobblemon.mod.common.api.storage.pc.ConstantsKt.POKEMON_PER_BOX;
 
 @Mixin(value = StorageWidget.class, remap = false)
 public abstract class StorageWidgetMixin extends SoundlessWidget implements MultiSelector, BoxViewHolder {
@@ -676,6 +679,30 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
         this.moreCobblemonTweaks$boxListSlots.forEach(widget -> removeWidget(widget));
         this.moreCobblemonTweaks$boxListSlots.clear();
         moreCobblemonTweaks$boxListSlotIndex = 30 * box;
+    }
+
+    @Override
+    public void moreCobblemonTweaks$sortAllBoxes(PokemonSortMode sortMode, boolean descending) {
+        ClientPC pc = pcGui.getPc();
+        List<Pokemon> allPokemon = new ArrayList<>();
+        for (ClientBox clientBox : pc.getBoxes()) {
+            for (Pokemon pokemon : clientBox.getSlots()) {
+                if (pokemon != null) {
+                    allPokemon.add(pokemon);
+                }
+            }
+        }
+        allPokemon.sort(sortMode.comparator(descending));
+
+        Map<Pokemon, PCPosition> moves = new LinkedHashMap<>();
+        for (int i = 0; i < allPokemon.size(); i++) {
+            moves.put(allPokemon.get(i), new PCPosition(i / POKEMON_PER_BOX, i % POKEMON_PER_BOX));
+        }
+
+        playSound(CobblemonSounds.PC_CLICK);
+        resetSelected();
+        moreCobblemonTweaks$clearMultiSelection();
+        moreCobblemonTweaks$handleMultiPokemonMoves(moves);
     }
 
     @Override

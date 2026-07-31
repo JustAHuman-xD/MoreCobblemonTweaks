@@ -1,5 +1,6 @@
 package me.justahuman.more_cobblemon_tweaks.mixins.pc;
 
+import com.cobblemon.mod.common.api.pokemon.PokemonSortMode;
 import com.cobblemon.mod.common.client.gui.pasture.PasturePCGUIConfiguration;
 import com.cobblemon.mod.common.client.gui.pc.BoxNameWidget;
 import com.cobblemon.mod.common.client.gui.pc.FilterWidget;
@@ -45,8 +46,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+
+import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 @Mixin(value = PCGUI.class, priority = 2000)
 public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
@@ -66,6 +70,8 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
     @Final
     private static ResourceLocation portraitBackgroundResource;
     @Unique private MultiSelectButton moreCobblemonTweaks$multiSelectButton;
+    @Unique private final List<IconButton> moreCobblemonTweaks$vanillaSortButtons = new ArrayList<>();
+    @Unique private final List<IconButton> moreCobblemonTweaks$boxListSortButtons = new ArrayList<>();
 
     protected PcGuiMixin(Component title) {
         super(title);
@@ -102,6 +108,35 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
                     BoxViewHolder boxViewHolder = (BoxViewHolder) (Object) storageWidget;
                     return boxViewHolder == null || !boxViewHolder.moreCobblemonTweaks$isBoxListOpen();
                 });
+                moreCobblemonTweaks$vanillaSortButtons.add(iconButton);
+            }
+        }
+
+        if (ModConfig.isEnabled("pc_box_view") && !(configuration instanceof PasturePCGUIConfiguration)) {
+            for (PokemonSortMode sortMode : PokemonSortMode.values()) {
+                String typeName = sortMode.name().toLowerCase(Locale.ROOT);
+                Component tooltip = Component.translatable("more_cobblemon_tweaks.pc_enhancements.box_list.sort." + typeName);
+                IconButton sortAllButton = new IconButton(
+                        x + 92 + (12 * sortMode.ordinal()),
+                        y + 31,
+                        20,
+                        20,
+                        cobblemonResource("textures/gui/pc/pc_button_sort_" + typeName + ".png"),
+                        cobblemonResource("textures/gui/pc/pc_button_sort_" + typeName + "_reverse.png"),
+                        null,
+                        "box_list_sort_" + typeName,
+                        button -> {
+                            storageWidget.resetSelected();
+                            ((BoxViewHolder) (Object) storageWidget).moreCobblemonTweaks$sortAllBoxes(sortMode, Screen.hasShiftDown());
+                        }
+                );
+                ConditionalIconButton conditional = (ConditionalIconButton) (Object) sortAllButton;
+                conditional.moreCobblemonTweaks$setCondition(() ->
+                        ((BoxViewHolder) (Object) storageWidget).moreCobblemonTweaks$isBoxListOpen() && cast().getDisplayOptions()
+                );
+                conditional.moreCobblemonTweaks$setTooltip(() -> tooltip);
+                moreCobblemonTweaks$boxListSortButtons.add(sortAllButton);
+                this.addRenderableWidget(sortAllButton);
             }
         }
     }
@@ -169,6 +204,17 @@ public abstract class PcGuiMixin extends Screen implements MultiSelectorState {
     public void captureMousePos(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         moreCobblemonTweaks$mouseX = mouseX;
         moreCobblemonTweaks$mouseY = mouseY;
+
+        if (storageWidget != null && !(moreCobblemonTweaks$vanillaSortButtons.isEmpty() && moreCobblemonTweaks$boxListSortButtons.isEmpty())) {
+            boolean boxListOpen = ((BoxViewHolder) (Object) storageWidget).moreCobblemonTweaks$isBoxListOpen();
+            boolean displayOptions = cast().getDisplayOptions();
+            for (IconButton button : moreCobblemonTweaks$vanillaSortButtons) {
+                button.visible = displayOptions && !boxListOpen;
+            }
+            for (IconButton button : moreCobblemonTweaks$boxListSortButtons) {
+                button.visible = displayOptions && boxListOpen;
+            }
+        }
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lcom/cobblemon/mod/common/api/gui/GuiUtilsKt;blitk$default(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/resources/ResourceLocation;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;Ljava/lang/Number;ZFILjava/lang/Object;)V"))
