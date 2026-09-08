@@ -2,6 +2,7 @@ package me.justahuman.more_cobblemon_tweaks.mixins.pc;
 
 import com.cobblemon.mod.common.api.gui.GuiUtilsKt;
 import com.cobblemon.mod.common.client.gui.PokemonGuiUtilsKt;
+import com.cobblemon.mod.common.client.gui.ProfileTransformType;
 import com.cobblemon.mod.common.client.gui.pc.BoxStorageSlot;
 import com.cobblemon.mod.common.client.gui.pc.StorageSlot;
 import com.cobblemon.mod.common.client.gui.pc.StorageWidget;
@@ -72,14 +73,15 @@ public abstract class StorageSlotMixin {
                     getState(),
                     0F,
                     4.5F,
-                    true,
+                    ProfileTransformType.PROFILE,
                     false,
                     1F,
                     1F,
                     1F,
                     0.33F,
                     0f,
-                    0f
+                    0f,
+                    13
             );
             RenderSystem.setShaderColor(original[0], original[1], original[2], original[3]);
             matrices.popPose();

@@ -33,12 +33,12 @@ public abstract class EnhancedEggLore {
     public abstract boolean hasIVs();
     public boolean hasIVs(int iv) {
         return hasIVs()
-                && Objects.equals(iv, getHpIV())
-                && Objects.equals(iv, getAtkIV())
-                && Objects.equals(iv, getDefIV())
-                && Objects.equals(iv, getSpAtkIV())
-                && Objects.equals(iv, getSpDefIV())
-                && Objects.equals(iv, getSpeedIV());
+                && getHpIV() != null && getHpIV() >= iv
+                && getAtkIV() != null && getAtkIV() >= iv
+                && getDefIV() != null && getDefIV() >= iv
+                && getSpAtkIV() != null && getSpAtkIV() >= iv
+                && getSpDefIV() != null && getSpDefIV() >= iv
+                && getSpeedIV() != null && getSpeedIV() >= iv;
     }
     public abstract Integer getHpIV();
     public abstract Integer getAtkIV();

@@ -18,7 +18,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.awt.*;
-import java.util.Objects;
 
 import static net.minecraft.ChatFormatting.*;
 
@@ -66,18 +65,19 @@ public class IvWidget implements Renderable {
         y = drawStat(context, ivs, Stats.SPECIAL_DEFENCE, YELLOW, x, y, mouseX, mouseY);
         y = drawStat(context, ivs, Stats.SPEED, AQUA, x, y, mouseX, mouseY);
 
-        double average = Stats.Companion.getPERMANENT().stream().mapToInt(ivs::getOrDefault).average().getAsDouble();
-        drawStat(context, "average", average, WHITE, x, y, mouseX, mouseY);
+        double baseAverage = Stats.Companion.getPERMANENT().stream().mapToInt(ivs::getOrDefault).average().orElse(0.0);
+        double effectiveAverage = Stats.Companion.getPERMANENT().stream().mapToDouble(ivs::getEffectiveBattleIV).average().orElse(0.0);
+        drawStat(context, "average", baseAverage, effectiveAverage, WHITE, x, y, mouseX, mouseY);
     }
 
     public double drawStat(GuiGraphics context, IVs ivs, Stats stat, ChatFormatting color, double x, double y, int mouseX, int mouseY) {
-        return drawStat(context, stat.name().toLowerCase(), Objects.requireNonNullElse(ivs.get(stat), 0), color, x, y, mouseX, mouseY);
+        return drawStat(context, stat.name().toLowerCase(), ivs.getOrDefault(stat), ivs.isHyperTrained(stat) ? (double) ivs.getEffectiveBattleIV(stat) : null, color, x, y, mouseX, mouseY);
     }
 
-    public double drawStat(GuiGraphics context, String stat, double statValue, ChatFormatting color, double x, double y, int mouseX, int mouseY) {
+    public double drawStat(GuiGraphics context, String stat, double baseValue, Double effectiveValue, ChatFormatting color, double x, double y, int mouseX, int mouseY) {
         boolean colored = ModConfig.isEnabled("pc_colored_ivs");
         RenderHelperKt.drawScaledText(context, null, PcEnhancements.translate("iv_display." + stat).withStyle(colored ? color : WHITE), x, y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);
-        String value = Screen.hasShiftDown() ? Utils.ivPercent(statValue) : Integer.toString((int) statValue);
+        String value = Screen.hasShiftDown() ? Utils.ivPercent(effectiveValue != null ? effectiveValue : baseValue) : (int) baseValue + (effectiveValue != null ? " (" + effectiveValue.intValue() + ")" : "");
         int width = Minecraft.getInstance().font.width(value);
         double valueX = x + 45 - (width * PCGUI.SCALE);
         RenderHelperKt.drawScaledText(context, null, Component.literal(value).withStyle(WHITE), valueX, y, PCGUI.SCALE, 1, Integer.MAX_VALUE, 0x00FFFFFF, false, true, mouseX, mouseY);

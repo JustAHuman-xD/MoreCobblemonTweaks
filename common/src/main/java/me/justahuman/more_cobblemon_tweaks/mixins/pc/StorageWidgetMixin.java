@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.api.net.NetworkPacket;
 import com.cobblemon.mod.common.api.storage.pc.PCPosition;
 import com.cobblemon.mod.common.client.CobblemonResources;
 import com.cobblemon.mod.common.client.gui.PokemonGuiUtilsKt;
+import com.cobblemon.mod.common.client.gui.ProfileTransformType;
 import com.cobblemon.mod.common.client.gui.pc.BoxStorageSlot;
 import com.cobblemon.mod.common.client.gui.pc.PCGUI;
 import com.cobblemon.mod.common.client.gui.pc.PartyStorageSlot;
@@ -559,14 +560,15 @@ public abstract class StorageWidgetMixin extends SoundlessWidget implements Mult
                                 BOX_PREVIEW_STATE,
                                 0F,
                                 1.62F,
-                                true,
+                                ProfileTransformType.PROFILE,
                                 false,
                                 1f,
                                 1f,
                                 1f,
                                 1f,
                                 0f,
-                                0f
+                                0f,
+                                13
                         );
                         matrices.popPose();
                         context.disableScissor();
