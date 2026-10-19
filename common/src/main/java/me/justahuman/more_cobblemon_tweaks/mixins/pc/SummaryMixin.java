@@ -48,7 +48,7 @@ public abstract class SummaryMixin extends Screen {
     @Unique
     private static void moreCobblemonTweaks$handleFromPC(CallbackInfo ci) {
         if (Utils.summaryFromPC) {
-            PCGUI pcGui = new PCGUI(Utils.summaryPC, CobblemonClient.INSTANCE.getStorage().getParty(), Utils.summaryConfig, CobblemonClient.INSTANCE.getLastPcBoxViewed(), Utils.unseenWallpapers);
+            PCGUI pcGui = new PCGUI(Utils.summaryPC, CobblemonClient.INSTANCE.getStorage().getParty(), Utils.summaryConfig, CobblemonClient.INSTANCE.getLastPcBoxViewed(), Utils.unseenWallpapers, true);
             Utils.summaryPC = null;
             Utils.summaryConfig = null;
             Utils.unseenWallpapers = null;

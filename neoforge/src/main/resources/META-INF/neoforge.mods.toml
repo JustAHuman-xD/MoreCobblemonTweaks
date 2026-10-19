@@ -38,7 +38,7 @@ side = "CLIENT"
 [[dependencies.more_cobblemon_tweaks]]
 modId = "cobblemon"
 type = "required"
-versionRange = "[1.7.0+1.21.1,)"
+versionRange = "[1.8.2+1.21.1,)"
 ordering = "AFTER"
 side = "CLIENT"
 
